@@ -10,20 +10,33 @@ dir.create("report", showWarnings = FALSE)
 ##########################################
 # Fetch
 ##########################################
-## GLPF:
-glpf <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
-## GLRI:
-load(file = file.path("raw","GLRI","FINAL8GLRIVirusSFSDec152015.RData"))
-load(file = file.path("raw","GLRI","GLRIdfOptSummary2016-03-03.RData"))
-## MMSD:
+
+# This is an example of how to fetch the raw data.
+# I would start from these lines in each of the sourced
+# scripts further down:
+
+# ## GLPF:
+# glpf <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
+# ## GLRI:
+# load(file = file.path("raw","GLRI","FINAL8GLRIVirusSFSDec152015.RData"))
+# load(file = file.path("raw","GLRI","GLRIdfOptSummary2016-03-03.RData"))
+# ## MMSD:
 
 ##########################################
 # Process
 ##########################################
 
+# Anything here would take the data from the "raw"
+# folder, and convert it to something more useful. 
+# Ideally, when this step is done, we'd have stuff populated
+# in a folder "process/out".
+
+# source(file = file.path("process","src","functions.R"))
+
 ##########################################
 # Visualize
 ##########################################
+source(file = file.path("process","src","samplePlot.R"))
 
 ##########################################
 # Report
