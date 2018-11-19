@@ -1,3 +1,7 @@
+# When you add a new package to your scripts, add 
+# it here too. This will just help make sure we each
+# have the right packages installed.
+
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -41,9 +45,30 @@ dir.create("report", showWarnings = FALSE)
 ##########################################
 # Visualize
 ##########################################
+
+# My vote would be that here we have a source file
+# that creates functions to call, then here we call
+# those functions. This makes what is happening in the 
+# source file a little more transparent, and allows
+# some fiddling here. 
+
+# So, source the functions:
 source(file = file.path("process","src","samplePlot.R"))
+# Then call the functions:
+
+# I'd say usually the "visualize" functions wouldn't take
+# too long, so if you leave these lines un-commented,
+# that is fine (so, comment out the process code, leave 
+# the visualize code alone).
+
 
 ##########################################
 # Report
 ##########################################
 
+# Within the "report" folder, create .Rmd files to
+# generate "chapters".
+
+# You can create individual html files like this:
+
+# Or bind them all together like this:
