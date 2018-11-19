@@ -4,9 +4,19 @@ Work prepping for GLPF manuscript.
 
 ## Workflow
 
+The workflow that is *checked in* to this repository should fit within the "workflow.R" script. If it doesn't make sense here:
+
 ```r
-Try to keep track of workflow here.
+# Fetch
+# Process
+# Visualize
+# Report
 ```
+Don't check it in.
+
+Need some space to explore? Save those scripts in the "probably_junk" folder. You'll notice that folder is ".gitignore" file so you don't accidently check it in. You'll also notice that the "raw" folder is in ".gitignore". The data required in that folder is on the "Projects" drive (`QW Monitoring Team\GLPF\JA\manuscript material\Data\Raw`).
+
+
 
 ## Disclaimer
 
