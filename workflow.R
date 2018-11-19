@@ -30,6 +30,11 @@ dir.create("report", showWarnings = FALSE)
 # folder, and convert it to something more useful. 
 # Ideally, when this step is done, we'd have stuff populated
 # in a folder "process/out".
+# I would also say once this step is done, it can be commented
+# out. Collaborators would need to un-comment these lines
+# once. 
+#
+#This is where `remake` would come in handy!
 
 # source(file = file.path("process","src","functions.R"))
 
