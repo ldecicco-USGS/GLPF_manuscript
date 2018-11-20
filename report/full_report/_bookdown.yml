@@ -1,0 +1,18 @@
+book_filename: "NWIS_FY18"
+repo: https://code.usgs.gov/water/NWIS_Analytics
+language:
+  label:
+    fig: "Figure "
+    tab: "Table "
+delete_merged_file: true
+output_dir: final_report
+split_by: "none"
+new_session: true
+rmd_files: [
+  "index.Rmd",
+#  "01-Introduction.Rmd",
+  "02-Methods.Rmd",
+  "03-WebSummary.Rmd",
+  "04-Geo.Rmd",
+  "05-Parameter.Rmd",
+  "06-Time.Rmd"]

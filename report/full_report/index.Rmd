@@ -1,0 +1,36 @@
+--- 
+title: "GLPF Manuscript"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+colorlinks: yes
+lot: yes
+lof: yes
+fontsize: 12pt
+monofont: "Source Code Pro"
+monofontoptions: "Scale=0.7"
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+favicon: "favicons/favicon.ico"
+description: "Getting ready for manuscript."
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+
+# Preface {-}
+
+This is a first-draft at the GLPF manuscript. Anything here will go in the first section of the "book" (ie...full report).
+
+
