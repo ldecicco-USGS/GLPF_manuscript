@@ -10,3 +10,4 @@ plots/out/*
 report/full_report/final_report
 report/full_report/*.rds
 report/full_report/_bookdown_files/*
+packages.bib
