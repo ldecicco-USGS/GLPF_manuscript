@@ -1,4 +1,9 @@
-create_report <- function(input, input_dir, output_format, ...){
+create_report <- function(...){
+  
+  input = "index.Rmd"
+  input_dir = file.path("report","full_report")
+  output_format = "bookdown::gitbook"
+  
   original_wd <- getwd()
   setwd(input_dir)
   x <- list(...)

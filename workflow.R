@@ -11,6 +11,7 @@ library(tidyr)
 library(ggplot2)
 library(rmarkdown)
 library(bookdown)
+library(servr)
 library(USGSHydroOpt)
 
 dir.create("process", showWarnings = FALSE)
@@ -97,8 +98,8 @@ source(file = file.path("report","src","create_report.R"))
 
 # You can create individual html files like this:
 
-# Or bind them all together like this:
-create_report(input = "index.Rmd", 
-              input_dir = file.path("report","full_report"),
-              output_format = "bookdown::gitbook",
-              EEMplot = EEMplot)
+# Or bind them all together like this. 
+create_report(EEMplot = EEMplot)
+
+# See the action:
+servr::httd("report/full_report/final_report")

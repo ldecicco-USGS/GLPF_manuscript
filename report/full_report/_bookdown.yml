@@ -8,5 +8,5 @@ delete_merged_file: true
 output_dir: final_report
 split_by: "none"
 new_session: true
-rmd_files: [
-  "index.Rmd"]
+#rmd_files: [
+#  "index.Rmd"]
