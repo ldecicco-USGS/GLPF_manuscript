@@ -1,3 +1,7 @@
+##########################################
+# Project Setup
+##########################################
+
 # When you add a new package to your scripts, add 
 # it here too. This will just help make sure we each
 # have the right packages installed.
@@ -5,10 +9,15 @@
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(rmarkdown)
+library(bookdown)
+library(USGSHydroOpt)
 
 dir.create("process", showWarnings = FALSE)
+dir.create(file.path("process","out"), showWarnings = FALSE)
 dir.create("probably_junk", showWarnings = FALSE)
 dir.create("plots", showWarnings = FALSE)
+dir.create(file.path("plots","out"), showWarnings = FALSE)
 dir.create("report", showWarnings = FALSE)
 
 ##########################################
@@ -21,10 +30,14 @@ dir.create("report", showWarnings = FALSE)
 
 # ## GLPF:
 # glpf <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
+#
 # ## GLRI:
 # load(file = file.path("raw","GLRI","FINAL8GLRIVirusSFSDec152015.RData"))
 # load(file = file.path("raw","GLRI","GLRIdfOptSummary2016-03-03.RData"))
+#
 # ## MMSD:
+# 
+# 
 
 ##########################################
 # Process
@@ -52,9 +65,20 @@ dir.create("report", showWarnings = FALSE)
 # source file a little more transparent, and allows
 # some fiddling here. 
 
-# So, source the functions:
-source(file = file.path("process","src","samplePlot.R"))
-# Then call the functions:
+########################
+# Plot an EEM heatmap:
+########################
+# Source the functions:
+source(file = file.path("plots","src","plot_EEM.R"))
+# Call the functions:
+summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
+EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
+EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
+# Save the plot:
+ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
+########################
+
+
 
 # I'd say usually the "visualize" functions wouldn't take
 # too long, so if you leave these lines un-commented,
