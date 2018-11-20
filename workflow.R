@@ -20,6 +20,7 @@ dir.create("probably_junk", showWarnings = FALSE)
 dir.create("plots", showWarnings = FALSE)
 dir.create(file.path("plots","out"), showWarnings = FALSE)
 dir.create("report", showWarnings = FALSE)
+dir.create(file.path("report","individual_reports","out"), showWarnings = FALSE)
 
 ##########################################
 # Fetch
@@ -97,6 +98,8 @@ source(file = file.path("report","src","create_report.R"))
 # generate "chapters".
 
 # You can create individual html files like this:
+render(input = file.path("report","individual_reports","EEMs.Rmd"),
+       output_dir = file.path("report","individual_reports","out"))
 
 # Or bind them all together like this. 
 create_report(EEMplot = EEMplot)

@@ -1,0 +1,21 @@
+---
+title: "EEMs plot"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE, 
+                      message = FALSE)
+```
+
+# EEM plot {#EEM}
+
+Maybe we want to show a particular EEM plot...such as Figure \@ref(fig:eem-example).
+
+```{r eem-example, fig.cap="Here is a EEM plot.", echo=FALSE}
+print(EEMplot)
+
+```
+
+Pretty neat.
