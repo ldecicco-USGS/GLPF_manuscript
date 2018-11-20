@@ -9,6 +9,7 @@ The workflow that is *checked in* to this repository should fit within the "work
 ```r
 # Fetch
 # Process
+# Model
 # Visualize
 # Report
 ```
@@ -16,7 +17,9 @@ Don't check it in.
 
 Need some space to explore? Save those scripts in the "probably_junk" folder. You'll notice that folder is ".gitignore" file so you don't accidently check it in. You'll also notice that the "raw" folder is in ".gitignore". The data required in that folder is on the "Projects" drive (`QW Monitoring Team\GLPF\JA\manuscript material\Data\Raw`).
 
+Once you run the whole "workflow.R" script, you should see a report generated in the "Viewer" tab. You can click here to open it in a browser:
 
+![Open Viewer](report/open_in_browser.jpg)
 
 ## Disclaimer
 

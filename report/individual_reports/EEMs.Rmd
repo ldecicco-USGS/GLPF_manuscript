@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 # EEM plot {#EEM}
 
-Maybe we want to show a particular EEM plot...such as Figure \@ref(fig:eem-example).
+Maybe we want to show a particular EEM plot:
 
 ```{r eem-example, fig.cap="Here is a EEM plot.", echo=FALSE}
 print(EEMplot)
@@ -19,3 +19,9 @@ print(EEMplot)
 ```
 
 Pretty neat.
+
+Here's the base-R figure:
+```{r base-r, fig.cap="Lachno vs HumBac"}
+base_plot(summaryDF)
+
+```

@@ -9,3 +9,10 @@ print(EEMplot)
 ```
 
 Pretty neat.
+
+Here's the base-R figure (\@ref(fig:base-r)):
+
+```{r base-r, fig.cap="Lachno vs HumBac"}
+base_plot(summaryDF)
+
+```

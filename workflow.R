@@ -13,9 +13,6 @@ library(rmarkdown)
 library(bookdown)
 library(servr)
 library(USGSHydroOpt)
-library(party)
-library(partykit)
-library(rpartScore)
 library(RColorBrewer)
 
 dir.create("process", showWarnings = FALSE)
@@ -51,7 +48,7 @@ dir.create(file.path("model","out"), showWarnings = FALSE)
 # Process
 ##########################################
 # Source any functions:
-source(file = file.path("process","src","functions.R"))
+# source(file = file.path("process","src","functions.R"))
 
 # Anything here would take the data from the "raw"
 # folder, and convert it to something more useful. 
@@ -76,6 +73,7 @@ source(file = file.path("process","src","functions.R"))
 ##########################################
 # Source the functions:
 source(file = file.path("plots","src","plot_EEM.R"))
+source(file = file.path("plots","src","plot_base.R"))
 
 # My vote would be that here we have a source file
 # that creates functions to call, then here we call
@@ -95,6 +93,13 @@ EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
 ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
 ########################
 
+########################
+# Plot an base-R thing:
+########################
+
+png(file.path("plots","out","base_r_example.png"))
+base_plot(summaryDF)
+dev.off()
 
 ##########################################
 # Report
@@ -113,7 +118,8 @@ render(input = file.path("report","individual_reports","EEMs.Rmd"),
 summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
 EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
 
-create_report(EEMplot = EEMplot)
+create_report(EEMplot = EEMplot,
+              summaryDF = summaryDF)
 
 # See the action:
 servr::httd("report/full_report/final_report")
