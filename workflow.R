@@ -67,19 +67,15 @@ source(file = file.path("process","src","functions.R"))
 # Model
 ##########################################
 # Source any functions:
-source(file = file.path("model","src","regressionTrees.R"))
-summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
+# source(file = file.path("model","src","model_script.R"))
 
-model_out <- regressionTree(summaryDF, file_out = "basic_tree.rds")
-
-#This is where `remake` would come in handy!
+# This is where `remake` would come in handy!
 
 ##########################################
 # Visualize
 ##########################################
 # Source the functions:
 source(file = file.path("plots","src","plot_EEM.R"))
-source(file = file.path("plots","src","plot_trees.R"))
 
 # My vote would be that here we have a source file
 # that creates functions to call, then here we call
@@ -99,15 +95,6 @@ EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
 ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
 ########################
 
-########################
-# Plot results of regression tree:
-########################
-
-
-# I'd say usually the "visualize" functions wouldn't take
-# too long, so if you leave these lines un-commented,
-# that is fine (so, comment out the process code, leave 
-# the visualize code alone).
 
 ##########################################
 # Report
@@ -123,6 +110,9 @@ render(input = file.path("report","individual_reports","EEMs.Rmd"),
        output_dir = file.path("report","individual_reports","out"))
 
 # Or bind them all together like this. 
+summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
+EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
+
 create_report(EEMplot = EEMplot)
 
 # See the action:
