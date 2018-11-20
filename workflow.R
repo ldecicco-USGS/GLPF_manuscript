@@ -42,6 +42,8 @@ dir.create("report", showWarnings = FALSE)
 ##########################################
 # Process
 ##########################################
+# Source any functions:
+source(file = file.path("process","src","functions.R"))
 
 # Anything here would take the data from the "raw"
 # folder, and convert it to something more useful. 
@@ -53,11 +55,13 @@ dir.create("report", showWarnings = FALSE)
 #
 #This is where `remake` would come in handy!
 
-# source(file = file.path("process","src","functions.R"))
+
 
 ##########################################
 # Visualize
 ##########################################
+# Source the functions:
+source(file = file.path("plots","src","plot_EEM.R"))
 
 # My vote would be that here we have a source file
 # that creates functions to call, then here we call
@@ -68,8 +72,7 @@ dir.create("report", showWarnings = FALSE)
 ########################
 # Plot an EEM heatmap:
 ########################
-# Source the functions:
-source(file = file.path("plots","src","plot_EEM.R"))
+
 # Call the functions:
 summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
 EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
@@ -78,17 +81,16 @@ EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
 ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
 ########################
 
-
-
 # I'd say usually the "visualize" functions wouldn't take
 # too long, so if you leave these lines un-commented,
 # that is fine (so, comment out the process code, leave 
 # the visualize code alone).
 
-
 ##########################################
 # Report
 ##########################################
+# Source the functions:
+source(file = file.path("report","src","create_report.R"))
 
 # Within the "report" folder, create .Rmd files to
 # generate "chapters".
@@ -96,3 +98,7 @@ ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height
 # You can create individual html files like this:
 
 # Or bind them all together like this:
+create_report(input = "index.Rmd", 
+              input_dir = file.path("report","full_report"),
+              output_format = "bookdown::gitbook",
+              EEMplot = EEMplot)
