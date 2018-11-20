@@ -3,12 +3,8 @@ bookdown::gitbook:
   config:
     toc:
       collapse: none
-      before: |
-        <li><a href="./">NWIS services FY18</a></li>
-      after: |
-        <li><a href="https://waterservices.usgs.gov/" target="_blank">https://waterservices.usgs.gov/</a></li>
     download: no
-    edit: https://code.usgs.gov/water/NWIS_Analytics/%s
+    edit: https://github.com/ldecicco-USGS/GLPF_manuscript/%s
     sharing:
       github: no
       facebook: no
