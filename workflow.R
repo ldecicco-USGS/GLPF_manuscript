@@ -13,6 +13,10 @@ library(rmarkdown)
 library(bookdown)
 library(servr)
 library(USGSHydroOpt)
+library(party)
+library(partykit)
+library(rpartScore)
+library(RColorBrewer)
 
 dir.create("process", showWarnings = FALSE)
 dir.create(file.path("process","out"), showWarnings = FALSE)
@@ -21,6 +25,8 @@ dir.create("plots", showWarnings = FALSE)
 dir.create(file.path("plots","out"), showWarnings = FALSE)
 dir.create("report", showWarnings = FALSE)
 dir.create(file.path("report","individual_reports","out"), showWarnings = FALSE)
+dir.create("model", showWarnings = FALSE)
+dir.create(file.path("model","out"), showWarnings = FALSE)
 
 ##########################################
 # Fetch
@@ -57,13 +63,23 @@ source(file = file.path("process","src","functions.R"))
 #
 #This is where `remake` would come in handy!
 
+##########################################
+# Model
+##########################################
+# Source any functions:
+source(file = file.path("model","src","regressionTrees.R"))
+summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
 
+model_out <- regressionTree(summaryDF, file_out = "basic_tree.rds")
+
+#This is where `remake` would come in handy!
 
 ##########################################
 # Visualize
 ##########################################
 # Source the functions:
 source(file = file.path("plots","src","plot_EEM.R"))
+source(file = file.path("plots","src","plot_trees.R"))
 
 # My vote would be that here we have a source file
 # that creates functions to call, then here we call
@@ -82,6 +98,11 @@ EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
 # Save the plot:
 ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
 ########################
+
+########################
+# Plot results of regression tree:
+########################
+
 
 # I'd say usually the "visualize" functions wouldn't take
 # too long, so if you leave these lines un-commented,

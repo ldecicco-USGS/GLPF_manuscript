@@ -76,3 +76,29 @@ accuracyStuff <- function(summaryDF, m.p, response, threshold){
               "falseNeg" = sum(summaryDF$predictions < threshold & summaryDF$observed >= threshold, na.rm = TRUE)))
 }
 
+
+tree_plot <- function(m){
+
+  threshold <- 2.5
+  
+  plotcp(m)
+
+  for(i in 2:6){
+    
+    cpPrune <- print(m$cptable)[i,'CP']
+    m.p <- prune(m, cp=cpPrune)
+    
+    plotJitter(summaryDF, m.p, threshold, j, i)
+    
+    ordRPResult <- as.data.frame(table(paste(summaryDF$contamination_rank,predict(m.p,newdata = summaryDF))))
+    # ordRPResult <- ordRPResult[-grep('NA',ordRPResult$Var1),]
+    ordRPResult$Bin <- as.numeric(substr(ordRPResult$Var1,1,1))
+    ordRPResult$predicted <- as.numeric(substr(ordRPResult$Var1,3,3))
+    
+    plot(c(1:6),c(1:6),pch="",xlab='Observed',ylab='Predicted', main=i,las=1,tcl=.3)
+    text(ordRPResult$Bin,ordRPResult$predicted,labels = ordRPResult$Freq)
+    abline(h=threshold, v=threshold, col="grey")
+    plot(as.party(m.p), tp_args=list(id=FALSE), main=i)
+  }
+
+}
