@@ -24,6 +24,8 @@ dir.create("report", showWarnings = FALSE)
 dir.create(file.path("report","individual_reports","out"), showWarnings = FALSE)
 dir.create("model", showWarnings = FALSE)
 dir.create(file.path("model","out"), showWarnings = FALSE)
+dir.create("cache", showWarnings = FALSE)
+
 
 ##########################################
 # Fetch
@@ -59,6 +61,9 @@ dir.create(file.path("model","out"), showWarnings = FALSE)
 # once. 
 #
 #This is where `remake` would come in handy!
+
+source(file=file.path("process","src","GenerateCombinedHumanMarkerDF.R"))
+combineHumanMarkerFiles("combined_human_markers.rds")
 
 ##########################################
 # Model
