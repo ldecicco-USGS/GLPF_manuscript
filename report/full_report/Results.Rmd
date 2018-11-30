@@ -1,20 +1,21 @@
 --- 
 title: "GLPF Results Section"
 date: "`r Sys.Date()`"
-site: bookdown::bookdown_site
-output: bookdown::gitbook
-documentclass: book
-colorlinks: yes
-lot: yes
-lof: yes
-fontsize: 12pt
-monofont: "Source Code Pro"
-monofontoptions: "Scale=0.7"
-bibliography: [book.bib, packages.bib]
-biblio-style: apalike
-link-citations: yes
-favicon: "favicons/favicon.ico"
-description: "Developing Results Section."
+#site: bookdown::bookdown_site
+#output: bookdown::gitbook
+#documentclass: book
+output: html_document
+# colorlinks: yes
+# lot: yes
+# lof: yes
+# fontsize: 12pt
+# monofont: "Source Code Pro"
+# monofontoptions: "Scale=0.7"
+# bibliography: [book.bib, packages.bib]
+# biblio-style: apalike
+# link-citations: yes
+# favicon: "favicons/favicon.ico"
+# description: "Developing Results Section."
 ---
 
 # Results {#results}
