@@ -1,0 +1,33 @@
+--- 
+title: "GLPF Results Section"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+colorlinks: yes
+lot: yes
+lof: yes
+fontsize: 12pt
+monofont: "Source Code Pro"
+monofontoptions: "Scale=0.7"
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+favicon: "favicons/favicon.ico"
+description: "Developing Results Section."
+---
+
+# Results {#results}
+
+Results \@ref(fig:figure_2).
+
+```{r figure_2, fig.cap="Figure 2. Human bacteria marker A. concentrations and b. Occurrence proportion in samples from small storm sewers and open channels (Small), subwatersheds of the Milwakee River (Subwatersheds), and tributaries of the Great Lakes (Watershed)", echo=FALSE}
+print(fig_2)
+
+```
+
+Points to make with this figure:
+1. Wisconsin small scale had samples with max concentrations and were generally higher than other sites
+2. Many sites had greater concentrations during runoff events. This is true for the watersheds and subwatersheds that had substantial urban influence. 
+3. Small scale sites
+

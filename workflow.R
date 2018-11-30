@@ -9,6 +9,8 @@
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(gridExtra)
+library(cowplot)
 library(rmarkdown)
 library(bookdown)
 library(servr)
@@ -85,6 +87,10 @@ source(file = file.path("plots","src","plot_base.R"))
 # those functions. This makes what is happening in the 
 # source file a little more transparent, and allows
 # some fiddling here. 
+
+source(file = file.path("plots","src","Figure_2.R"))
+fig_2 <- plot_fig_2()
+ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.png"), width = 7, height = 5)
 
 ########################
 # Plot an EEM heatmap:

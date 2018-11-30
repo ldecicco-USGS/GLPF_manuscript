@@ -14,6 +14,7 @@ combineHumanMarkerFiles <- function(filename){
   # Set all values <= 225 to 225
   
   glri[which(glri$BACHUM.cn.100mls <= 225),"BACHUM.cn.100mls"] <- 225 
+  glri[which(glri$Lachno.2.cn.100ml <= 225),"Lachno.2.cn.100ml"] <- 225 
   
   
   # load(file = file.path("raw","GLRI","GLRIdfOptSummary2016-03-03.RData"))
@@ -43,7 +44,8 @@ combineHumanMarkerFiles <- function(filename){
   
   # Consider all values < 225 as censored to make censored values consistent across studies
   # Set all values <= 225 to 225
-  mmsd[which(mmsd$bacHum <= 225),"bacHum"] <- 225 
+  mmsdHM[which(mmsdHM$bacHum <= 225),"bacHum"] <- 225 
+  mmsdHM[which(mmsdHM$lachno2 <= 225),"lachno2"] <- 225 
   
   names(glpfHM) <- c("GRnumber","site","psdate","hydro_condition","bacHum","lachno2","scale")
   names(glriHM) <- c("GRnumber","site","psdate","hydro_condition","bacHum","lachno2","scale")
@@ -52,6 +54,8 @@ combineHumanMarkerFiles <- function(filename){
   dfHM <- rbind(glpfHM,glriHM)
   dfHM <- rbind(dfHM,mmsdHM)               
   dfHM <- filter(dfHM,!is.na(bacHum))
+  baseflow_Rows <- grep("base",dfHM$hydro_condition,ignore.case = TRUE)
+  dfHM$hydro_condition[baseflow_Rows] <- "Low Flow"
   
   saveRDS(dfHM,file=file.path("process","out",filename))
   
