@@ -118,8 +118,14 @@ dev.off()
 # Source the functions:
 source(file = file.path("report","src","create_report.R"))
 
+#Results section
+render(input = file.path("report","individual_reports","Results.Rmd"),
+       output_dir = file.path("report","individual_reports","out"))
+       
 # Within the "report" folder, create .Rmd files to
 # generate "chapters".
+
+       
 
 # You can create individual html files like this:
 render(input = file.path("report","individual_reports","EEMs.Rmd"),
