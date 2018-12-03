@@ -23,7 +23,7 @@ maxHM <- round(max(dfHM$bacHum + dfHM$lachno2)/10^9,2)
 maxSite <- dfHM[which.max(dfHM$bacHum + dfHM$lachno2),"site"]
 maxScale <- dfHM[which.max(dfHM$bacHum + dfHM$lachno2),"scale"]
 ```
-Throughout the study, `r sum(dfHM_summary$n)` samples were collected, including `r dfHM_summary[1,"n"]` samples from `r dfHM_summary[1,"scale"]` scale sites, `r dfHM_summary[2,"n"]` 189 samples from `r dfHM_summary[2,"scale"]` sites, and `r dfHM_summary[3,"n"]` samples from `r dfHM_summary[3,"scale"]` sites. The sum of the two human markers varied from below the reporting level to a maximum of `r maxHM`^9^ cn/100 ml at a `r maxScale` site in `r maxSite`.
+Throughout the study, `r sum(dfHM_summary$n)` samples were collected, including `r dfHM_summary[1,"n"]` samples from `r dfHM_summary[1,"scale"]` scale sites, `r dfHM_summary[2,"n"]` samples from `r dfHM_summary[2,"scale"]` scale sites, and `r dfHM_summary[3,"n"]` samples from `r dfHM_summary[3,"scale"]` scale sites. The sum of the two human markers varied from below the reporting level to a maximum of `r maxHM` x 10^9^ cn/100 ml at a `r maxScale` scale site in `r maxSite` during a runoff event period (Figure 2).
 
 
 
