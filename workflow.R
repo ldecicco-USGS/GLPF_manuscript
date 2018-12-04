@@ -16,6 +16,7 @@ library(bookdown)
 library(servr)
 library(USGSHydroOpt)
 library(RColorBrewer)
+library(scales)
 
 dir.create("process", showWarnings = FALSE)
 dir.create(file.path("process","out"), showWarnings = FALSE)
