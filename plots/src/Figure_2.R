@@ -37,7 +37,7 @@ plot_fig_2 <- function() {
   barp <- ggplot(HMoccurrence,aes(y=occur,x=site,group=hydro_condition,fill=hydro_condition)) +
     geom_bar(stat = "identity", position = 'dodge') +
     geom_text(aes(y=1.1, label =  count), size = 2.5, angle = 90,nudge_x = rep(c(-0.25,0.25),16)) +
-    ylim(0.0,1.2) +
+    ylim(0.0,1.19) +
     facet_grid(~scale, scales='free_x', space = "free_x") +
     #  geom_hline(yintercept = 225) +
     #    xTickLabelFont=c(14,"bold", "#993333") +
