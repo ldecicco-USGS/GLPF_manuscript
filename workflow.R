@@ -96,12 +96,12 @@ ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.png"), width 
 # Plot an EEM heatmap:
 ########################
 
-# Call the functions:
-summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
-EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
-EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
-# Save the plot:
-ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
+# # Call the functions:
+# summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
+# EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
+# EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
+# # Save the plot:
+# ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
 ########################
 
 ########################

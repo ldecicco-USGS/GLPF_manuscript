@@ -31,10 +31,13 @@ plot_fig_2 <- function() {
   
   #Occurrence
   HMoccurrence <- group_by(dfHM, scale, site, hydro_condition) %>% 
-    summarize(occur = mean(hm > 500))
+    summarize(occur = mean(hm > 500),
+              count = n())
   
   barp <- ggplot(HMoccurrence,aes(y=occur,x=site,group=hydro_condition,fill=hydro_condition)) +
     geom_bar(stat = "identity", position = 'dodge') +
+    geom_text(aes(y=1.1, label =  count), size = 2.5, angle = 90,nudge_x = rep(c(-0.25,0.25),16)) +
+    ylim(0.0,1.2) +
     facet_grid(~scale, scales='free_x', space = "free_x") +
     #  geom_hline(yintercept = 225) +
     #    xTickLabelFont=c(14,"bold", "#993333") +
@@ -44,6 +47,8 @@ plot_fig_2 <- function() {
           strip.background = element_blank(),
           strip.text.x = element_blank()) +
     labs(x="",y="Occurrence ")
+  
+ # barp
   
   #png(filenm)
   fig_2 <- plot_grid(boxp,barp,  ncol=1, align="v")
