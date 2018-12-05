@@ -28,7 +28,7 @@ Throughout the study, `r sum(dfHM_summary$n)` samples were collected, including 
 
 
 
-```{r figure_2, fig.width=5,fig.height=5, fig.cap = "Figure 2. Human bacteria marker A. concentrations and b. Occurrence proportion in samples from small storm sewers and open channels (Small), subwatersheds of the Milwakee River (Subwatersheds), and tributaries of the Great Lakes (Watershed)", echo=FALSE}
+```{r figure_2, fig.width=5,fig.height=5, fig.cap = "Figure 2. Human bacteria marker A. concentrations and b. Occurrence proportion in samples from small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). For each scale, sites are ordered by most to least urban land use percentage from left to right.", echo=FALSE}
 #source(file = #file.path("plots","out","Figure_2_bar_box.png"))
 #fig_2 <- plot_fig_2()
 print(fig_2)
@@ -47,8 +47,13 @@ hmMINYEvent <- dfSmall[which(dfSmall$site!="WI" & dfSmall$hydro_cond=="Event"),"
 hmMINYLowflow <- dfSmall[which(dfSmall$site!="WI" & dfSmall$hydro_cond!="Event"),"hm"]
 wilcox.result2 <- wilcox.test(hmMINYEvent,hmMINYLowflow)
 
+
+
 ```
 There were a number of differences among sites and by hydrologic condition that could At the small scale, median concentrations of HB were `r WI_ratio_median` times greater at the Wisconsin sites than those from the other states (p < 0.05). In samples from Michigan and New York, results indicated greater HB concentrations during runoff events than during periods of low flow (p < 0.05), but results from the small scale Wisconsin sites indicated no significant difference in HB concentrations by hydrologic event. 
+
+In subwatershed and watershed scale, all sites with urban land cover greater than 25% had greater concentrations during runoff event periods than during low-flow periods except the site MF. 
+
 
 Actions needed:
 1. Develop site characteristics table. Land cover for the watershed and subwatershed scales, and for the three primary small watersheds in the small scale.

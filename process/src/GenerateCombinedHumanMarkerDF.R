@@ -57,6 +57,19 @@ combineHumanMarkerFiles <- function(filename){
   baseflow_Rows <- grep("base",dfHM$hydro_condition,ignore.case = TRUE)
   dfHM$hydro_condition[baseflow_Rows] <- "Low Flow"
   
+  sitesSmall <- c("WI","NY","MI")
+  names(sitesSmall) <- c("Kinnickinnic","Red","Middle Clinton")
+  sitesWatershed <- c("Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
+  names(sitesWatershed) <- c("Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
+  sitesSubWatershed <- c("HW","UW","MC","MW","MF","LD","CG","BK")
+  names(sitesSubWatershed) <- c("Honey","Underwood","Menomonee DS","Menomonee Mid","Menomonee US","Little Menomonee","Milwaukee US","Bark")
+  
+  
+  sites <- c(sitesSmall,sitesSubWatershed,sitesWatershed)
+  table(dfHM$site)
+  dfHM$site <- factor(dfHM$site,levels =sites)
+  length(unique(dfHM$site))
+  
   saveRDS(dfHM,file=file.path("process","out",filename))
   
 }
