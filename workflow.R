@@ -9,11 +9,14 @@
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(gridExtra)
+library(cowplot)
 library(rmarkdown)
 library(bookdown)
 library(servr)
 library(USGSHydroOpt)
 library(RColorBrewer)
+library(scales)
 
 dir.create("process", showWarnings = FALSE)
 dir.create(file.path("process","out"), showWarnings = FALSE)
@@ -24,6 +27,8 @@ dir.create("report", showWarnings = FALSE)
 dir.create(file.path("report","individual_reports","out"), showWarnings = FALSE)
 dir.create("model", showWarnings = FALSE)
 dir.create(file.path("model","out"), showWarnings = FALSE)
+dir.create("cache", showWarnings = FALSE)
+
 
 ##########################################
 # Fetch
@@ -60,6 +65,9 @@ dir.create(file.path("model","out"), showWarnings = FALSE)
 #
 #This is where `remake` would come in handy!
 
+#source(file=file.path("process","src","GenerateCombinedHumanMarkerDF.R"))
+#combineHumanMarkerFiles("combined_human_markers.rds")
+
 ##########################################
 # Model
 ##########################################
@@ -81,16 +89,20 @@ source(file = file.path("plots","src","plot_base.R"))
 # source file a little more transparent, and allows
 # some fiddling here. 
 
+source(file = file.path("plots","src","Figure_2.R"))
+fig_2 <- plot_fig_2()
+ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.png"), width = 7, height = 5)
+
 ########################
 # Plot an EEM heatmap:
 ########################
 
-# Call the functions:
-summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
-EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
-EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
-# Save the plot:
-ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
+# # Call the functions:
+# summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
+# EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
+# EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
+# # Save the plot:
+# ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
 ########################
 
 ########################
@@ -107,8 +119,14 @@ dev.off()
 # Source the functions:
 source(file = file.path("report","src","create_report.R"))
 
+#Results section
+render(input = file.path("report","individual_reports","Results.Rmd"),
+       output_dir = file.path("report","individual_reports","out"))
+       
 # Within the "report" folder, create .Rmd files to
 # generate "chapters".
+
+       
 
 # You can create individual html files like this:
 render(input = file.path("report","individual_reports","EEMs.Rmd"),
