@@ -4,7 +4,7 @@
 library(USGSHydroOpt)
 
 #set data directories
-raw.path <- "raw_data"
+raw.path <- "raw"
 cached.path <- "cached_data"
 summary.path <- "SummaryVariables"
 summary.save <- "1_SummaryVariables"
@@ -17,7 +17,7 @@ checkDups <- function(df,parm){
 }
 
 # Load summary data, vectorized fluorescence, and absorbance data
-dfabs <- readRDS(file.path(cached.path,processed.path, "absP3MRLAdjusted.rds"))
+dfabs <- readRDS(file.path("raw","MMSD","PhaseIII","absP3MRLAdjusted.rds"))
 dffl <- readRDS(file.path(cached.path,processed.path, "flP3MRLAdjusted.rds"))
 MMSD3DEEMs <- VectorizedTo3DArray(dffl,"exem", "GRnumber")
 

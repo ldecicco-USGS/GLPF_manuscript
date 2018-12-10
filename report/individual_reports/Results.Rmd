@@ -62,6 +62,13 @@ Actions needed:
     + need site IDs for middle branch Clinton and Red Creek, NY
 2. Use these characteristics to describe the hydrologic changes. Urban: hydro change, non-urban no hydro change.
 
+3. Run MDL scripts on all three data sets
+
+4. Run optical summary scripts for all three data sets
+
+5. Combine the three data sets into one with scale variable for subsetting.
+
+
 
 
 Points to make with this figure:
