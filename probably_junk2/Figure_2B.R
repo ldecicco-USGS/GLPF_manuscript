@@ -4,7 +4,7 @@ plot_fig_2 <- function() {
   dfHM <- readRDS(file.path("process","out","combined_human_markers.rds"))
   
   #Sum of human markers
-  dfHM$hm <- dfHM$bacHum + dfHM$lachno2
+  dfHM$hm <- dfHM$T
   
   # boxplot(hm~site+hydro_condition,data=dfHM,log="y",las=2)
   # boxplot(hm~site,data=dfHM,log="y",las=2)
@@ -51,7 +51,8 @@ plot_fig_2 <- function() {
  # barp
   
   #png(filenm)
-  fig_2 <- plot_grid(boxp,barp,  ncol=1, align="v")
+  fig_2B <- plot_grid(boxp,barp,  ncol=1, align="v")
+  fig_2B
   #dev.off()
   return(fig_2)
 }

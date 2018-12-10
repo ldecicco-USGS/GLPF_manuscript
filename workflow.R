@@ -65,8 +65,8 @@ dir.create("cache", showWarnings = FALSE)
 #
 #This is where `remake` would come in handy!
 
-#source(file=file.path("process","src","GenerateCombinedHumanMarkerDF.R"))
-#combineHumanMarkerFiles("combined_human_markers.rds")
+#source(file=file.path("process","src","GenerateComboHMPlusBasicOptical.R"))
+#comboHMPlusBasicOptical("combined_human_markers.rds")
 
 ##########################################
 # Model
