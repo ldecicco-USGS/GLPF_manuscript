@@ -26,12 +26,12 @@ combineHumanMarkerFiles <- function(filename){
   # Extract human markers and make one dataframe with all three scales
   
   # GLPF data
-  glpfHM <- glpf[,c("CAGRnumber","State","pdate","hydroCondition","bacHum", "lachno")]
+  glpfHM <- glpf[,c("CAGRnumber","UWMFT","State","pdate","hydroCondition","bacHum", "lachno")]
   glpfHM$scale <- "small"
   
   #GLRI data
   #names(glri)[1:20]
-  glriHM <- glri[,c("GRnumber","Site","GMTStartTime","FinalHydrologicConditionDecision","BACHUM.cn.100mls", "Lachno.2.cn.100ml")]
+  glriHM <- glri[,c("GRnumber","FT.","Site","GMTStartTime","FinalHydrologicConditionDecision","BACHUM.cn.100mls", "Lachno.2.cn.100ml")]
   glriHM$scale <- "watershed"
   
   #MMSD data
@@ -39,7 +39,7 @@ combineHumanMarkerFiles <- function(filename){
   #Data file dfOptP3P4Combined.rds is the result of that munging and what we will
   #use as the "raw" data for the manuscript
   
-  mmsdHM <- mmsd[,c("GRnumber","abbrev","psdate","hydro_condition","bacHum","lachno2")]
+  mmsdHM <- mmsd[,c("GRnumber","FT","abbrev","psdate","hydro_condition","bacHum","lachno2")]
   mmsdHM$scale <- "subwatershed"
   
   # Consider all values < 225 as censored to make censored values consistent across studies
@@ -47,9 +47,9 @@ combineHumanMarkerFiles <- function(filename){
   mmsdHM[which(mmsdHM$bacHum <= 225),"bacHum"] <- 225 
   mmsdHM[which(mmsdHM$lachno2 <= 225),"lachno2"] <- 225 
   
-  names(glpfHM) <- c("GRnumber","site","psdate","hydro_condition","bacHum","lachno2","scale")
-  names(glriHM) <- c("GRnumber","site","psdate","hydro_condition","bacHum","lachno2","scale")
-  names(mmsdHM) <- c("GRnumber","site","psdate","hydro_condition","bacHum","lachno2","scale")
+  names(glpfHM) <- c("GRnumber","FT","site","psdate","hydro_condition","bacHum","lachno2","scale")
+  names(glriHM) <- c("GRnumber","FT","site","psdate","hydro_condition","bacHum","lachno2","scale")
+  names(mmsdHM) <- c("GRnumber","FT","site","psdate","hydro_condition","bacHum","lachno2","scale")
   
   dfHM <- rbind(glpfHM,glriHM)
   dfHM <- rbind(dfHM,mmsdHM)               

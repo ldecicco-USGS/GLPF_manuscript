@@ -65,6 +65,15 @@ dir.create("cache", showWarnings = FALSE)
 #
 #This is where `remake` would come in handy!
 
+# Start with EEMS and abs data + human marker data, and add in optical summary variables.
+# Use list of optical summary variables for GLPF consistently for data sets from all three scales.
+
+# GLPF: Add summary variables
+# Begin with previously merged data set, strip out the current optical summary variables
+# and add in all of the ones selected for GLPF
+
+
+
 #source(file=file.path("process","src","GenerateComboHMPlusBasicOptical.R"))
 #comboHMPlusBasicOptical("combined_human_markers.rds")
 

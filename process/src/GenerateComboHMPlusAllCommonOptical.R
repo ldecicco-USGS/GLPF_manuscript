@@ -31,6 +31,10 @@ comboHMPlusBasicOptical <- function(filename){
   glri_vars[which(glri_vars %in% glpf_vars)]
   glri_vars[which(!(glri_vars %in% glpf_vars))]
   
+  mmsd_vars[which(mmsd_vars %in% glpf_vars)]
+  mmsd_vars[which(!(mmsd_vars %in% glpf_vars))]
+  glpf_vars[which(!(glpf_vars %in% mmsd_vars))]
+  
   glri_vars[which(glri_vars %in% mmsd_vars)]
   glri_vars[which(!(glri_vars %in% mmsd_vars))]
   
