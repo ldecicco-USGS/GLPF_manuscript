@@ -11,10 +11,9 @@ get_GLRI_blank_GRnums <- function(){
   tracking_QA <- filter(tracking,QA.sample > 0) %>%
     filter(UW.M.Bacteria > 0 & USGS.CA.Optics.DOC > 0)
   
-  tracking_QA$QA.sample
- tracking$USGS.CA.Optics.DOC
-  
-  tracking_QA$Comments
+  # tracking_QA$QA.sample
+  # tracking$USGS.CA.Optics.DOC
+  # tracking_QA$Comments
   
   blank_rows <- grep("blank",tracking_QA$Comments,ignore.case = TRUE)
   blank_rows <- unique(blank_rows,which(tracking_QA$Blank>0))
@@ -22,10 +21,10 @@ get_GLRI_blank_GRnums <- function(){
   rep_rows <- unique(rep_rows,which(tracking_QA$Replicate>0))
   auto_rows <- grep("auto",tracking_QA$Comments,ignore.case = TRUE)
   RC_rows <- grep("control",tracking_QA$Comments,ignore.case = TRUE)
-  test <- tracking_QA[which(tracking_QA$QA.sample>0),]
-  test2 <- tracking_QA[unique(c(blank_rows,rep_rows,auto_rows,RC_rows)),]
-  test2$Sample.ID %in% test$Sample.ID
-  check <- test[!(test$Sample.ID %in% test2$Sample.ID),]
+  # test <- tracking_QA[which(tracking_QA$QA.sample>0),]
+  # test2 <- tracking_QA[unique(c(blank_rows,rep_rows,auto_rows,RC_rows)),]
+  # test2$Sample.ID %in% test$Sample.ID
+  # check <- test[!(test$Sample.ID %in% test2$Sample.ID),]
   
   
   #look at GLRI optical summary file
@@ -53,30 +52,14 @@ get_GLRI_blank_GRnums <- function(){
   
   sum(!(blankRows2 %in% blankRows1)) #
   sum(!(blankRows1 %in% blankRows2)) #
-  sum(!(blankRows3 %in% blankRows)) #
+  sum(!(blankRows3 %in% blankRows1)) #
   sum(!(blankRows3 %in% blankRows2)) #
   
-  blankRows <- c(blankRows1,blankRows2,blankRows3)
+  blankRows <- unique(c(blankRows1,blankRows2,blankRows3))
   
   df_blanks <- df[blankRows,]
   
-  blankGRnums <- df[blankRows,"GRnumber"]
-  blanks_from_MMSDOptSummary <- df[blankRows,]
-  
-  blank_sample_IDs_optSum <- gsub(" ","",blanks_from_MMSDOptSummary$FieldExpID)
-  
-  #Note: 2 blanks did not get reported from CA lab: CG 100 and MC 100. We will move ahead withou
-  #these samples to determine MRLs. Three process blanks were not included in the tracking form.
-  #We will not use these in the final MRL determination as they do not represent the entire
-  #sampling process. Final blanks used are all determined from the CA summary file here:
-  # file.path("raw","MMSD","PhaseIV","MMSDOptSummary.csv")
-  
-  #blank_sample_IDs[!(blank_sample_IDs %in% blank_sample_IDs_optSum)]
-  process_blank_field_ids <- blank_sample_IDs_optSum[!(blank_sample_IDs_optSum %in% blank_sample_IDs)]
-  which(!(blank_sample_IDs_optSum %in% blank_sample_IDs))
-  
-  remove_blanks <- which(blanks_from_MMSDOptSummary$FieldExpID %in% process_blank_field_ids)
-  blankGRnums <- blanks_from_MMSDOptSummary[-remove_blanks,"GRnumber"]
-  saveRDS(data.frame(GRnumbers = blankGRnums),file=file.path("process","out","MMSD_PhaseIV_blank_GRnumbers.rds"))
+  blankGRnums <- df_blanks[,"GRnumber"]
+  saveRDS(data.frame(GRnumbers = blankGRnums),file=file.path("process","out","GLRI_blank_GRnumbers.rds"))
   
 }

@@ -53,8 +53,6 @@ dir.create("cache", showWarnings = FALSE)
 # Process
 ##########################################
 # Source any functions:
-# source(file = file.path("process","src","functions.R"))
-
 # Anything here would take the data from the "raw"
 # folder, and convert it to something more useful. 
 # Ideally, when this step is done, we'd have stuff populated
@@ -63,7 +61,31 @@ dir.create("cache", showWarnings = FALSE)
 # out. Collaborators would need to un-comment these lines
 # once. 
 #
-#This is where `remake` would come in handy!
+# source(file = file.path("process","src","functions.R"))
+
+# QA functions 
+# 1. Set Minimum Reporting Levels (MRLs): 
+#    A. Functions for identifying blanks
+source(file = file.path("process","src","get_MMSD_blank_GRnums.R"))
+source(file = file.path("process","src","get_GLRI_blank_GRnums.R"))
+source(file = file.path("process","src","get_GLPF_blank_GRnums.R"))
+
+#    B. Functions for Defining MRLs with the collective set of blanks from all scales
+source(file = file.path("process","src","optMRL.R"))
+source(file = file.path("process","src","defineMRLs.R"))
+
+#    C. Functions for adjusting raw data to include MRLs
+source(file = file.path("process","src","Apply_MRLs.R"))
+
+# Set MRLs
+#   Define blank samples
+get_MMSD_blank_GRnums()
+get_GLRI_blank_GRnums()
+get_GLPF_blank_GRnums()
+
+#   Define MRLs
+define_MRLs()
+
 
 # Start with EEMS and abs data + human marker data, and add in optical summary variables.
 # Use list of optical summary variables for GLPF consistently for data sets from all three scales.
