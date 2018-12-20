@@ -13,24 +13,27 @@ define_MRLs <- function() {
   
   #MMSD
   load(file.path("raw","MMSD","PhaseIV","MMSDOpticalData.RData"))
+  mmsd_fl <- dffl
   mmsd_abs <- dfabs
   names(mmsd_abs)[1] <- "Wavelength"
   row.names(mmsd_abs) <- mmsd_abs$Wavelength
+  names(mmsd_fl) <- substr(names(mmsd_fl),1,7)
+  names(mmsd_fl)[1] <- "exem"
   
   #GLRI
   glri_abs <- read.csv(file.path("raw","GLRI","compiled_absorbance_Corr_May2014.csv"),stringsAsFactors = FALSE)
-  #glri_abs <- read_xlsx(file.path("raw","GLRI","GLRI_102714 data dump_vectorized_plus ABS vect.xlsx"),sheet = "Absorbance Aqua_GLRI Phase II")
-  #names(glri_abs) <- substr(names(glri_abs),1,7)
-  #load(file.path("raw","GLRI","GLRI3DEEMs.RData"))
+  glri_fl <- read_xlsx(file.path("raw","GLRI","GLRI_CompleteData_091913.xlsx"),sheet = "Vectorized Flourescence_Corr", skip = 1)
   names(glri_abs)[1] <- "Wavelength"
   row.names(glri_abs) <- glri_abs$Wavelength
+  names(glri_fl)[1] <- "exem"
   
   #GLPF
   glpf_abs <- readRDS(file.path("raw","GLPF","optics","dfabs_QA.rds"))
   glpf_fl <- readRDS(file.path("raw","GLPF","optics","dffl_QA.rds"))
-  GLPF3DEEMs <- VectorizedTo3DArray(df = glpf_fl, "exem",grnum = "GRnumber")
+  #GLPF3DEEMs <- VectorizedTo3DArray(df = glpf_fl, "exem",grnum = "GRnumber")
   names(glpf_abs)[1] <- "Wavelength"
   row.names(glpf_abs) <- glpf_abs$Wavelength
+
   
   # read GR numbers for each data set
   mmsd_GRnumbers <- readRDS(file.path("process","out","MMSD_PhaseIV_blank_GRnumbers.rds"))
@@ -56,11 +59,29 @@ define_MRLs <- function() {
   
  
   abs_MRL <- optMRL(df = df_blanks,Wavelength = "Wavelength",blankGRnums = names(df_blanks)[-1])
-  plot(test$MRL)
+  plot(abs_MRL$MRL~abs_MRL$Wavelength)
   
+  ### Combine fl blanks
+  # Combine abs blanks
+  
+  mmsd_blank_cols <- which(names(mmsd_fl) %in% mmsd_GRnumbers$GRnumbers)
+  glri_blank_cols <- which(names(glri_fl) %in% glri_GRnumbers$GRnumbers)
+  glpf_blank_cols <- which(names(glpf_fl) %in% glpf_GRnumbers$GRnumbers)
+  
+  names(mmsd_abs)[mmsd_blank_cols]
+  mmsd_blanks <- mmsd_fl[,c(1,mmsd_blank_cols)]
+  glri_blanks <- glri_fl[,c(1,glri_blank_cols)]
+  glpf_blanks <- glpf_fl[,c(1,glpf_blank_cols)]
+  
+  df_blanks <- left_join(mmsd_blanks,glri_blanks)
+  df_blanks <- left_join(df_blanks,glpf_blanks)
+  
+  
+  fl_MRL <- optMRL(df = df_blanks,Wavelength = "exem",blankGRnums = names(df_blanks)[-1])
+  
+  warnings()
   saveRDS(abs_MRLs, file = file.path("processed","out","abs_MRLs.rds"))
-  #saveRDS(fl_MRLs, file = file.path("processed","out","fl_MRLs.rds"))
-  
+  saveRDS(fl_MRLs, file = file.path("processed","out","fl_MRLs.rds"))
 }
 
 # 

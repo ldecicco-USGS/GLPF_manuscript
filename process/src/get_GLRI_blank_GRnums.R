@@ -32,6 +32,7 @@ get_GLRI_blank_GRnums <- function(){
   # df <- read.csv(file.path("raw","GLRI","GLRI_102714 data dump_vectorized_plus ABS vect Summary.csv"),stringsAsFactors = FALSE)
   df <- read_xlsx(file.path("raw","GLRI","GLRI_102714 data dump_vectorized_plus ABS vect.xlsx"),sheet = "qryCompDataQuery_KO")
   df <- df[-grep("mmsd",df$Project, ignore.case = TRUE),]
+  df <- df[-grep("phase",df$Project, ignore.case = TRUE),]
   df <- filter(df,!is.na(df$Tex275em340_result))
   
   sum(is.na(df$DOCResult)) #125 NA results for DOC are present when optical is reported
