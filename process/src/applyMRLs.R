@@ -41,16 +41,27 @@ apply_MRLs <- function() {
   abs_MRL_temp <- abs_MRL[which(abs_MRL$Wavelength %in% glpf_abs$Wavelength),]
   glpf_abs_MRL_adjusted <- optMRLAdjust(df = glpf_abs,dfMRLs = abs_MRL_temp,Wavelength = "Wavelength",sampleGRnums = glpf_grnums)
   
+  saveRDS(glri_abs_MRL_adjusted,file=file.path("process","out","glri_abs_MRL_adjusted.rds"))
+  saveRDS(mmsd_abs_MRL_adjusted, file=file.path("process","out","mmsd_abs_MRL_adjusted.rds"))
+  saveRDS(glpf_abs_MRL_adjusted, file=file.path("process","out","glpf_abs_MRL_adjusted.rds"))
+  
 
   # fl
   
 
   fl_MRL_temp <- fl_MRL[which(as.character(fl_MRL$Wavelength) %in% as.character(mmsd_fl$exem)),]
   mmsd_fl_MRL_adjusted <- optMRLAdjust(df = mmsd_fl,dfMRLs = fl_MRL_temp,Wavelength = "exem",sampleGRnums = mmsd_grnums)
-  glri_fl_MRL_adjusted <- optMRLAdjust(df = glri_fl,dfMRLs = fl_MRL,Wavelength = "exem",sampleGRnums = glri_grnums)
 
-  #!!!!!!!!!!!!!Need to trouble shoot this command!!!!!!!!!!!!!
+  
+  #This needs to be tested. Takes a long time to run. Try it overnight.
+    glri_fl_MRL_adjusted <- optMRLAdjust(df = glri_fl,dfMRLs = fl_MRL,Wavelength = "exem",sampleGRnums = glri_grnums)
+
+  #!!!!!!!!!!!!!Need to trouble shoot this command. Possibly wrong fl file with inconsistent wavelengths!!!!!!!!!!!!!
     glpf_fl_MRL_adjusted <- optMRLAdjust(df = glpf_fl,dfMRLs = fl_MRL_temp,Wavelength = "exem",sampleGRnums = glpf_grnums)
   
+    saveRDS(glri_fl_MRL_adjusted,file=file.path("process","out","glri_fl_MRL_adjusted.rds"))
+    saveRDS(mmsd_fl_MRL_adjusted, file=file.path("process","out","mmsd_fl_MRL_adjusted.rds"))
+    saveRDS(glpf_fl_MRL_adjusted, file=file.path("process","out","glpf_fl_MRL_adjusted.rds"))
+    
   
 }

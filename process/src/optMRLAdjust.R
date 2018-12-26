@@ -24,7 +24,8 @@ optMRLAdjust <- function(df,dfMRLs,Wavelength,sampleGRnums,multiplier=1.0) {
   dfRemarks <- data.frame(Wavelength = df[,Wavelength])
   for(colName in sampleGRnums){
     df2 <- cbind(df2,ifelse(df[,colName] < dfMRLs[,"MRL"],dfMRLs[,"MRL"]*multiplier,df[,colName]))
-    dfRemarks <- cbind(dfRemarks,ifelse(df[,colName] < dfMRLs[,"MRL"],paste("<",dfMRLs[,"MRL"]),df[,colName]))
+    mrl_col <- as.character(ifelse(df[,colName] < dfMRLs[,"MRL"],paste("<",dfMRLs[,"MRL"]),df[,colName]))
+    dfRemarks <- cbind(dfRemarks,mrl_col)
   }
   
   names(df2)[-1] <- sampleGRnums
