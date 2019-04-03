@@ -8,7 +8,6 @@ define_MRLs <- function() {
   
   # Use blank samples from all three spatial scales to define MRLs
   
-  
   # Read in raw data files from three spatial scales
   
   #MMSD
@@ -59,7 +58,7 @@ define_MRLs <- function() {
   
  
   abs_MRL <- optMRL(df = df_blanks,Wavelength = "Wavelength",blankGRnums = names(df_blanks)[-1])
-  plot(abs_MRL$MRL~abs_MRL$Wavelength)
+  #plot(abs_MRL$MRL~abs_MRL$Wavelength)
   
   ### Combine fl blanks
   # Combine abs blanks
@@ -79,28 +78,11 @@ define_MRLs <- function() {
   
   fl_MRL <- optMRL(df = df_blanks,Wavelength = "exem",blankGRnums = names(df_blanks)[-1])
   
-  warnings()
-  saveRDS(abs_MRLs, file = file.path("processed","out","abs_MRLs.rds"))
-  saveRDS(fl_MRLs, file = file.path("processed","out","fl_MRLs.rds"))
+  saveRDS(abs_MRL, file = file.path("process","out","abs_MRLs.rds"))
+  saveRDS(fl_MRL, file = file.path("process","out","fl_MRLs.rds"))
+  
+  save(mmsd_abs,mmsd_fl,file = file.path("process","out","mmsd_optical_Dec_2018_no_MRLs.RData"))
+  save(glri_abs,glri_fl,file = file.path("process","out","glri_optical_Dec_2018_no_MRLs.RData"))
+  save(glpf_abs,glpf_fl,file = file.path("process","out","glpf_optical_Dec_2018_no_MRLs.RData"))
 }
-
-# 
-# glpf_IN_glri <- glpf_GRnumbers$GRnumbers[glpf_GRnumbers$GRnumbers %in% glri_GRnumbers$GRnumbers]
-# 
-# mmsd_IN_glri <- mmsd_GRnumbers$GRnumbers[mmsd_GRnumbers$GRnumbers %in% glri_GRnumbers$GRnumbers]
-# glri_IN_mmsd <- glri_GRnumbers$GRnumbers[glri_GRnumbers$GRnumbers %in% mmsd_GRnumbers$GRnumbers]
-# 
-# glpf_GRnumbers$GRnumbers[glpf_GRnumbers$GRnumbers %in% mmsd_GRnumbers$GRnumbers]
-# 
-# 
-# 
-# #look into missing blank samples in abs file
-# missing <- which((glri_GRnumbers$GRnumbers %in% names(glri_abs))) #!!!! Not all blanks are in the abs 
-# 
-# 
-# 
-# test <- df_blanks[!(df_blanks$GRnumber %in% as.character(glri_GRnumbers[missing,])),]
-# 
-
-
 

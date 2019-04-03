@@ -27,12 +27,12 @@ comboHMPlusBasicOptical <- function(filename){
   # Extract human markers and make one dataframe with all three scales
   
   # GLPF data
-  glpfHM <- glpf[,c("CAGRnumber","State","pdate","hydroCondition","bacHum", "lachno","T","F","A","A254")]
+  glpfHM <- glpf[,c("CAGRnumber","State","USGSFieldID","pdate","hydroCondition","bacHum", "lachno","T","F","A","A254")]
   glpfHM$scale <- "small"
   
   #GLRI data
   #names(glri)[1:20]
-  glriHM <- glri[,c("GRnumber","Site","GMTStartTime","FinalHydrologicConditionDecision","BACHUM.cn.100mls", "Lachno.2.cn.100ml","T","F","A","A254")]
+  glriHM <- glri[,c("GRnumber","Site","sampleID","GMTStartTime","FinalHydrologicConditionDecision","BACHUM.cn.100mls", "Lachno.2.cn.100ml","T","F","A","A254")]
   glriHM$scale <- "watershed"
   
   #MMSD data
@@ -40,7 +40,7 @@ comboHMPlusBasicOptical <- function(filename){
   #Data file dfOptP3P4Combined.rds is the result of that munging and what we will
   #use as the "raw" data for the manuscript
   
-  mmsdHM <- mmsd[,c("GRnumber","abbrev","psdate","hydro_condition","bacHum","lachno2","T","F","A","A254")]
+  mmsdHM <- mmsd[,c("GRnumber","abbrev","abbrev","psdate","hydro_condition","bacHum","lachno2","T","F","A","A254")]
   mmsdHM$scale <- "subwatershed"
   
   # Consider all values < 225 as censored to make censored values consistent across studies
@@ -48,9 +48,9 @@ comboHMPlusBasicOptical <- function(filename){
   mmsdHM[which(mmsdHM$bacHum <= 225),"bacHum"] <- 225 
   mmsdHM[which(mmsdHM$lachno2 <= 225),"lachno2"] <- 225 
   
-  names(glpfHM) <- c("GRnumber","site","psdate","hydro_condition","bacHum","lachno2","T","F","A","A254","scale")
-  names(glriHM) <- c("GRnumber","site","psdate","hydro_condition","bacHum","lachno2","T","F","A","A254","scale")
-  names(mmsdHM) <- c("GRnumber","site","psdate","hydro_condition","bacHum","lachno2","T","F","A","A254","scale")
+  names(glpfHM) <- c("GRnumber","site","ID","psdate","hydro_condition","bacHum","lachno2","T","F","A","A254","scale")
+  names(glriHM) <- c("GRnumber","site","ID","psdate","hydro_condition","bacHum","lachno2","T","F","A","A254","scale")
+  names(mmsdHM) <- c("GRnumber","site","ID","psdate","hydro_condition","bacHum","lachno2","T","F","A","A254","scale")
   
   dfHM <- rbind(glpfHM,glriHM)
   dfHM <- rbind(dfHM,mmsdHM)               
