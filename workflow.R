@@ -1,3 +1,41 @@
+###
+#Outline of workflow for the three different spatial scales
+#
+#1. Data processing: 
+#  a. MRL determination for optical data
+#      -Question: can we determine a common MRL for all data sets or separate?
+#    i.   Locate blanks for each data set
+#    ii.  Compute MRLs
+#    iii. Apply MRLs to each raw data set
+#  b. Compute summary optical data parameters
+#    i.   Develop common set of parameters needed
+#    ii.  Use HydroOpt routines to compute 
+#    iii. Result: summary optical data sets
+#  c. Combine summary optical data sets with bacteria data
+#    i.   Use GR numbers form CA lab and FT numbers from UWM lab. These are 
+#         all joined already from previous data tasks
+#    ii.  Use optical parameters from the final GLPF data set to define
+#         optical parameters for all three spatial scales
+#
+#2. Data description
+#  a. Generate plot (figure 2) with concentration and occurrence of HB
+#    i. Done: script = Figure 2.R, Results.Rmd
+#  b. Determine numbers of samples and such for adding to text
+#    ii. Began this task: script = Results.Rmd
+#
+#3. Modeling
+#  a. Large watersheds
+#    i.   Begin with OLS modeling of common parameters
+#    ii.  Explore additional parameters for watersheds where that doesn't work
+#    iii. Develop summary table of models
+#  b. Subwatersheds
+#    i.  OLS modeling with common parameters: this works
+#    ii. Include in modeling table with Large watersheds
+#  c. Small 
+#
+
+
+
 ##########################################
 # Project Setup
 ##########################################
