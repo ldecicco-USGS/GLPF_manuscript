@@ -54,6 +54,8 @@ apply_MRLs <- function() {
 
   
   #This needs to be tested. Takes a long time to run. Try it overnight.
+  fl_MRL_temp <- fl_MRL[which(as.character(fl_MRL$Wavelength) %in% as.character(glri_fl$exem)),]
+  
     glri_fl_MRL_adjusted <- optMRLAdjust(df = glri_fl,dfMRLs = fl_MRL,Wavelength = "exem",sampleGRnums = glri_grnums)
 
   #!!!!!!!!!!!!!Need to trouble shoot this command. Possibly wrong fl file with inconsistent wavelengths!!!!!!!!!!!!!
