@@ -109,9 +109,9 @@ dir.create("cache", showWarnings = FALSE)
 # # 1. Set Minimum Reporting Levels (MRLs): 
 # #    A. Functions for identifying blanks
 # 
-# source(file = file.path("process","src","get_MMSD_blank_GRnums.R"))
-# source(file = file.path("process","src","get_GLRI_blank_GRnums.R"))
-# source(file = file.path("process","src","get_GLPF_blank_GRnums.R"))
+source(file = file.path("process","src","get_MMSD_blank_GRnums.R"))
+source(file = file.path("process","src","get_GLRI_blank_GRnums.R"))
+source(file = file.path("process","src","get_GLPF_blank_GRnums.R"))
 
 #    B. Functions for Defining MRLs with the collective set of blanks from all scales
 source(file = file.path("process","src","optMRL.R"))
@@ -119,7 +119,7 @@ source(file = file.path("process","src","optMRLAdjust.R"))
 source(file = file.path("process","src","defineMRLs.R"))
 
 #    C. Functions for adjusting raw data to include MRLs
-source(file = file.path("process","src","Apply_MRLs.R"))
+source(file = file.path("process","src","applyMRLs.R"))
 
 # Set MRLs
 #   Define blank samples
@@ -130,6 +130,8 @@ get_GLPF_blank_GRnums()
 #   Define MRLs
 define_MRLs()
 
+#   Apply MRLs
+apply_MRLs()
 
 # Start with EEMS and abs data + human marker data, and add in optical summary variables.
 # Use list of optical summary variables for GLPF consistently for data sets from all three scales.
