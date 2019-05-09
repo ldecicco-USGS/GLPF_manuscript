@@ -21,8 +21,6 @@ apply_MRLs <- function() {
   mmsd_grnums <- df_HB[which(df_HB$scale == scales[2]),"GRnumber"]
   glpf_grnums <- df_HB[which(df_HB$scale == scales[3]),"GRnumber"]
   
-  
-  
   # load MRLs
   abs_MRL <- readRDS(file.path("process","out","abs_MRLs.rds"))
   fl_MRL <- readRDS(file.path("process","out","fl_MRLs.rds"))
@@ -35,7 +33,9 @@ apply_MRLs <- function() {
   
   #MMSD
   abs_MRL_temp <- abs_MRL[which(abs_MRL$Wavelength %in% mmsd_abs$Wavelength),]
-  mmsd_abs_MRL_adjusted <- optMRLAdjust(df = mmsd_abs,dfMRLs = abs_MRL_temp,Wavelength = "Wavelength",sampleGRnums = mmsd_grnums)
+  mmsd_grnums_abs <- mmsd_grnums[mmsd_grnums %in% names(mmsd_abs)]
+  mmsd_grnums_abs <- mmsd_grnums_abs[mmsd_grnums_abs %in% names(mmsd_abs)]
+  mmsd_abs_MRL_adjusted <- optMRLAdjust(df = mmsd_abs,dfMRLs = abs_MRL_temp,Wavelength = "Wavelength",sampleGRnums = mmsd_grnums_abs)
   
   #GLPF
   abs_MRL_temp <- abs_MRL[which(abs_MRL$Wavelength %in% glpf_abs$Wavelength),]
@@ -47,23 +47,19 @@ apply_MRLs <- function() {
   
 
   # fl
-  
-
   fl_MRL_temp <- fl_MRL[which(as.character(fl_MRL$Wavelength) %in% as.character(mmsd_fl$exem)),]
+  mmsd_grnums <- mmsd_grnums[mmsd_grnums %in% names(mmsd_fl)]
   mmsd_fl_MRL_adjusted <- optMRLAdjust(df = mmsd_fl,dfMRLs = fl_MRL_temp,Wavelength = "exem",sampleGRnums = mmsd_grnums)
 
-  
-  #This needs to be tested. Takes a long time to run. Try it overnight.
   fl_MRL_temp <- fl_MRL[which(as.character(fl_MRL$Wavelength) %in% as.character(glri_fl$exem)),]
-  
-    glri_fl_MRL_adjusted <- optMRLAdjust(df = glri_fl,dfMRLs = fl_MRL,Wavelength = "exem",sampleGRnums = glri_grnums)
+  glri_fl_MRL_adjusted <- optMRLAdjust(df = glri_fl,dfMRLs = fl_MRL,Wavelength = "exem",sampleGRnums = glri_grnums)
 
   #!!!!!!!!!!!!!Need to trouble shoot this command. Possibly wrong fl file with inconsistent wavelengths!!!!!!!!!!!!!
-    glpf_fl_MRL_adjusted <- optMRLAdjust(df = glpf_fl,dfMRLs = fl_MRL_temp,Wavelength = "exem",sampleGRnums = glpf_grnums)
+  glpf_fl_MRL_adjusted <- optMRLAdjust(df = glpf_fl,dfMRLs = fl_MRL_temp,Wavelength = "exem",sampleGRnums = glpf_grnums)
   
-    saveRDS(glri_fl_MRL_adjusted,file=file.path("process","out","glri_fl_MRL_adjusted.rds"))
-    saveRDS(mmsd_fl_MRL_adjusted, file=file.path("process","out","mmsd_fl_MRL_adjusted.rds"))
-    saveRDS(glpf_fl_MRL_adjusted, file=file.path("process","out","glpf_fl_MRL_adjusted.rds"))
+  saveRDS(glri_fl_MRL_adjusted,file=file.path("process","out","glri_fl_MRL_adjusted.rds"))
+  saveRDS(mmsd_fl_MRL_adjusted, file=file.path("process","out","mmsd_fl_MRL_adjusted.rds"))
+  saveRDS(glpf_fl_MRL_adjusted, file=file.path("process","out","glpf_fl_MRL_adjusted.rds"))
     
   
 }
