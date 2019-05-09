@@ -12,7 +12,6 @@ apply_MRLs <- function() {
   names(glpf_abs)[1] <- "Wavelength"
   glpf_fl <- readRDS(file.path("raw","GLPF","optics","dffl_noQA.rds"))
   
-  
   # read bacteria and header data
   scales <- c("watershed","subwatershed","small")
   df_HB <- readRDS(file=file.path("process","out","combined_human_markers.rds"))
@@ -45,7 +44,6 @@ apply_MRLs <- function() {
   saveRDS(mmsd_abs_MRL_adjusted, file=file.path("process","out","mmsd_abs_MRL_adjusted.rds"))
   saveRDS(glpf_abs_MRL_adjusted, file=file.path("process","out","glpf_abs_MRL_adjusted.rds"))
   
-
   # fl
   fl_MRL_temp <- fl_MRL[which(as.character(fl_MRL$Wavelength) %in% as.character(mmsd_fl$exem)),]
   mmsd_grnums <- mmsd_grnums[mmsd_grnums %in% names(mmsd_fl)]
