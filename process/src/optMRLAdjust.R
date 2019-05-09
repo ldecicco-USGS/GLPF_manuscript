@@ -17,20 +17,17 @@
 #' @return 
 
 optMRLAdjust <- function(df,dfMRLs,Wavelength,sampleGRnums,multiplier=1.0) {  
-  #Generate data frame with adjusted values based on the MRL. Generate a second 
-  #dataframe with remark columns indicating values that are less than the MRL
-  df2 <- data.frame(Wavelength = df[,Wavelength],stringsAsFactors = FALSE)
-  names(df2) <- Wavelength
-  dfRemarks <- data.frame(Wavelength = df[,Wavelength])
-  for(colName in sampleGRnums){
-    df2 <- cbind(df2,ifelse(df[,colName] < dfMRLs[,"MRL"],dfMRLs[,"MRL"]*multiplier,df[,colName]))
-    mrl_col <- as.character(ifelse(df[,colName] < dfMRLs[,"MRL"],paste("<",dfMRLs[,"MRL"]),df[,colName]))
-    dfRemarks <- cbind(dfRemarks,mrl_col)
+
+  df2 <- df[,c(Wavelength,sampleGRnums)]
+  dfRemarks <- df[,c(Wavelength,sampleGRnums)]
+  
+  MRL <- dfMRLs[,"MRL"]
+  
+  for(i in 2:ncol(df2)){
+    df2[which(df2[i] < MRL), i] <- MRL[which(df2[i] < MRL)]*multiplier
+    dfRemarks[which(dfRemarks[i] < MRL), i] <- paste("<",MRL[which(dfRemarks[i] < MRL)])
   }
   
-  names(df2)[-1] <- sampleGRnums
-  names(dfRemarks)[-1] <- sampleGRnums
-  
-  return(list(df2,dfRemarks))
+  return(list(df2=df2,dfRemarks=dfRemarks))
 }
 
