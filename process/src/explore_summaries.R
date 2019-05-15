@@ -182,18 +182,11 @@ combine_values <- function(glri, mmsd, glpf, wavelength = "exem"){
 
 abs_peaks <- function(abs_signals_all, abs_sum){
 
-  abs_peaks_long <- data.frame()
+  abs_signals_all <- rename(abs_signals_all, Wavelength=abs_wav)
+
+  abs_peaks_long <- abs_signals_all %>%
+    left_join(abs_sum, by = c("Wavelength","study"))
   
-  for(i in 1:nrow(abs_signals_all)){
-    
-    stuff = abs_sum %>%
-      filter(study == abs_signals_all$study[i], 
-             Wavelength >= abs_signals_all$abs_wav[i]-1 &
-               Wavelength <= abs_signals_all$abs_wav[i]+1)
-    
-    abs_peaks_long <- bind_rows(abs_peaks_long, stuff)
-    
-  }
   return(abs_peaks_long)
   
 }
