@@ -8,7 +8,6 @@ abs_signals <- function(){
   
 }
 
-
 fl_signals <- function(){
   
   fl_signals <- data.table::fread(file.path("raw","Optical summary definitions","ex_ems_means.csv"), na.strings = "")

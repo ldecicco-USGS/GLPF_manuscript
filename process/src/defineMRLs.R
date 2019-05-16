@@ -13,8 +13,8 @@ define_MRLs <- function() {
   
   #MMSD
   load(file.path("raw","MMSD","PhaseIV","MMSDOpticalData.RData"))
-  mmsd_fl <- dffl
-  mmsd_abs <- dfabs
+  mmsd_fl <- data.frame(dffl)
+  mmsd_abs <- data.frame(dfabs)
   names(mmsd_abs)[1] <- "Wavelength"
   row.names(mmsd_abs) <- mmsd_abs$Wavelength
   names(mmsd_fl) <- substr(names(mmsd_fl),1,7)
