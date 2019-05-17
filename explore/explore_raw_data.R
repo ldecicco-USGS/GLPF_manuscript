@@ -4,7 +4,7 @@ library(dplyr)
 library(tidyr)
 library(sf)
 
-source(file.path("process","src","explore_summaries.R"))
+source(file.path("explore","src","explore_summaries.R"))
 
 load(file = file.path("process","out","glri_optical_Dec_2018_no_MRLs.RData"))
 load(file = file.path("process","out","mmsd_optical_Dec_2018_no_MRLs.RData"))
@@ -17,6 +17,8 @@ glri_GRnumbers <- readRDS(file.path("process","out","GLRI_blank_GRnumbers.rds"))
 glri_GRnumbers$GRnumbers <- as.character(glri_GRnumbers$GRnumbers)
 glpf_GRnumbers <- readRDS(file.path("process","out","GLPF_blank_GRnumbers.rds"))
 glpf_GRnumbers$GRnumbers <- as.character(glpf_GRnumbers$GRnumbers)
+
+glri_GRnumbers <- filter(glri_GRnumbers, GRnumbers != "gr13755")
 
 mmsd_blank_cols <- which(names(mmsd_fl) %in% mmsd_GRnumbers$GRnumbers)
 glri_blank_cols <- which(names(glri_fl) %in% glri_GRnumbers$GRnumbers)
