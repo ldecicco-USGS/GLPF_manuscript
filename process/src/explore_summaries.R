@@ -17,6 +17,8 @@ fl_signals <- function(){
                               mutate(fl_signals, study="GLRI"),
                               mutate(fl_signals_glpf, study="GLPF"))
   
+  fl_signals_all$Em2[which(fl_signals_all$Em1 == fl_signals_all$Em2)] <- NA
+  
   return(fl_signals_all)
 }
 
@@ -39,7 +41,7 @@ em_peaks <- function(fl_signals_all, fl_sum){
     study_coords <- data.frame()
     for(j in 1:nrow(signals)){
       point_j <- sf::st_point(as.matrix(signals[j,c("x","y")]))
-      nearest_1 <- st_nearest_points(point_j, vals_geo)
+      nearest_1 <- sf::st_nearest_points(point_j, vals_geo)
       
       binder <- data.frame(sf::st_coordinates(sf::st_cast(nearest_1, "POINT")[2]))
       binder <- bind_cols(binder, signals[j,!(names(signals) %in% c("x","y"))])
@@ -190,4 +192,54 @@ abs_peaks <- function(abs_signals_all, abs_sum){
   
 }
 
+print_fl_pages <- function(filename, fl_df, 
+                           wavelength = "exem",
+                           color_lim = c(-0.2,0.2),
+                           npages = NA,
+                           filter_min = NA,
+                           filter_max = NA){
+  
+  fl_long <- long_df(fl_df, study = "") %>%
+    select(-study)
+  
+  if(!is.na(filter_max) & !is.na(filter_min)){
+    fl_long <- filter(fl_long, value > filter_min & value < filter_max)
+  }
+  
+  if(is.na(npages)){
+    npages <- ceiling(length(unique(fl_long$sample))/9)
+  }
+  
+  pdf(filename)
+  for(i in 1:npages){
+    print(
+      ggplot(fl_long) +
+        geom_point(aes(x = x, y = y, color = value)) +
+        theme_bw() +
+        scale_colour_gradient2(limits = color_lim) +
+        ggforce::facet_wrap_paginate(~ sample, ncol = 3, nrow = 3, page = i)
+    )
+  }
+  dev.off()
+  
+}
 
+
+long_df <- function(df, study, wavelength = "exem"){
+  
+  df_long <- split_exem(df, wavelength = wavelength) %>%
+    gather("sample","value",-x,-y) %>%
+    filter(!is.na(value)) %>%
+    mutate(study = !!study)
+  
+  return(df_long)
+}
+
+split_exem <- function(df, wavelength = "exem"){
+  
+  df_split <- df %>%
+    tidyr::separate(!!wavelength, into = c("x","y"),sep = "/") %>%
+    mutate(x = as.numeric(x),
+           y = as.numeric(y))
+  return(df_split)
+}
