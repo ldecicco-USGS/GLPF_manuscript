@@ -8,7 +8,7 @@ names(study_colors) <- c("GLPF","GLRI","MMSD")
 dfAbs$plotcolors <- study_colors[dfAbs$study]
 
 plot(dfAbs$Wavelength,dfAbs$mean_freq,col=dfAbs$plotcolors,pch=20)
-
+legend("topright",legend = names(study_colors),col = study_colors,pch=20)
 
 
 dfFl <- read.csv(file.path("process","out","summary_fl.csv"))
