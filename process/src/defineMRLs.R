@@ -1,6 +1,7 @@
 #defineMRLs.R
 
 library(dplyr)
+library(tidyr)
 library(USGSHydroOpt)
 library(readxl)
 
@@ -53,12 +54,12 @@ define_MRLs <- function() {
   glri_blanks <- glri_abs[,c(1,glri_blank_cols)]
   glpf_blanks <- glpf_abs[,c(1,glpf_blank_cols)]
   
-  df_blanks <- left_join(mmsd_blanks,glri_blanks)
-  df_blanks <- left_join(df_blanks,glpf_blanks)
-  
- 
+  df_blanks <- left_join(mmsd_blanks,glri_blanks, by="Wavelength")
+  # Note, all glpf wavelengths are in the glri/mmsd (but some are missing)
+  df_blanks <- left_join(df_blanks,glpf_blanks, by="Wavelength")
+
   abs_MRL <- optMRL(df = df_blanks,Wavelength = "Wavelength",blankGRnums = names(df_blanks)[-1])
-  #plot(abs_MRL$MRL~abs_MRL$Wavelength)
+
   
   ### Combine fl blanks
   # Combine abs blanks
@@ -72,12 +73,12 @@ define_MRLs <- function() {
   glri_blanks <- glri_fl[,c(1,glri_blank_cols)]
   glpf_blanks <- glpf_fl[,c(1,glpf_blank_cols)]
   
-  df_blanks <- left_join(mmsd_blanks,glri_blanks)
-  df_blanks <- left_join(df_blanks,glpf_blanks)
   
+  df_blanks <- left_join(mmsd_blanks,glri_blanks, by="exem")
+  df_blanks <- full_join(df_blanks,glpf_blanks, by="exem")
   
   fl_MRL <- optMRL(df = df_blanks,Wavelength = "exem",blankGRnums = names(df_blanks)[-1])
-  
+
   saveRDS(abs_MRL, file = file.path("process","out","abs_MRLs.rds"))
   saveRDS(fl_MRL, file = file.path("process","out","fl_MRLs.rds"))
   

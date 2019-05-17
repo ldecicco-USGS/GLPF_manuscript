@@ -6,10 +6,6 @@ library(dplyr)
 
 get_GLPF_blank_GRnums <- function(){
   
-  
-  
- 
-  
   #Use GLPF summary file for defining blanks
   df <- readRDS(file.path("raw","GLPF","summary_QA.rds"))
   

@@ -2,11 +2,16 @@
 title: "Results"
 author: "Steven R. Corsi, Laura A. De Cicco and others"
 date: "November 30, 2018"
-output: html_document
+output: word_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+knitr::opts_knit$set(root.dir = '../../') 
 ```
 
 
@@ -14,7 +19,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r,echo=FALSE}
 library(dplyr)
-dfHM <- readRDS("../../process/out/combined_human_markers.rds")
+library(ggplot2)
+library(scales)
+library(cowplot)
+
+dfHM <- readRDS("process/out/combined_human_markers.rds")
 occur <- function(x) mean(x>225)
 dfHM_summary <- dfHM %>% 
   group_by(scale) %>%
@@ -30,8 +39,10 @@ Throughout the study, `r sum(dfHM_summary$n)` samples were collected, including 
 
 
 ```{r figure_2, fig.width=5,fig.height=5, fig.cap = "Figure 2. The sum of human indicator bacteria markers A. concentrations and b. Occurrence proportion in samples from small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). For each scale, sites are ordered by most to least urban land use percentage from left to right.", echo=FALSE}
-#source(file = #file.path("plots","out","Figure_2_bar_box.png"))
-#fig_2 <- plot_fig_2()
+
+source(file = "plots/src/Figure_2.R")
+
+fig_2 <- plot_fig_2()
 print(fig_2)
 
 ```

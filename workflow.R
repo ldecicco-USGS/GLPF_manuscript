@@ -1,3 +1,41 @@
+###
+#Outline of workflow for the three different spatial scales
+#
+#1. Data processing: 
+#  a. MRL determination for optical data
+#      -Question: can we determine a common MRL for all data sets or separate?
+#    i.   Locate blanks for each data set
+#    ii.  Compute MRLs
+#    iii. Apply MRLs to each raw data set
+#  b. Compute summary optical data parameters
+#    i.   Develop common set of parameters needed
+#    ii.  Use HydroOpt routines to compute 
+#    iii. Result: summary optical data sets
+#  c. Combine summary optical data sets with bacteria data
+#    i.   Use GR numbers form CA lab and FT numbers from UWM lab. These are 
+#         all joined already from previous data tasks
+#    ii.  Use optical parameters from the final GLPF data set to define
+#         optical parameters for all three spatial scales
+#
+#2. Data description
+#  a. Generate plot (figure 2) with concentration and occurrence of HB
+#    i. Done: script = Figure 2.R, Results.Rmd
+#  b. Determine numbers of samples and such for adding to text
+#    ii. Began this task: script = Results.Rmd
+#
+#3. Modeling
+#  a. Large watersheds
+#    i.   Begin with OLS modeling of common parameters
+#    ii.  Explore additional parameters for watersheds where that doesn't work
+#    iii. Develop summary table of models
+#  b. Subwatersheds
+#    i.  OLS modeling with common parameters: this works
+#    ii. Include in modeling table with Large watersheds
+#  c. Small 
+#
+
+
+
 ##########################################
 # Project Setup
 ##########################################
@@ -71,9 +109,9 @@ dir.create("cache", showWarnings = FALSE)
 # # 1. Set Minimum Reporting Levels (MRLs): 
 # #    A. Functions for identifying blanks
 # 
-# source(file = file.path("process","src","get_MMSD_blank_GRnums.R"))
-# source(file = file.path("process","src","get_GLRI_blank_GRnums.R"))
-# source(file = file.path("process","src","get_GLPF_blank_GRnums.R"))
+source(file = file.path("process","src","get_MMSD_blank_GRnums.R"))
+source(file = file.path("process","src","get_GLRI_blank_GRnums.R"))
+source(file = file.path("process","src","get_GLPF_blank_GRnums.R"))
 
 #    B. Functions for Defining MRLs with the collective set of blanks from all scales
 source(file = file.path("process","src","optMRL.R"))
@@ -81,7 +119,7 @@ source(file = file.path("process","src","optMRLAdjust.R"))
 source(file = file.path("process","src","defineMRLs.R"))
 
 #    C. Functions for adjusting raw data to include MRLs
-source(file = file.path("process","src","Apply_MRLs.R"))
+source(file = file.path("process","src","applyMRLs.R"))
 
 # Set MRLs
 #   Define blank samples
@@ -92,6 +130,8 @@ get_GLPF_blank_GRnums()
 #   Define MRLs
 define_MRLs()
 
+#   Apply MRLs
+apply_MRLs()
 
 # Start with EEMS and abs data + human marker data, and add in optical summary variables.
 # Use list of optical summary variables for GLPF consistently for data sets from all three scales.
