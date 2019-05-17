@@ -3,7 +3,7 @@ library(tidyr)
 library(ggplot2)
 library(sf)
 
-source(file.path("process","src","explore_summaries.R"))
+source(file.path("explore","src","explore_summaries.R"))
 
 # Fluorescence:
 fl_signals_all <- fl_signals()
