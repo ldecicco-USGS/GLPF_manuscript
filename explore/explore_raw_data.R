@@ -83,7 +83,7 @@ ggplot(summary_raw_signals) +
 
 ####################
 # Abs:
-source(file.path("process","src","explore_summaries.R"))
+source(file.path("explore","src","explore_summaries.R"))
 abs_signals_all <- abs_signals()
 
 load(file = file.path("process","out","glri_optical_Dec_2018_no_MRLs.RData"))
