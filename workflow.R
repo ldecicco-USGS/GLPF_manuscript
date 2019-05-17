@@ -126,7 +126,7 @@ comboHMPlusBasicOptical(filename = "combined_human_markers.rds") #File OUT name
 
 #Retrieve Turbidity data from NWIS for GLRI
 source(file=file.path("process","src","get_GLRI_turbidity_data.R"))
-get_GLRI_turbidity_data()
+#get_GLRI_turbidity_data() #Only run this once. It is a slow process.
 
 #Populate the GLRI data set with turbidity parameters for each sampling period
 source(file=file.path("process","src","PopulateTurbidity.R"))
