@@ -1,7 +1,7 @@
 # Plot frequencies
 library(ggplot2)
 
-dfAbs <- read.csv(file.path("process","out","summary_abs.csv"))
+dfAbs <- read.csv(file.path("explore","out","summary_abs.csv"))
 
 study_colors <- c("blue","forestgreen","red")
 names(study_colors) <- c("GLPF","GLRI","MMSD")
@@ -11,12 +11,12 @@ plot(dfAbs$Wavelength,dfAbs$mean_freq,col=dfAbs$plotcolors,pch=20)
 legend("topright",legend = names(study_colors),col = study_colors,pch=20)
 
 
-dfFl <- read.csv(file.path("process","out","summary_fl.csv"))
+dfFl <- read.csv(file.path("explore","out","summary_fl.csv"))
 
 dfFl$plotcolors <- study_colors[dfFl$study]
-dfFl$Peak <- factor(dfFl$Peak,levels = dfFl$Peak)
+#dfFl$Peak <- factor(dfFl$Peak,levels = dfFl$Peak)
 
-boxplot(dfFl$mean_freq~dfFl$Peak | df$study,col=dfFl$plotcolors,pch=20,las=2)
+#boxplot(dfFl$mean_freq~dfFl$Peak | dfFl$study,col=dfFl$plotcolors,pch=20,las=2)
 
 ggplot(dfFl, aes(x = dfFl$study,y=dfFl$mean_freq),xlab = "Study") +
   geom_point() +
