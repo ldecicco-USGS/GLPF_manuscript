@@ -99,6 +99,7 @@ glri_GRnumbers <- readRDS(file.path("process","out","GLRI_blank_GRnumbers.rds"))
 glri_GRnumbers$GRnumbers <- as.character(glri_GRnumbers$GRnumbers)
 glpf_GRnumbers <- readRDS(file.path("process","out","GLPF_blank_GRnumbers.rds"))
 glpf_GRnumbers$GRnumbers <- as.character(glpf_GRnumbers$GRnumbers)
+glri_GRnumbers <- filter(glri_GRnumbers, GRnumbers != "gr13755")
 
 mmsd_blank_cols <- which(names(mmsd_abs) %in% mmsd_GRnumbers$GRnumbers)
 glri_blank_cols <- which(names(glri_abs) %in% glri_GRnumbers$GRnumbers)
