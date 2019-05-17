@@ -7,8 +7,12 @@
 #    i.   Locate blanks for each data set
 #    ii.  Compute MRLs
 #    iii. Apply MRLs to each raw data set
+#   
 #  b. Compute summary optical data parameters
 #    i.   Develop common set of parameters needed
+#       - determine frequency of censored values for each parameter for each data set
+#       - decide which parameters to keep 
+#       - modify Optical summary definitions
 #    ii.  Use HydroOpt routines to compute 
 #    iii. Result: summary optical data sets
 #  c. Combine summary optical data sets with bacteria data
@@ -72,34 +76,10 @@ dir.create("cache", showWarnings = FALSE)
 # Fetch
 ##########################################
 
-# This is an example of how to fetch the raw data.
-# I would start from these lines in each of the sourced
-# scripts further down:
-
-# ## GLPF:
-# glpf <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
-#
-# ## GLRI:
-# load(file = file.path("raw","GLRI","FINAL8GLRIVirusSFSDec152015.RData"))
-# load(file = file.path("raw","GLRI","GLRIdfOptSummary2016-03-03.RData"))
-#
-# ## MMSD:
-# 
-# 
 
 ##########################################
 # Process
 ##########################################
-# Source any functions:
-# Anything here would take the data from the "raw"
-# folder, and convert it to something more useful. 
-# Ideally, when this step is done, we'd have stuff populated
-# in a folder "process/out".
-# I would also say once this step is done, it can be commented
-# out. Collaborators would need to un-comment these lines
-# once. 
-#
-# source(file = file.path("process","src","functions.R"))
 
 #Combine MMSD P3 and P4 vectorized abs and fl data
 # source(file = file.path("process","src","merge_fl_abs_mmsd_p3_p4_vectorized.R"))
@@ -140,10 +120,8 @@ apply_MRLs()
 # Begin with previously merged data set, strip out the current optical summary variables
 # and add in all of the ones selected for GLPF
 
-
-
 source(file=file.path("process","src","GenerateComboHMPlusBasicOptical.R"))
-comboHMPlusBasicOptical("combined_human_markers.rds")
+comboHMPlusBasicOptical(filename = "combined_human_markers.rds") #File OUT name
 
 ##########################################
 # Model
