@@ -42,12 +42,12 @@ response <- "logLachno"
 # df$season <- ifelse(as.POSIXlt(df$psdate)$mon == 11,1,df$season)
 
 sites <- c("JI", "EE", "OC", "PO", "MA", "CL", "RO", "RM")
+sites <- c("JI")
 sites <- c("EE", "OC")
-sites <- c("PO", "MA", "CL", "RO", "RM")
+sites <- c("PO", "MA", "CL", "RO", "RM","JI")
 sites <- c("CL", "RO")
 sites <- c("CL", "RO","JI")
 sites <- c("PO", "MA", "RM")
-sites <- c("JI")
 
 
 
