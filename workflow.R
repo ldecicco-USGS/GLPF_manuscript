@@ -54,11 +54,11 @@ library(ggplot2)
 library(gridExtra)
 library(cowplot)
 library(rmarkdown)
-library(bookdown)
 library(servr)
 library(USGSHydroOpt)
 library(RColorBrewer)
 library(scales)
+library(USGSHydrotools)
 
 dir.create("process", showWarnings = FALSE)
 dir.create(file.path("process","out"), showWarnings = FALSE)
@@ -85,6 +85,11 @@ dir.create("cache", showWarnings = FALSE)
 # source(file = file.path("process","src","merge_fl_abs_mmsd_p3_p4_vectorized.R"))
 # 
 # 
+#Generate a combined dataframe that has human markers and a few basic optical signals
+#for all three spatial scales
+source(file=file.path("process","src","GenerateComboHMPlusBasicOptical.R"))
+comboHMPlusBasicOptical(filename = "combined_human_markers.rds") #File OUT name
+
 # # QA functions 
 # # 1. Set Minimum Reporting Levels (MRLs): 
 # #    A. Functions for identifying blanks
@@ -119,10 +124,6 @@ apply_MRLs()
 # GLPF: Add summary variables
 # Begin with previously merged data set, strip out the current optical summary variables
 # and add in all of the ones selected for GLPF
-
-source(file=file.path("process","src","GenerateComboHMPlusBasicOptical.R"))
-comboHMPlusBasicOptical(filename = "combined_human_markers.rds") #File OUT name
-
 
 #Retrieve Turbidity data from NWIS for GLRI
 source(file=file.path("process","src","get_GLRI_turbidity_data.R"))
