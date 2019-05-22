@@ -58,7 +58,7 @@ library(servr)
 library(USGSHydroOpt)
 library(RColorBrewer)
 library(scales)
-library(USGSHydrotools)
+library(USGSHydroTools)
 
 dir.create("process", showWarnings = FALSE)
 dir.create(file.path("process","out"), showWarnings = FALSE)
@@ -132,6 +132,15 @@ source(file=file.path("process","src","get_GLRI_turbidity_data.R"))
 #Populate the GLRI data set with turbidity parameters for each sampling period
 source(file=file.path("process","src","PopulateTurbidity.R"))
 PopulateTurbidity()
+
+# Remove optical variables from initial summary files so we can add consistent
+# variables for all three scales.
+
+source(file.path("process", "src","remove_old_optical_signals.R"))
+remove_old_optical_signals()
+
+#Add summary variables
+
 
 
 ##########################################
