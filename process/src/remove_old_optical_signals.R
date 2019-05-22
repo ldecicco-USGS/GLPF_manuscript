@@ -25,6 +25,9 @@ remove_old_optical_signals <- function() {
   mmsd_GRnumbers <- readRDS(file.path("process","out","MMSD_PhaseIV_blank_GRnumbers.rds"))
   df_mmsd <- dplyr::filter(df_mmsd, !(GRnumber %in% mmsd_GRnumbers$GRnumbers))
   
+  mmsd_abs <- readRDS(file.path("process","out","mmsd_abs_MRL_adjusted.rds"))
+  mmsd_abs <- mmsd_abs$df2
+  df_mmsd <- dplyr::filter(df_mmsd, GRnumber %in% names(mmsd_abs)[-1])
   # GLPF
   glpf <- readRDS(file.path("process","out","glpf_fl_MRL_adjusted.rds"))
   glpf_fl <- glpf$df2

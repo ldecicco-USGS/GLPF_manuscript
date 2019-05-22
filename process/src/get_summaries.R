@@ -5,6 +5,7 @@ library(readxl)
 source(file.path("process","src","run_suite.R"))
 
 get_summaries <- function(){
+  
   glri <- readRDS(file.path("process","out","glri_fl_MRL_adjusted.rds"))
   mmsd <- readRDS(file.path("process","out","mmsd_fl_MRL_adjusted.rds"))
   glpf <- readRDS(file.path("process","out","glpf_fl_MRL_adjusted.rds"))
@@ -45,7 +46,3 @@ get_summaries <- function(){
 
 }
   
-# rm(list = ls())
-# glri_sum <- readRDS(file.path("process","out","glri_summary.rds"))
-# glpf_sum <- readRDS(file.path("process","out","glpf_summary.rds"))
-# mmsd_sum <- readRDS(file.path("process","out","mmsd_iv_summary.rds"))                  

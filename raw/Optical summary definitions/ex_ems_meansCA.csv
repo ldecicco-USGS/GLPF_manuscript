@@ -1,0 +1,39 @@
+Peak,Ex1,Ex2,Em1,Em2,Source
+OB1,360,,410,598,Hartel Turner
+OB2,360,,436,436,Hartel Turner
+OB3,365,,400,550,Hagedorn Turner
+S1.50,310,,402,502,Sniffer
+S2.50,280,,402,502,Sniffer
+S3.50,280,,310,390,Sniffer
+S1.25,310,,427,477,Sniffer
+S2.25,280,,427,477,Sniffer
+S3.25,280,,330,370,Sniffer
+Mrange.25,300,,365,415,test
+Mrange.50,300,,340,440,test
+TB,275,,322,,Heuristic
+T,275,,340,,CA
+M,300,,390,,CA
+A,260,,450,,CA
+C,340,,440,,CA
+N,280,,370,,CA
+N2,280,,420,,Heuristic
+D,390,,510,,CA
+F,370,,460,,CA
+J,420,,460,,CA
+S1,310,,452,,SniffSingle
+S2,280,,452,,SniffSingle
+S3,280,,350,,SniffSingle
+H1,250,,460,,Ohno2002
+H2,250,,320,,Ohno2002
+F1,370,,470,,"Cory and McKnight, 2005"
+F2,370,,520,,"Cory and McKnight, 2005"
+W,255,291,304,350,Wastewater range
+LA,240,,440,,
+S41,370,,391,437,WETLabs - below peak F
+S42,310,,362,396,WETLabs-near peak M
+S43,310,,335,375,WETLabs - below and to the right of peak M
+S44,280,,362,396,WETLabs - peak N
+S45,282,,300,546,WETLabs - full EM spectra average at Ex280
+S1.WS,300,320,430,474,WETLabs CA sniffer
+S2.WS,273,287,430,474,WETLabs CA sniffer
+S3.WS,273,287,330,370,WETLabs CA sniffer

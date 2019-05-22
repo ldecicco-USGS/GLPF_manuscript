@@ -4,7 +4,10 @@
 .Ruserdata
 *.Rproj
 probably_junk
-raw/*
+raw/GLPF/*
+raw/GLRI/*
+raw/MMSD/*
+raw/Optical summary definitions - Original/*
 process/out/*
 plots/out/*
 model/out/*
