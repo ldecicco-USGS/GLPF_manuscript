@@ -41,7 +41,7 @@ ggplot() +
   theme_bw() + 
   scale_color_gradient(
     trans = "log",
-    low = "blue", high = "red")
+    low = "blue", high = "white")
 
 all_signals <- bind_rows(peaks, lines, boxes) 
 

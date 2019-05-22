@@ -1,0 +1,51 @@
+library(USGSHydroOpt)
+library(tidyverse)
+library(readxl)
+
+source(file.path("process","src","run_suite.R"))
+
+get_summaries <- function(){
+  glri <- readRDS(file.path("process","out","glri_fl_MRL_adjusted.rds"))
+  mmsd <- readRDS(file.path("process","out","mmsd_fl_MRL_adjusted.rds"))
+  glpf <- readRDS(file.path("process","out","glpf_fl_MRL_adjusted.rds"))
+  
+  glri_fl <- glri$df2
+  mmsd_fl <- mmsd$df2
+  glpf_fl <- glpf$df2
+  
+  rm(glpf, glri, mmsd)
+  
+  glri_abs <- readRDS(file.path("process","out","glri_abs_MRL_adjusted.rds"))
+  mmsd_abs <- readRDS(file.path("process","out","mmsd_abs_MRL_adjusted.rds"))
+  glpf_abs <- readRDS(file.path("process","out","glpf_abs_MRL_adjusted.rds"))
+  
+  glri_abs <- glri_abs$df2
+  mmsd_abs <- mmsd_abs$df2
+  glpf_abs <- glpf_abs$df2
+  
+  # GLRI Summary:
+  df_glri <- readRDS(file.path("process","out","glri_summary_input.rds"))
+
+  # GLPF Summary:
+  df_glpf <- readRDS(file.path("process","out","glpf_summary_input.rds"))
+  
+  # MMSD Summary:
+  df_mmsd <- readRDS(file.path("process","out","mmsd_summary_input.rds"))
+  
+  dir.create(file.path("process","out"),showWarnings = FALSE)  
+  
+  glri_sum <- run_suite(df_glri, glri_fl, glri_abs)
+  saveRDS(glri_sum, file = file.path("process","out","glri_summary.rds"))
+  
+  glpf_sum <- run_suite(df_glpf, glpf_fl, glpf_abs)
+  saveRDS(glpf_sum, file = file.path("process","out","glpf_summary.rds"))
+  
+  mmsd_sum <- run_suite(df_mmsd, mmsd_fl, mmsd_abs)
+  saveRDS(mmsd_sum, file = file.path("process","out","mmsd_summary.rds"))
+
+}
+  
+# rm(list = ls())
+# glri_sum <- readRDS(file.path("process","out","glri_summary.rds"))
+# glpf_sum <- readRDS(file.path("process","out","glpf_summary.rds"))
+# mmsd_sum <- readRDS(file.path("process","out","mmsd_iv_summary.rds"))                  

@@ -20,6 +20,9 @@ remove_old_optical_signals <- function() {
   
   
   # GLPF
+  glpf <- readRDS(file.path("process","out","glpf_fl_MRL_adjusted.rds"))
+  glpf_fl <- glpf$df2
+  
   df_glpf <- readRDS(file.path("raw","GLPF","summary_noQA.rds"))
   df_glpf <- df_glpf[,1:(which(names(df_glpf) == "OB1")-1)]
   df_glpf <- df_glpf %>% 

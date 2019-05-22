@@ -140,7 +140,8 @@ source(file.path("process", "src","remove_old_optical_signals.R"))
 remove_old_optical_signals()
 
 #Add summary variables
-
+source(file.path("process", "src","get_summaries.R"))
+get_summaries()
 
 
 ##########################################
