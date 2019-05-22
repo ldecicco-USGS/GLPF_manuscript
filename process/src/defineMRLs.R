@@ -34,7 +34,6 @@ define_MRLs <- function() {
   names(glpf_abs)[1] <- "Wavelength"
   row.names(glpf_abs) <- glpf_abs$Wavelength
 
-  
   # read GR numbers for each data set
   mmsd_GRnumbers <- readRDS(file.path("process","out","MMSD_PhaseIV_blank_GRnumbers.rds"))
   mmsd_GRnumbers$GRnumbers <- as.character(mmsd_GRnumbers$GRnumbers)
@@ -43,7 +42,7 @@ define_MRLs <- function() {
   glpf_GRnumbers <- readRDS(file.path("process","out","GLPF_blank_GRnumbers.rds"))
   glpf_GRnumbers$GRnumbers <- as.character(glpf_GRnumbers$GRnumbers)
   
-  glri_GRnumbers <- filter(glri_GRnumbers, GRnumbers != "gr13755")
+  glri_GRnumbers <- dplyr::filter(glri_GRnumbers, GRnumbers != "gr13755")
   
   # Combine abs blanks
   
