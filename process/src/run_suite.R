@@ -29,6 +29,10 @@ run_suite <- function(df_summary, df_fl, df_abs, glpf=FALSE){
   
   ratioOrder <- readRDS(file.path(SummaryDir,"RatioOrder.rds"))
   
+  ratioOrder <- dplyr::filter(ratioOrder, 
+                              !(var1 %in% c("A412")),
+                              !(var2 %in% c("A440","A412","B")))
+  
   x <- getMeanFl(a=EEMs,
                  signals=dfFlSignals,
                  Peak="Peak",Ex1="Ex1",Ex2="Ex2",
