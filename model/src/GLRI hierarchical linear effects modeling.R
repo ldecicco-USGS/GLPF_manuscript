@@ -15,7 +15,8 @@ library(car)
 # summary.save <- "1_SummaryVariables"
 # cached.save <- "0_munge"
 
-df_GLRI <- readRDS(file.path("process","out","GLRISummaryWithTurbidity.rds"))
+#df_GLRI <- readRDS(file.path("process","out","GLRISummaryWithTurbidity.rds"))
+df_GLRI <- readRDS(file.path("process","out","glri_summary.rds"))
 df <- df_GLRI
 
 df <- df[!is.na(df$Lachno.2.cn.100ml),]
@@ -45,6 +46,7 @@ sites <- c("JI", "EE", "OC", "PO", "MA", "CL", "RO", "RM")
 sites <- c("JI")
 sites <- c("EE", "OC")
 sites <- c("PO", "MA", "CL", "RO", "RM","JI")
+sites <- c("PO", "MA", "CL", "RO", "RM")
 sites <- c("CL", "RO")
 sites <- c("CL", "RO","JI")
 sites <- c("PO", "MA", "RM")
@@ -96,7 +98,7 @@ plot(dfModel[selectedRows,response],fitted(m),
      xlab="Observed",ylab="Predicted",col=plotColors,pch=20,log=axis.log,ylim=axis.limits,xlim=axis.limits)
 abline(0,1)
 #mtext(paste(Active.Coef.names[2:length(Active.Coef.names)],collapse=", "),side=3,line=1,cex=0.8)
-mtext(paste("Linear mixed effects moedel for MMSD subwatersheds",response),side=3,line=2,font=2,cex=1)
+mtext(paste("Linear mixed effects moedel for GLRI watersheds",response),side=3,line=2,font=2,cex=1)
 legend(x="topleft",legend=names(colorOptions),col=colorOptions,pch=20,text.col=colorOptions,cex=0.7)
 
 summary(m)
