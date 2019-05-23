@@ -24,6 +24,26 @@ get_summaries <- function(){
   mmsd_abs <- mmsd_abs$df2
   glpf_abs <- glpf_abs$df2
   
+  load(file.path("raw","MMSD","PhaseIII","MMSDabsEEMs.RData"))
+  rm(MMSD3DEEMs)
+  
+  phaseIII <- names(dfabs)[-1][!(names(dfabs)[-1] %in% names(mmsd_abs)[-1])]
+  phaseIII <- phaseIII[phaseIII != "X"]
+  
+  phaseIV <- names(mmsd_abs)[-1][!(names(mmsd_abs)[-1] %in% names(dfabs)[-1])]
+  
+  dfabs <- dfabs[,c("Wavelength", phaseIII)]
+  dfFluor <- dfFluor[,c("Wavelength.Pairs",phaseIII)]
+  
+  mmsd_abs <- mmsd_abs[,c("Wavelength", phaseIV)]
+  mmsd_fl <- mmsd_fl[,c("exem",phaseIV)]
+  
+  mmsd_abs_total <- mmsd_abs %>%
+    left_join(dfabs, by="Wavelength", )
+  
+  mmsd_fl_total <- mmsd_fl %>%
+    left_join(dfFluor, by=c("exem"="Wavelength.Pairs"))
+  
   # GLRI Summary:
   df_glri <- readRDS(file.path("process","out","glri_summary_input.rds"))
 
@@ -41,7 +61,7 @@ get_summaries <- function(){
   glpf_sum <- run_suite(df_glpf, glpf_fl, glpf_abs)
   saveRDS(glpf_sum, file = file.path("process","out","glpf_summary.rds"))
   
-  mmsd_sum <- run_suite(df_mmsd, mmsd_fl, mmsd_abs)
+  mmsd_sum <- run_suite(df_mmsd, mmsd_fl_total, mmsd_abs_total)
   saveRDS(mmsd_sum, file = file.path("process","out","mmsd_summary.rds"))
 
 }
