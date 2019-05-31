@@ -29,9 +29,10 @@
 #
 #3. Modeling
 #  a. Large watersheds
-#    i.   Begin with OLS modeling of common parameters
-#    ii.  Explore additional parameters for watersheds where that doesn't work
-#    iii. Develop summary table of models
+#    i.   Begin with LME modeling of common parameters
+#    ii.  Choose groups of sites where this works
+#    iii. Explore additional parameters for watersheds where that doesn't work
+#    iv.  Develop summary table of models
 #  b. Subwatersheds
 #    i.  OLS modeling with common parameters: this works
 #    ii. Include in modeling table with Large watersheds

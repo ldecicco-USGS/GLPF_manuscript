@@ -60,22 +60,22 @@ sites <- c("PO", "MA", "RM")
 dfModel <- df
 selectedRows <- which(df$abbrev %in% sites)
 
-m <- lmer(logLachno ~ T*sinDate + T*cosDate + F*cosDate + F*sinDate + ( T + F  | abbrev),data=df[selectedRows,])
+#m <- lmer(logLachno ~ T*sinDate + T*cosDate + F*cosDate + F*sinDate + ( T + F  || abbrev),data=df[selectedRows,])
 
 # Remove missing turbidity rows
 missing_Turb <- which(is.na(df$Turbidity_mean) | is.infinite(df$Turbidity_mean))
 dfModel <- df[c(-missing_Turb),]
 selectedRows <- which(dfModel$abbrev %in% sites)
 
-m <- lmer(logLachno ~ Aresids*cosDate + Aresids*sinDate  + F*cosDate + F*sinDate + Turbidity_mean + (Aresids +   F  + Turbidity_mean | abbrev),data=dfModel[selectedRows,])
+m <- lmer(logLachno ~ Aresid267*cosDate + Aresid267*sinDate  + F*cosDate + F*sinDate + Turbidity_mean + (Aresid267 +   F  || abbrev),data=dfModel[selectedRows,])
 
-m <- lmer(logLachno ~  F*cosDate + F*sinDate + Turbidity_mean + (F  + Turbidity_mean | abbrev),data=dfModel[selectedRows,])
-
-m <- lmer(logLachno ~  Turbidity_mean + (Turbidity_mean | abbrev),data=dfModel[selectedRows,])
-
-m <- lmer(logLachno ~ T*sinDate + T*cosDate + F*cosDate + F*sinDate + Turbidity_mean + ( T + F + Turbidity_mean | abbrev),data=dfModel[selectedRows,])
-
-m <- lm(logLachno ~ Aresids*cosDate + Aresids*sinDate  + F*cosDate + F*sinDate + Turbidity_mean ,data=dfModel[selectedRows,])
+# m <- lmer(logLachno ~  F*cosDate + F*sinDate + Turbidity_mean + (F  + Turbidity_mean | abbrev),data=dfModel[selectedRows,])
+# 
+# m <- lmer(logLachno ~  Turbidity_mean + (Turbidity_mean | abbrev),data=dfModel[selectedRows,])
+# 
+# m <- lmer(logLachno ~ T*sinDate + T*cosDate + F*cosDate + F*sinDate + Turbidity_mean + ( T + F + Turbidity_mean | abbrev),data=dfModel[selectedRows,])
+# 
+# m <- lm(logLachno ~ Aresids*cosDate + Aresids*sinDate  + F*cosDate + F*sinDate + Turbidity_mean ,data=dfModel[selectedRows,])
 
 # m <- lmer(logLachno ~ T + F + Turbidity_mean + CSO + ( T + F + Turbidity_mean | abbrev) + ( T + F + Turbidity_mean | season),data=dfModel[selectedRows,])
 

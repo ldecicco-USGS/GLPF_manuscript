@@ -15,7 +15,6 @@ library(car)
 # summary.save <- "1_SummaryVariables"
 # cached.save <- "0_munge"
 
-#df_GLRI <- readRDS(file.path("process","out","GLRISummaryWithTurbidity.rds"))
 df_GLPF <- readRDS(file.path("process","out","glpf_summary.rds"))
 df <- df_GLPF
 
@@ -54,7 +53,7 @@ sites <- c("WI","MI","NY")
 dfModel <- df
 selectedRows <- which(df$State %in% sites)
 
-m <- lmer(logEC ~ T*sinDate + T*cosDate + F*cosDate + F*sinDate + ( T + F  | State),data=df[selectedRows,])
+m <- lmer(logEC ~ T*sinDate + T*cosDate + F*cosDate + F*sinDate + ( T + F  | eventNum),data=df[selectedRows,])
 
 # Remove missing turbidity rows
 missing_Turb <- which(is.na(df$Turb) | is.infinite(df$Turb))
@@ -62,7 +61,22 @@ dfModel <- df[c(-missing_Turb),]
 dfModel <- dfModel[which(!is.na(dfModel[,response])),]
 selectedRows <- which(dfModel$State %in% sites)
 
-m <- lmer(logEC ~ Aresids*cosDate + Aresids*sinDate  + F*cosDate + F*sinDate + Turb + (Aresids +   F  + Turb | State),data=dfModel[selectedRows,])
+dfModel <- na.omit(df[,c(response,"T","F","Aresids","sinDate","cosDate","eventNum","State")])
+m <- lmer(logLachno ~ T*cosDate + T*sinDate  + F*cosDate + F*sinDate + 
+            Aresids*cosDate + Aresids*sinDate  +
+            Turb + 
+            (T +   F + Aresids + Turb | eventNum) + 
+            (T +   F + Aresids + Turb | State),data=dfModel[selectedRows,])
+
+m <- lmer(logLachno ~ T*cosDate + T*sinDate  + F*cosDate + F*sinDate + 
+            Aresids*cosDate + Aresids*sinDate  +
+            (T +   F + Aresids  | eventNum) + 
+            (T +   F + Aresids  | State),data=dfModel[selectedRows,])
+
+m <- lmer(logLachno ~ T*cosDate + T*sinDate  + F*cosDate + F*sinDate + (T +   F  | eventNum),data=dfModel[selectedRows,])
+
+
+m <- lmer(logLachno ~ Aresids*cosDate + Aresids*sinDate  + F*cosDate + F*sinDate + Turb + (Aresids +   F  + Turb | eventNum),data=dfModel[selectedRows,])
 
 m <- lmer(logLachno ~  F*cosDate + F*sinDate + Turb + (F  + Turb | State),data=dfModel[selectedRows,])
 
@@ -82,19 +96,29 @@ m <- lm(logLachno ~ Aresids*cosDate + Aresids*sinDate  + F*cosDate + F*sinDate +
 colorOptions <- c("red","green","blue")#,"black","springgreen4","blue","grey","darkorchid1")
 names(colorOptions) <- unique(dfModel$State)
 
-plotColors <- colorOptions[dfModel[selectedRows,"State"]]
-levels(as.factor(dfModel[selectedRows,"State"]))
+pdf("regression_by_eventNum_wo_turb.pdf")
+for(event in sort(unique(dfModel$eventNum))) {
+  plotColors <- colorOptions[dfModel[selectedRows,"State"]]
+  levels(as.factor(dfModel[selectedRows,"State"]))
+  plotColors <- ifelse(dfModel$eventNum==event,"purple","grey")
+  plotCex <- ifelse(dfModel$eventNum==event,2,1)
+  
+  axis.log <- ""
+  axis.limits <- c(1,7)
+  
+  par(mfcol=c(1,1))
+  plot(dfModel[,response],fitted(m),
+       xlab="Observed",ylab="Predicted",col=plotColors,pch=20,
+       log=axis.log,ylim=axis.limits,xlim=axis.limits,cex=plotCex,
+       main = event)
+  abline(0,1)
+  #mtext(paste(Active.Coef.names[2:length(Active.Coef.names)],collapse=", "),side=3,line=1,cex=0.8)
+  mtext(paste("Linear mixed effects moedel for GLRI watersheds",response),side=3,line=2,font=2,cex=1)
+  legend(x="topleft",legend=names(colorOptions),col=colorOptions,pch=20,text.col=colorOptions,cex=0.7)
+}
+dev.off()
+shell.exec("regression_by_eventNum.pdf")
 
-axis.log <- ""
-axis.limits <- c(1,7)
-
-par(mfcol=c(1,1))
-plot(dfModel[selectedRows,response],fitted(m),
-     xlab="Observed",ylab="Predicted",col=plotColors,pch=20,log=axis.log,ylim=axis.limits,xlim=axis.limits)
-abline(0,1)
-#mtext(paste(Active.Coef.names[2:length(Active.Coef.names)],collapse=", "),side=3,line=1,cex=0.8)
-mtext(paste("Linear mixed effects moedel for GLRI watersheds",response),side=3,line=2,font=2,cex=1)
-legend(x="topleft",legend=names(colorOptions),col=colorOptions,pch=20,text.col=colorOptions,cex=0.7)
 
 summary(m)
 Anova(m)
@@ -112,3 +136,5 @@ points(plotdf[,response],fitted(m),
 mstep <- step(m)
 summary(m)
 summary(mstep)
+
+
