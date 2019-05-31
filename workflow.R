@@ -134,6 +134,9 @@ source(file=file.path("process","src","get_GLRI_turbidity_data.R"))
 source(file=file.path("process","src","PopulateTurbidity.R"))
 PopulateTurbidity()
 
+source(file=file.path("process","src","PopulateTurbidity_mmsd.R"))
+Populate_turbidity_mmsd()
+
 # Remove optical variables from initial summary files so we can add consistent
 # variables for all three scales.
 
