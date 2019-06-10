@@ -46,9 +46,10 @@ get_summaries <- function(){
   
   # GLRI Summary:
   df_glri <- readRDS(file.path("process","out","glri_summary_input.rds"))
-
+  df_glri$NWISSiteID <- dataRetrieval::zeroPad(df_glri$NWISSiteID, 8)
   # GLPF Summary:
   df_glpf <- readRDS(file.path("process","out","glpf_summary_input.rds"))
+  # df_glpf_QA <- readRDS(file.path("raw","GLPF","summary_QA.rds"))
   
   # MMSD Summary:
   df_mmsd <- readRDS(file.path("process","out","mmsd_summary_input.rds"))
