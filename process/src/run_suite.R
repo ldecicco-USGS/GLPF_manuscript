@@ -89,7 +89,7 @@ run_suite <- function(df_summary, df_fl, df_abs, glpf=FALSE){
 VectorizedTo3DArray_new <- function(df, ExEm, grnum){
   
   df_new <- df %>%
-    separate(!!ExEm, into = c("Ex","Em"))
+    separate(!!ExEm, into = c("Ex","Em"), sep="/")
   
   m <- reshape2::melt(data = df_new, id = c("Ex", "Em"))
   colnames(m)[3] <- grnum
