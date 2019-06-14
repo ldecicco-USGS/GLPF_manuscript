@@ -18,7 +18,7 @@ remove_old_optical_signals <- function() {
   df_glri <- dplyr::filter(df_glri, !(GRnumber %in% glri_GRnumbers$GRnumbers))
   
   #MMSD 
-  df_mmsd <- readRDS(file.path("raw","MMSD","dfOptP3P4Combined.rds"))
+  df_mmsd <- readRDS(file.path("process","out","dfOptP3P4Combined_w_turb.rds"))
   begin_remove <- which(names(df_mmsd) == "OB1")
   end_remove <- which(names(df_mmsd) == "logA488")
   df_mmsd <- df_mmsd[,-c(begin_remove:end_remove)]

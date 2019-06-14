@@ -3,32 +3,92 @@
 
 #Intro to Linear mixed models: https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/
 
+# Load data
+# General modeling setup:
+# Define response variables
+# Define predictors
+# Define interactions
+# Define grouping variable (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
+# Choose sites or states to be included
+
+# Transform variables where needed
+# Filter data to sites and make model df
+# Construct formula
+# Run LME model for all response variables
+# Graph results
+
+
 library(lme4)
 library(smwrBase)
 library(car)
 
+# Load data
+df_MMSD <- readRDS(file.path("process","out","mmsd_summary.rds"))
+df <- df_MMSD
 
-#set data directories
-# raw.path <- "raw_data"
-# cached.path <- "cached_data"
-# summary.path <- "SummaryVariables"
-# summary.save <- "1_SummaryVariables"
-# cached.save <- "0_munge"
+# General modeling setup:
 
-#df_GLRI <- readRDS(file.path("process","out","GLRISummaryWithTurbidity.rds"))
-df_GLRI <- readRDS(file.path("process","out","glri_summary.rds"))
-df <- df_GLRI
+# Define response variables
+response <- c("lachno2","bacHum","eColi","ent")
 
-df <- df[!is.na(df$Lachno.2.cn.100ml),]
-df$Lachno.2.cn.100ml <- ifelse(df$Lachno.2.cn.100ml==1,112,df$Lachno.2.cn.100ml)
 
-df <- df[!is.na(df$BACHUM.cn.100mls),]
-df$BACHUM.cn.100mls <- ifelse(df$BACHUM.cn.100mls==1,112,df$BACHUM.cn.100mls)
+i <- 1
 
-df$logLachno <- log10(df$Lachno.2.cn.100ml)
-df$logBachum <- log10(df$BACHUM.cn.100mls)
-df$sinDate <- fourier(df$GMTStartTime)[,1]
-df$cosDate <- fourier(df$GMTStartTime)[,2]
+# Define predictors and interaction terms
+predictors<- c("Aresid267", "T", "F")
+interactors <- c("sinDate","cosDate")
+#predictors_withou_int <- "Turb"
+
+
+# Define grouping variable (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
+groupings <- c("abbrev")
+
+# Choose sites or states to be included
+sites <- c("MC","MW","UW")
+
+# transform response variable
+df$log_response <- log10(df[,response[i]])
+
+# Filter data to sites and make model df
+model_df <- df[which(df[,groupings] %in% sites),]
+
+# Construct formula
+form <- paste("")
+for(j in 1:length(interactors)){ 
+  form_temp <- paste(paste(predictors,"*",interactors[j],sep=""),collapse = " + ")
+  if(j>1) {form <- paste(form_temp, " + ", form) 
+  }else form <- form_temp
+}
+
+
+
+form <- paste("log_respnse ~ ")
+
+
+paste(form, paste(predictors,"*",interactors),collapse = " + ")
+
+
+
+paste(predictors,interactors[j],sep="*")
+
+# Run LME model for all response variables
+# Graph results
+
+
+
+
+####################################################################################
+
+df <- df[!is.na(df$lachno2),]
+#df$lachno2 <- ifelse(df$lachno2<225,225,df$lachno2)
+
+df <- df[!is.na(df$bacHum),]
+#df$bacHum <- ifelse(df$bacHum<225,225,df$bacHum)
+
+df$logLachno <- log10(df$lachno2)
+df$logBachum <- log10(df$bacHum)
+df$sinDate <- fourier(df$psdate)[,1]
+df$cosDate <- fourier(df$psdate)[,2]
 
 response <- "logLachno"
 #which(substr(names(df),1,1)=="A")
@@ -42,14 +102,8 @@ response <- "logLachno"
 # test <- df[,c("season","psdate")]
 # df$season <- ifelse(as.POSIXlt(df$psdate)$mon == 11,1,df$season)
 
-sites <- c("JI", "EE", "OC", "PO", "MA", "CL", "RO", "RM")
-sites <- c("JI")
-sites <- c("EE", "OC")
-sites <- c("PO", "MA", "CL", "RO", "RM","JI")
-sites <- c("PO", "MA", "CL", "RO", "RM")
-sites <- c("CL", "RO")
-sites <- c("CL", "RO","JI")
-sites <- c("PO", "MA", "RM")
+sites <- c("MC","MW","UW")
+
 
 
 
@@ -63,11 +117,11 @@ selectedRows <- which(df$abbrev %in% sites)
 #m <- lmer(logLachno ~ T*sinDate + T*cosDate + F*cosDate + F*sinDate + ( T + F  || abbrev),data=df[selectedRows,])
 
 # Remove missing turbidity rows
-missing_Turb <- which(is.na(df$Turbidity_mean) | is.infinite(df$Turbidity_mean))
-dfModel <- df[c(-missing_Turb),]
+# missing_Turb <- which(is.na(df$Turbidity_mean) | is.infinite(df$Turbidity_mean))
+# dfModel <- df[c(-missing_Turb),]
 selectedRows <- which(dfModel$abbrev %in% sites)
 
-m <- lmer(logLachno ~ Aresid267*cosDate + Aresid267*sinDate  + F*cosDate + F*sinDate + Turbidity_mean + (Aresid267 +   F  || abbrev),data=dfModel[selectedRows,])
+m <- lmer(logLachno ~ Aresid267*cosDate + Aresid267*sinDate  + F*cosDate + F*sinDate + CSO + (Aresid267 +   F  || abbrev),data=dfModel[selectedRows,])
 
 # m <- lmer(logLachno ~  F*cosDate + F*sinDate + Turbidity_mean + (F  + Turbidity_mean | abbrev),data=dfModel[selectedRows,])
 # 
