@@ -76,7 +76,7 @@ groupings <- c("abbrev")
 #   
 # }
 
-form_names <- c("F,T","F,Turb","T,Turb","F","T","Turb","OB1")
+form_names <- c("F,T","F,Turb","T,Turb","F","T","Turb")
 form <- list()
 form[[1]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (F + T | abbrev)")
 form[[2]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (F + Turbidity_mean | abbrev)")
@@ -84,13 +84,15 @@ form[[3]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T 
 form[[4]] <- formula("log_response ~ F * cosDate + F * sinDate + (F | abbrev)")
 form[[5]] <- formula("log_response ~ T * cosDate + T * sinDate  + (T | abbrev)")
 form[[6]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate  + (Turbidity_mean | abbrev)")
-form[[7]] <- formula("log_response ~ OB1 * cosDate + OB1 * sinDate  + (OB1 | abbrev)")
 # form[[6]] <- formula("log_response ~ rS1.25_T * cosDate + rS1.25_T * sinDate  + (rS1.25_T | abbrev)")
 # form[[7]] <- formula("log_response ~ T * cosDate + T * sinDate + rS1.25_T * cosDate + rS1.25_T * sinDate  + (rS1.25_T + T | abbrev)")
 # form[[8]] <- formula("log_response ~ T * cosDate + T * sinDate + S1.25 * cosDate + S1.25 * sinDate  + (S1.25 + T | abbrev)")
 
 names(form) <- form_names
 # # 3. Run LME model for all response variables
+
+wd <- getwd()
+setwd("./plots/out/model_results")
 
 for (i in 1:length(response)) {
   
@@ -119,7 +121,7 @@ for (i in 1:length(response)) {
   running_mean_cv_rmspe_list <- list()
   for(f in 1:length(form)){
     n_folds <- 10
-    n_replications <- 2
+    n_replications <- 3
     cv_rmspe = numeric()
     running_mean_cv_rmspe <- numeric()
     folds <- cvFolds(nrow(model_df), K=n_folds, R = n_replications)
@@ -170,30 +172,31 @@ for (i in 1:length(response)) {
   shell.exec(filenm)
   
   
-  # filenm <- paste("running_mean_rmspe_GLRI_",response[i],".pdf",sep="")
-  # pdf(filenm)
-  # 
-  # plot_df <- data.frame(running_mean_cv_rmspe_list[[1]])
-  # if(length(form) > 1) for(k in 2:length(form)) plot_df <- cbind(plot_df,running_mean_cv_rmspe_list[[k]])
-  # names(plot_df) <- names(form)
-  # 
-  #   boxplot(plotdf)
-  #   mtext(form[[f]],cex=0.75)
-  #   mtext(response[i],line=1.5)
-  #   dev.off()
-  #   
-  # shell.exec(filenm)
+  filenm <- paste("GLRI_model_options_",response[i],".pdf",sep="")
+  pdf(filenm,width = 11,height = 8)
   
+  plot_df <- do.call(cbind,running_mean_cv_rmspe_list)
+  plot_df <- as.data.frame(plot_df)
+  names(plot_df) <- names(form)
+  
+  plot_df <- tidyr::gather(plot_df)
+  ggplot(data=plot_df,aes(x=key,y=value)) + 
+    geom_boxplot() + 
+    ggtitle(paste0(response[i],":    Root Mean Square Prediction Error for ",n_replications," replications of each Model Option")) +
+    theme(plot.title = element_text(size = 12))
+  
+  # boxplot(plot_df,las=2)
+  # mtext(response[i],line=1.5)
+  # mtext(paste("Root Mean Square Prediction Error for ",n_replications,"replications of each Model Option"))
   
   # Plot observed vs predicted models
   # Compile fitted vs observed in df with three columns
   # Fitted, observed, model description (response & predictors)
-  filenm <- paste("model_options_GLRI_",response[i],".pdf",sep="")
-  pdf(filenm)
   colorOptions <- c("orange","yellow2","skyblue","black","springgreen4","blue","grey","darkorchid1")
   names(colorOptions) <- legend_names <- sort(unique(model_df$abbrev))
-  plotColors <- colorOptions[model_df[,"abbrev"]]
-
+  plot_Colors <- colorOptions[model_df[,"abbrev"]]
+  abbrev <- model_df$abbrev
+  
   model_AICs <- numeric()
   model_results_df <- NULL
   for(f in 1:length(form)){
@@ -201,14 +204,22 @@ for (i in 1:length(response)) {
     predicted <- predict(m,newdata=model_df_scaled)
     observed <- model_df_scaled$log_response
     model_name <- paste(response[i],form_names[f],sep=" ~ ")
-    model_results_df <- rbind(model_results_df,data.frame(predicted,observed,model_name,plotColors))
+    model_results_df <- rbind(model_results_df,data.frame(predicted,observed,model_name,plot_Colors,abbrev))
     model_AICs <- c(model_AICs,AIC(m))
+    names(model_AICs)[f] <- form[f]
   }
-  bp <- ggplot(data = model_results_df,aes(x = observed,y = predicted)) + 
-    geom_point(aes(colour=abbrev)) +
+  names(model_results_df) <- c("predicted","observed","model_name","Plot_colors","abbrev")
+  model_plot <- ggplot(data = model_results_df,aes(x = observed,y = predicted,, color=abbrev)) + 
+    geom_point() +
+    #    geom_point(colour=model_results_df$Plot_colors) +
+    scale_color_brewer(palette="Dark2") +
+    geom_abline(intercept = 0, slope = 1, color="blue", 
+                linetype="dashed", size=0.5) +
     facet_wrap(~ model_name)
-bp  
-
-dev.off()
-shell.exec(filenm)
+  model_plot  
+  
+  dev.off()
+  shell.exec(filenm)
 }
+
+setwd(wd)
