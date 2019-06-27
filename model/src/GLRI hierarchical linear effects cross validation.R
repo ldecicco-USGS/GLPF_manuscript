@@ -40,13 +40,14 @@ df <- df_GLRI
 
 #  * Define response variables
 response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls","E..coli.CFUs.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml")
+response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
 
 # * Transform seasonal variables
 df$sinDate <- fourier(df$psdate)[,1]
 df$cosDate <- fourier(df$psdate)[,2]
 
 # Define predictors and interaction terms
-predictors<- c("Turbidity_mean", "T", "F","OB1")
+predictors<- c("Turbidity_mean", "T", "F","OB1","Aresid267","S1.25","rF_T")
 
 #non_int_predictors <- c("CSO")
 interactors <- c("sinDate","cosDate")
@@ -77,7 +78,7 @@ groupings <- c("abbrev")
 #   
 # }
 
-form_names <- c("F,T","F,Turb","T,Turb","F","T","Turb")
+form_names <- c("F,T","F,Turb","T,Turb","F","T","Turb","F,Aresid","T,S1","F,rF_T")
 form <- list()
 form[[1]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (F + T | abbrev)")
 form[[2]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (F + Turbidity_mean | abbrev)")
@@ -85,11 +86,11 @@ form[[3]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T 
 form[[4]] <- formula("log_response ~ F * cosDate + F * sinDate + (F | abbrev)")
 form[[5]] <- formula("log_response ~ T * cosDate + T * sinDate  + (T | abbrev)")
 form[[6]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate  + (Turbidity_mean | abbrev)")
-# form[[6]] <- formula("log_response ~ rS1.25_T * cosDate + rS1.25_T * sinDate  + (rS1.25_T | abbrev)")
-# form[[7]] <- formula("log_response ~ T * cosDate + T * sinDate + rS1.25_T * cosDate + rS1.25_T * sinDate  + (rS1.25_T + T | abbrev)")
-# form[[8]] <- formula("log_response ~ T * cosDate + T * sinDate + S1.25 * cosDate + S1.25 * sinDate  + (S1.25 + T | abbrev)")
+form[[7]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  + (Aresid267 + T | abbrev)")
+form[[8]] <- formula("log_response ~ T * cosDate + T * sinDate + S1.25 * cosDate + S1.25 * sinDate  + (S1.25 + T | abbrev)")
+form[[9]] <- formula("log_response ~ F * cosDate + F * sinDate + rF_T * cosDate + rF_T * sinDate  + (rF_T + T | abbrev)")
 
-names(form) <- form_names
+names(form) <- form_names[1:length(form)]
 # # 3. Run LME model for all response variables
 
 wd <- getwd()
@@ -173,15 +174,12 @@ for (i in 1:length(response)) {
   shell.exec(filenm)
   
   
-  filenm <- paste("GLRI_model_options_",response[i],".pdf",sep="")
-  pdf(filenm,width = 11,height = 8)
-  
   plot_df <- do.call(cbind,running_mean_cv_rmspe_list)
   plot_df <- as.data.frame(plot_df)
   names(plot_df) <- names(form)
   
   plot_df <- tidyr::gather(plot_df)
-  ggplot(data=plot_df,aes(x=key,y=value)) + 
+  rmspeboxplot <- ggplot(data=plot_df,aes(x=key,y=value)) + 
     geom_boxplot() + 
     ggtitle(paste0(response[i],":    Root Mean Square Prediction Error for ",n_replications," replications of each Model Option")) +
     theme(plot.title = element_text(size = 12))
@@ -217,10 +215,14 @@ for (i in 1:length(response)) {
     geom_abline(intercept = 0, slope = 1, color="blue", 
                 linetype="dashed", size=0.5) +
     facet_wrap(~ model_name)
-  model_plot  
+  #model_plot  
   
-  dev.off()
-  shell.exec(filenm)
+  multi.page <- ggarrange(model_plot, rmspeboxplot,
+                          nrow = 1, ncol = 1)
+  
+  filenm <- paste("GLRI_model_options_",response[i],".pdf",sep="")
+  ggexport(multi.page, filename = filenm,width = 11,height = 8)
+  
 }
 
 setwd(wd)
