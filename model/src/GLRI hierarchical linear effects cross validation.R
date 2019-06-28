@@ -29,6 +29,7 @@ library(car)
 library(dplyr)
 library(cvTools)
 library(ggplot2)
+library(ggpubr)
 
 source(file.path("model","src","plot_model_cv.R"))
 
@@ -40,7 +41,7 @@ df <- df_GLRI
 
 #  * Define response variables
 response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls","E..coli.CFUs.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml")
-response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
+#response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
 
 # * Transform seasonal variables
 df$sinDate <- fourier(df$psdate)[,1]
@@ -123,7 +124,7 @@ for (i in 1:length(response)) {
   running_mean_cv_rmspe_list <- list()
   for(f in 1:length(form)){
     n_folds <- 10
-    n_replications <- 3
+    n_replications <- 50
     cv_rmspe = numeric()
     running_mean_cv_rmspe <- numeric()
     folds <- cvFolds(nrow(model_df), K=n_folds, R = n_replications)
@@ -171,7 +172,7 @@ for (i in 1:length(response)) {
   
   #}
   dev.off()
-  shell.exec(filenm)
+#  shell.exec(filenm)
   
   
   plot_df <- do.call(cbind,running_mean_cv_rmspe_list)
