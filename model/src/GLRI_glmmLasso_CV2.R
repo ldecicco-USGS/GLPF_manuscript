@@ -19,18 +19,15 @@ df$sinDate <- fourier(df$psdate)[,1]
 df$cosDate <- fourier(df$psdate)[,2]
 
 # Define predictors and interaction terms
-predictors_interacting <- c("T", "F")#,"OB1","Aresid267","S1.25","rF_T")
-predictors_noninteracting <- c("Turbidity_mean","Aresid267","rF_T")
-predictors <- c(predictors_interacting,predictors_noninteracting)
+predictors<- c("T", "F")#,"Turbidity_mean", "OB1","Aresid267","S1.25","rF_T")
+
 interactors <- c("sinDate","cosDate")
 
 #Develop regression formula for fixed effects
-form1 <- c(paste(predictors_interacting,interactors[1], sep=":"), paste(predictors_interacting,interactors[2], sep=":"))
-form1 <- c(predictors_interacting, form1)
-form1 <- c(predictors_noninteracting, form1)
+form1 <- c(paste(predictors,interactors[1], sep=":"), paste(predictors,interactors[2], sep=":"))
+form1 <- c(predictors, form1)
 form1 <- paste(form1,collapse = " + ")
 form1 <- paste("log_response ~ 1 + ",form1)
-form1 <- as.formula(form1)
 
 # Define grouping variable (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
 groupings <- c("abbrev")
@@ -100,19 +97,19 @@ for(j in 1:length(lambda))
     model_df.train<-model_df[-indi,]
     model_df.test<-model_df[indi,]
     
-    glm2 <- try(glmmLasso(log_response~ 1 + T + F + Turbidity_mean
-                          + T:sinDate + T:cosDate
-                          + F:sinDate + F:cosDate,
-                          rnd = list(abbrev = ~1),
-                          family = family, data =model_df.train, lambda=lambda[j],switch.NR=F,final.re=TRUE,
-                          control=list(start=Delta.start,q_start=Q.start))
-                ,silent=TRUE)
-    # glm2 <- try(glmmLasso(form1,
+    # glm2 <- try(glmmLasso(log_response~T + F + Turbidity_mean
+    #                       + T:sinDate + T:cosDate
+    #                       + F:sinDate + F:cosDate,
     #                       rnd = list(abbrev = ~1),
     #                       family = family, data =model_df.train, lambda=lambda[j],switch.NR=F,final.re=TRUE,
     #                       control=list(start=Delta.start,q_start=Q.start))
     #             ,silent=TRUE)
 
+    glm3 <- try(glmmLasso(form1,
+                          rnd = list(abbrev = ~1),
+                          family = family, data =model_df.train, lambda=lambda[j],switch.NR=F,final.re=TRUE,
+                          control=list(start=Delta.start,q_start=Q.start))
+                ,silent=TRUE)
     
     if(class(glm2)!="try-error")
     {  
@@ -130,10 +127,10 @@ Devianz_vec<-apply(Devianz_ma,1,sum)
 opt2<-which.min(Devianz_vec)
 plot(Devianz_vec)
 
-glm2_final <- glmmLasso(log_response~ 1 + T + F + Turbidity_mean 
+glm2_final <- glmmLasso(log_response~T + F + Turbidity_mean 
                         + T:sinDate + T:cosDate 
                         + F:sinDate + F:cosDate,
-                        rnd = list(abbrev = ~1),  
+                        rnd = list(abbrev = ~1 + F),  
                         family = family, data = model_df, lambda=lambda[opt2],switch.NR=F,final.re=TRUE,
                         control=list(start=Delta.start,q_start=Q.start))
 
