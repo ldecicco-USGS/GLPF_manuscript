@@ -39,20 +39,23 @@ sites <- c("JI", "PO", "MA", "CL", "RO", "RM")
 
 #   * Filter data to sites and make model df
 model_rows <- which(df[,groupings] %in% sites)
+model_columns <- c("log_response",predictors_rnd_int,predictors_fixed_nonint)
 model_columns_form <- c("log_response",predictors_rnd_int,predictors_fixed_nonint,predictors_fixed_interaction)
 form_all <- as.formula(paste("dummy ~",paste(paste(model_columns_form,collapse = " + "),"+ row_num")))
 df$dummy <- 0
 
-model_df_init <- df[model_rows,c("dummy",model_columns)]
-model_df_init$row_num <- as.numeric(row.names(model_df_init))
+model_df_init <- df[model_rows,c("dummy",groupings, model_columns)]
+model_df_init$row_num <- 1:dim(model_df_init)[1]
 
 options(na.action="na.pass")
 model_df <- model.matrix(form_all,model_df_init)
 
-#model_df <- cbind(model_df,as.factor(model_df_init[model_df[,"row_num"],groupings]))
-model_df <- cbind(model_df,as.factor(model_df_init[model_df[,"row_num"],"log_response"]))
+as.factor(model_df_init[model_df[,"row_num"],groupings])
+model_df <- cbind(as.factor(model_df_init[model_df[,"row_num"],groupings]),model_df)
+colnames(model_df)[1] <- groupings
+#model_df <- cbind(model_df,as.factor(model_df_init[model_df[,"row_num"],"log_response"]))
 
-model_df2 <- na.exclude(model_df)
+model_df <- na.exclude(model_df)
 
 
 ### set seed
@@ -70,7 +73,16 @@ set.seed(123)
 # m$coefficients
 
 
-lambda <- seq(from = 50, to = 0, by = -0.5)
+lambda <- seq(from = 20, to = 0, by = -1)
+N<-dim(model_df)[1]
+ind<-sample(N,N)
+kk<-5
+nk <- floor(N/kk)
+m_AIC <- matrix(Inf,ncol=kk,nrow=length(lambda))
+m_BIC <- matrix(Inf,ncol=kk,nrow=length(lambda))
+m_deviance <- matrix(Inf,ncol=kk,nrow=length(lambda))
+m_logLik <- matrix(Inf,ncol=kk,nrow=length(lambda))
+m_objective <- matrix(Inf,ncol=kk,nrow=length(lambda))
 
 for(j in 1:length(lambda))
 {
@@ -84,47 +96,67 @@ for(j in 1:length(lambda))
     }else{
       indi <- ind[((i-1)*nk+1):N]
     }
-
-# Y GIVES ERROR RIGHT NOW. LOOK AT 
-    model_df[, predictors_fixed_interaction]
-    x <- as.matrix(cbind(1,model_df[-indi,c(predictors_fixed_nonint,predictors_fixed_interaction)]))
-    y <- model_df[model_df_init$row_num,"log_response"]
-    z <- as.matrix(model_df[-ind,predictors_rnd])
-    grp <- factor(model_df[-ind,"abbrev"])
     
-    m <- lmmlasso(x=x,y=y,z=z,grp=grp,lambda = 2,standardize = TRUE)
+    # Y GIVES ERROR RIGHT NOW. LOOK AT 
+    # model_df[, predictors_fixed_interaction]
+    x <- as.matrix(cbind(1,model_df[-indi,c(predictors_fixed_nonint,predictors_fixed_interaction)]))
+    y <- model_df[-indi,"log_response"]
+    z <- as.matrix(model_df[-indi,predictors_rnd])
+    grp <- factor(model_df[-indi,groupings])
+    
+    m <- lmmlasso(x=x,y=y,z=z,grp=grp,lambda = lambda[j],standardize = TRUE)
     
     # glm2 <- try(glmmLasso(form1,
     #                       rnd = list(abbrev = ~1),
     #                       family = family, data =model_df.train, lambda=lambda[j],switch.NR=F,final.re=TRUE,
     #                       control=list(start=Delta.start,q_start=Q.start))
     #             ,silent=TRUE)
-
     
-      m_BIC[j,i]<-m$BIC
+    
+    m_AIC[j,i] <- m$aic
+    m_BIC[j,i] <- m$bic
+    m_deviance[j,i] <- m$deviance
+    m_logLik[j,i] <- m$logLik
+    m_objective[j,i] <- m$objective
+    
+    
   }
-  print(sum(Devianz_ma[j,]))
+  print(mean(m_BIC[j,]))
 }
 
 
-Devianz_vec<-apply(Devianz_ma,1,sum)
+model_AIC_means <- apply(m_AIC,1,mean)
+model_BIC_means <- apply(m_BIC,1,mean)
+model_deviance_means <- apply(m_deviance,1,mean)
+model_objective_means <- apply(m_objective,1,mean)
+model_logLik_means <- apply(m_logLik,1,mean)
 
-opt2<-which.min(Devianz_vec)
-plot(Devianz_vec)
+opt2<-which.min(model_BIC_means)
+par(mfrow = c(5,1),mar=c(1,1,1,1))
+plot(model_AIC_means,main="AIC")
+plot(model_BIC_means,main="BIC")
+plot(model_deviance_means,main="Deviance")
+plot(model_objective_means,main="Objective")
+plot(model_logLik_means,main="Log likelihood")
 
-x <- as.matrix(cbind(1,model_df[,predictors_fixed]))
-y <- model_df$log_response
+
+x <- as.matrix(cbind(1,model_df[,c(predictors_fixed_nonint,predictors_fixed_interaction)]))
+y <- model_df[,"log_response"]
 z <- as.matrix(model_df[,predictors_rnd])
-grp <- factor(model_df[,"abbrev"])
+grp <- factor(model_df[,groupings])
 
 
-glm2_final <- glmmLasso(log_response~ 1 + T + F + Turbidity_mean 
-                        + T:sinDate + T:cosDate 
-                        + F:sinDate + F:cosDate,
-                        rnd = list(abbrev = ~1),  
-                        family = family, data = model_df, lambda=lambda[opt2],switch.NR=F,final.re=TRUE,
-                        control=list(start=Delta.start,q_start=Q.start))
+m <- lmmlasso(x=x,y=y,z=z,grp=grp,lambda = lambda[opt2],standardize = TRUE)
 
-summary(glm2_final)
 
-plot(model_df$log_response, predict(glm2_final))
+summary(m)
+
+m_coef <- coef(m)
+
+
+fitted_fixed <- x[,names(m_coef)] %*% m_coef
+fitted_rnd <- 
+
+
+par(mfrow=c(1,1))
+plot(m$data$y, fitted(m))

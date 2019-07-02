@@ -20,7 +20,7 @@ df$cosDate <- fourier(df$psdate)[,2]
 
 # Define predictors and interaction terms
 predictors_interacting <- c("T", "F")#,"OB1","Aresid267","S1.25","rF_T")
-predictors_noninteracting <- c("Turbidity_mean","Aresid267","rF_T")
+predictors_noninteracting <- c("Turbidity_mean","Aresid267","rF_T","sinDate","cosDate")
 predictors <- c(predictors_interacting,predictors_noninteracting)
 interactors <- c("sinDate","cosDate")
 
@@ -100,9 +100,10 @@ for(j in 1:length(lambda))
     model_df.train<-model_df[-indi,]
     model_df.test<-model_df[indi,]
     
-    glm2 <- try(glmmLasso(log_response~ 1 + T + F + Turbidity_mean
+    glm2 <- try(glmmLasso(log_response~ 1 + Turbidity_mean
                           + T:sinDate + T:cosDate
-                          + F:sinDate + F:cosDate,
+                          + F:sinDate + F:cosDate
+                          + sinDate + cosDate,
                           rnd = list(abbrev = ~1),
                           family = family, data =model_df.train, lambda=lambda[j],switch.NR=F,final.re=TRUE,
                           control=list(start=Delta.start,q_start=Q.start))
