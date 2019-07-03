@@ -64,7 +64,7 @@ N<-dim(model_df)[1]
 
 ind<-sample(N,N)
 
-lambda <- seq(50,0,by=-0.5)
+lambda <- seq(4,0,by=-.1)
 
 kk<-5
 
@@ -72,17 +72,17 @@ nk <- floor(N/kk)
 
 Devianz_ma<-matrix(Inf,ncol=kk,nrow=length(lambda))
 
-## first fit good starting model
-library(MASS);library(nlme)
-
-PQL<-glmmPQL(log_response~1,random = ~1|abbrev,family=family,data=model_df)
-
-Delta.start<-c(as.numeric(PQL$coef$fixed),rep(0,14),as.numeric(t(PQL$coef$random$abbrev)))
-
-Q.start<-as.numeric(VarCorr(PQL)[1,1])
-
-
-Delta.start<-as.matrix(t(rep(0,14)))
+# ## first fit good starting model
+# library(MASS);library(nlme)
+# 
+# PQL<-glmmPQL(log_response~1,random = ~1|abbrev,family=family,data=model_df)
+# 
+# Delta.start<-c(as.numeric(PQL$coef$fixed),rep(0,14),as.numeric(t(PQL$coef$random$abbrev)))
+# 
+# Q.start<-as.numeric(VarCorr(PQL)[1,1])
+# 
+# 
+# Delta.start<-as.matrix(t(rep(0,14)))
 
 for(j in 1:length(lambda))
 {
@@ -100,20 +100,33 @@ for(j in 1:length(lambda))
     model_df.train<-model_df[-indi,]
     model_df.test<-model_df[indi,]
     
-    glm2 <- try(glmmLasso(log_response~ 1 + Turbidity_mean
-                          + T:sinDate + T:cosDate
-                          + F:sinDate + F:cosDate
-                          + sinDate + cosDate,
-                          rnd = list(abbrev = ~1),
-                          family = family, data =model_df.train, lambda=lambda[j],switch.NR=F,final.re=TRUE,
-                          control=list(start=Delta.start,q_start=Q.start))
-                ,silent=TRUE)
-    # glm2 <- try(glmmLasso(form1,
-    #                       rnd = list(abbrev = ~1),
+    # glm2 <- try(glmmLasso(log_response~ 1 + Turbidity_mean
+    #                       + T:sinDate + T:cosDate
+    #                       + F:sinDate + F:cosDate
+    #                       + sinDate + cosDate,
+    #                       rnd = list(abbrev = ~1 + T + F),
+    #                       family = family, data =model_df.train, lambda=lambda[j],switch.NR=F,final.re=TRUE,
+    #                       control=list(method = "REML",start=Delta.start,q_start=Q.start))
+    #             ,silent=TRUE)
+    
+    
+    
+    glm2 <- glmmLasso(log_response ~ 1 + T +  + F + Turbidity_mean 
+                      + sinDate + cosDate
+                      + F:sinDate + F:cosDate
+                      + T:sinDate + T:cosDate, 
+                      rnd = list(abbrev=~1 + T + F), lambda=lambda[j], 
+                      data = model_df.train, control = list(method="REML",print.iter=TRUE))
+    
+    summary(glm2)
+    
+    # glm2 <- try(glmmLasso(log_response ~ 1 + F + Turbidity_mean,
+    #                       rnd = list(abbrev =~ T),
     #                       family = family, data =model_df.train, lambda=lambda[j],switch.NR=F,final.re=TRUE,
     #                       control=list(start=Delta.start,q_start=Q.start))
-    #             ,silent=TRUE)
-
+    # ,silent=TRUE)
+    
+    summary(glm2)
     
     if(class(glm2)!="try-error")
     {  
@@ -131,12 +144,19 @@ Devianz_vec<-apply(Devianz_ma,1,sum)
 opt2<-which.min(Devianz_vec)
 plot(Devianz_vec)
 
-glm2_final <- glmmLasso(log_response~ 1 + T + F + Turbidity_mean 
-                        + T:sinDate + T:cosDate 
-                        + F:sinDate + F:cosDate,
-                        rnd = list(abbrev = ~1),  
-                        family = family, data = model_df, lambda=lambda[opt2],switch.NR=F,final.re=TRUE,
-                        control=list(start=Delta.start,q_start=Q.start))
+glm2_final <- glmmLasso(log_response ~ 1 + T +  + F + Turbidity_mean 
+                  + sinDate + cosDate
+                  + F:sinDate + F:cosDate
+                  + T:sinDate + T:cosDate, 
+                  rnd = list(abbrev=~1 + T + F), lambda=lambda[opt2], 
+                  data = model_df, control = list(method="REML",print.iter=TRUE))
+
+# glm2_final <- glmmLasso(log_response~ 1 + T + F + Turbidity_mean 
+#                         + T:sinDate + T:cosDate 
+#                         + F:sinDate + F:cosDate,
+#                         rnd = list(abbrev = ~1 + T),  
+#                         family = family, data = model_df, lambda=lambda[opt2],switch.NR=F,final.re=TRUE,
+#                         control=list(method="REML",start=Delta.start,q_start=Q.start))
 
 summary(glm2_final)
 
