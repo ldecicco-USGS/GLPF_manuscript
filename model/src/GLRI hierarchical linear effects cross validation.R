@@ -79,7 +79,7 @@ for(i in 1:length(groupings)) {
 
 }
 
-form_names <- c("F,T","F,Turb","T,Turb","F","T","Turb","F,Aresid","T,S1","F,rF_T","F,A254")
+form_names <- c("F,T","F,Turb","T,Turb","F","T","Turb","F,Aresid","T,S1","F,rF_T","F,A254","F,T,Turb", "F,T,Turb 2")
 form <- list()
 form[[1]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (F + T | abbrev)")
 form[[2]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (F + Turbidity_mean | abbrev)")
@@ -90,7 +90,9 @@ form[[6]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean *
 form[[7]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  + (Aresid267 + T | abbrev)")
 form[[8]] <- formula("log_response ~ T * cosDate + T * sinDate + S1.25 * cosDate + S1.25 * sinDate  + (S1.25 + T | abbrev)")
 form[[9]] <- formula("log_response ~ F * cosDate + F * sinDate + rF_T * cosDate + rF_T * sinDate  + (rF_T + T | abbrev)")
-form[[10]] <- formula("log_response ~ F * cosDate + F * sinDate + A254 * cosDate + A254 * sinDate  + (A254 + T | abbrev)")
+form[[10]] <- formula("log_response ~ F * cosDate + F * sinDate + A254 * cosDate + A254 * sinDate  + (A254 + F | abbrev)")
+form[[11]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (T + F + Turbidity_mean | abbrev)")
+form[[12]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (T + F | abbrev)")
 
 names(form) <- form_names[1:length(form)]
 # # 3. Run LME model for all response variables
