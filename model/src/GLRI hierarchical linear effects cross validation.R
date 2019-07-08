@@ -102,13 +102,13 @@ setwd("./plots/out/model_results")
 
 for (i in 1:length(response)) {
   
-  filenm <- paste("GLRI_predictions_cv_",response[i],".pdf",sep="")
+  filenm <- paste("GLRI_predictions_cv_no_JI_",response[i],".pdf",sep="")
 #  pdf(filenm)
   
   #   * transform response variable
   df$log_response <- log10(df[,response[i]])
   #   * Choose sites or states to be included
-  sites <- c("JI", "PO", "MA", "CL", "RO", "RM")
+  sites <- c("PO", "MA", "CL", "RO", "RM")
   
   #   * Filter data to sites and make model df
   model_rows <- which(df[,groupings] %in% sites)
@@ -229,7 +229,7 @@ for (i in 1:length(response)) {
   multi.page <- ggarrange(model_plot, rmspeboxplot,
                           nrow = 1, ncol = 1)
   
-  filenm <- paste("GLRI_model_options_",response[i],".pdf",sep="")
+  filenm <- paste("GLRI_model_options_no_JI_",response[i],".pdf",sep="")
   ggexport(multi.page, filename = filenm,width = 11,height = 8)
   
 }
