@@ -48,7 +48,7 @@ df$sinDate <- fourier(df$psdate)[,1]
 df$cosDate <- fourier(df$psdate)[,2]
 
 # Define predictors and interaction terms
-predictors<- c("Turbidity_mean", "T", "F","OB1","Aresid267","S1.25","rF_T")
+predictors<- c("Turbidity_mean", "T", "F","OB1","Aresid267","S1.25","rF_T","A254")
 
 #non_int_predictors <- c("CSO")
 interactors <- c("sinDate","cosDate")
@@ -58,28 +58,28 @@ interactors <- c("sinDate","cosDate")
 
 # Define grouping variable (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
 groupings <- c("abbrev")
-# 
-# #   * Construct formula
-# form <- paste("")
-# for(j in 1:length(interactors)){ 
-#   form_temp <- paste(paste(predictors,"*",interactors[j],sep=""),collapse = " + ")
-#   if(j>1) {form <- paste(form_temp, " + ", form) 
-#   }else form <- form_temp
-# }
-# 
-# form <- paste("log_response ~ ",form)
-# 
+
+#   * Construct formula
+form <- paste("")
+for(j in 1:length(interactors)){
+  form_temp <- paste(paste(predictors,"*",interactors[j],sep=""),collapse = " + ")
+  if(j>1) {form <- paste(form_temp, " + ", form)
+  }else form <- form_temp
+}
+
+form <- paste("log_response ~ ",form)
+
 # 
 # # Add groupings
 # 
-# for(i in 1:length(groupings)) {
-#   
-#   group_form <- paste("(",paste(predictors, collapse = " + ")," | ",groupings[i], ")")
-#   form <- formula(paste(form, " + ", group_form))
-#   
-# }
+for(i in 1:length(groupings)) {
 
-form_names <- c("F,T","F,Turb","T,Turb","F","T","Turb","F,Aresid","T,S1","F,rF_T")
+  group_form <- paste("(",paste(predictors, collapse = " + ")," | ",groupings[i], ")")
+  form <- formula(paste(form, " + ", group_form))
+
+}
+
+form_names <- c("F,T","F,Turb","T,Turb","F","T","Turb","F,Aresid","T,S1","F,rF_T","F,A254")
 form <- list()
 form[[1]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (F + T | abbrev)")
 form[[2]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (F + Turbidity_mean | abbrev)")
@@ -90,6 +90,7 @@ form[[6]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean *
 form[[7]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  + (Aresid267 + T | abbrev)")
 form[[8]] <- formula("log_response ~ T * cosDate + T * sinDate + S1.25 * cosDate + S1.25 * sinDate  + (S1.25 + T | abbrev)")
 form[[9]] <- formula("log_response ~ F * cosDate + F * sinDate + rF_T * cosDate + rF_T * sinDate  + (rF_T + T | abbrev)")
+form[[10]] <- formula("log_response ~ F * cosDate + F * sinDate + A254 * cosDate + A254 * sinDate  + (A254 + T | abbrev)")
 
 names(form) <- form_names[1:length(form)]
 # # 3. Run LME model for all response variables
@@ -100,7 +101,7 @@ setwd("./plots/out/model_results")
 for (i in 1:length(response)) {
   
   filenm <- paste("GLRI_predictions_cv_",response[i],".pdf",sep="")
-  pdf(filenm)
+#  pdf(filenm)
   
   #   * transform response variable
   df$log_response <- log10(df[,response[i]])
@@ -123,7 +124,7 @@ for (i in 1:length(response)) {
   
   running_mean_cv_rmspe_list <- list()
   for(f in 1:length(form)){
-    n_folds <- 10
+    n_folds <- 5
     n_replications <- 50
     cv_rmspe = numeric()
     running_mean_cv_rmspe <- numeric()
@@ -146,7 +147,7 @@ for (i in 1:length(response)) {
       
       cv_rmspe <- c(cv_rmspe,rmspe(df_predict$log_response,df_predict$predictions))
       running_mean_cv_rmspe <- c(running_mean_cv_rmspe,mean(cv_rmspe))
-      plot_model_cv(df_predictions,form[[f]])
+     # plot_model_cv(df_predictions,form[[f]])
       
     }
     if(f==1) {
@@ -171,7 +172,7 @@ for (i in 1:length(response)) {
   names(df_running_mean_cv_rmspe) <-  paste("form",c(1:length(form)),sep="_")
   
   #}
-  dev.off()
+#  dev.off()
 #  shell.exec(filenm)
   
   
@@ -192,7 +193,7 @@ for (i in 1:length(response)) {
   # Plot observed vs predicted models
   # Compile fitted vs observed in df with three columns
   # Fitted, observed, model description (response & predictors)
-  colorOptions <- c("orange","yellow2","skyblue","black","springgreen4","blue","grey","darkorchid1")
+  colorOptions <- c("orange","red","skyblue","black","springgreen4","blue","grey","darkorchid1")
   names(colorOptions) <- legend_names <- sort(unique(model_df$abbrev))
   plot_Colors <- colorOptions[model_df[,"abbrev"]]
   abbrev <- model_df$abbrev
@@ -209,13 +210,18 @@ for (i in 1:length(response)) {
     names(model_AICs)[f] <- form[f]
   }
   names(model_results_df) <- c("predicted","observed","model_name","Plot_colors","abbrev")
-  model_plot <- ggplot(data = model_results_df,aes(x = observed,y = predicted,, color=abbrev)) + 
+
+  model_plot <- ggplot(data = model_results_df,aes(x = observed,y = predicted, color=abbrev)) + 
     geom_point() +
     #    geom_point(colour=model_results_df$Plot_colors) +
-    scale_color_brewer(palette="Dark2") +
+    scale_color_manual(values= colorOptions[levels(model_results_df$abbrev)]) +
+    #scale_color_brewer(palette="Set2") +
     geom_abline(intercept = 0, slope = 1, color="blue", 
                 linetype="dashed", size=0.5) +
     facet_wrap(~ model_name)
+  
+  
+
   #model_plot  
   
   multi.page <- ggarrange(model_plot, rmspeboxplot,

@@ -1,4 +1,8 @@
-################## Second Simple Method ###########################
+
+
+
+
+################## Linear Mixed Effects Modeling with Lasso and CV ###########################
 ## Using 5-fold CV to determine the optimal tuning parameter lambda
 
 
@@ -19,7 +23,7 @@ df$sinDate <- fourier(df$psdate)[,1]
 df$cosDate <- fourier(df$psdate)[,2]
 
 # Define predictors and interaction terms
-predictors_interacting <- c("T", "F")#,"OB1","Aresid267","S1.25","rF_T")
+predictors_interacting <- c("T", "F","A","logT","logF","logA")#,"OB1","Aresid267","S1.25","rF_T")
 predictors_noninteracting <- c("Turbidity_mean","Aresid267","rF_T","sinDate","cosDate")
 predictors <- c(predictors_interacting,predictors_noninteracting)
 interactors <- c("sinDate","cosDate")
@@ -64,7 +68,7 @@ N<-dim(model_df)[1]
 
 ind<-sample(N,N)
 
-lambda <- seq(4,0,by=-.1)
+lambda <- seq(20,0,by=-1)
 
 kk<-5
 
@@ -111,10 +115,14 @@ for(j in 1:length(lambda))
     
     
     
-    glm2 <- glmmLasso(log_response ~ 1 + T +  + F + Turbidity_mean 
-                      + sinDate + cosDate
-                      + F:sinDate + F:cosDate
-                      + T:sinDate + T:cosDate, 
+    # glm2 <- glmmLasso(log_response ~ 1 + T +  + F + Turbidity_mean 
+    #                   + sinDate + cosDate
+    #                   + F:sinDate + F:cosDate
+    #                   + T:sinDate + T:cosDate, 
+    #                   rnd = list(abbrev=~1 + T + F), lambda=lambda[j], 
+    #                   data = model_df.train, control = list(method="REML",print.iter=TRUE))
+    # 
+    glm2 <- glmmLasso(form1, 
                       rnd = list(abbrev=~1 + T + F), lambda=lambda[j], 
                       data = model_df.train, control = list(method="REML",print.iter=TRUE))
     
