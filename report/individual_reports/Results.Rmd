@@ -99,3 +99,10 @@ Do we want a similar descriptive set of graphs for some of the optical propertie
 2. item 2
     + sub-item 1
     + sub-item 2 
+    
+
+Modeling points to make:
+
+1. MMSD: 
+  a. There were three CSO events. All three of these are outliers in the model. The model underpredicts these values for all bacteria modeled. Adding a CSO term aligns these with the rest of the model (adjustment of the intercept), but three observations is not enough to provide confidence in that model term. Additional CSO event samples would be needed to provide sufficient confidence in these results.
+
