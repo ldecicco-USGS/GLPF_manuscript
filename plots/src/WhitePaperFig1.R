@@ -10,6 +10,7 @@ library(servr)
 library(USGSHydroOpt)
 library(RColorBrewer)
 library(scales)
+library(Hmisc)
 
 
 n_fun <- function(x){
@@ -29,7 +30,7 @@ dfHM <- filter(dfHM,scale != "small")
 
 boxp <- ggplot(dfHM,aes(y=hm,x=site)) +
   geom_boxplot(aes(fill=hydro_condition))+ 
-  facet_grid(~scale, scales='free_x', space = "free_x") +
+  facet_grid(~scale, scales='free_x', space = "free_x", labeller = labeller(scale=capitalize)) +
   stat_summary(fun.data = n_fun, geom = "text", angle = 90,
                aes(group=hydro_condition),
                hjust = 0.5, position = position_dodge(0.6)) +
