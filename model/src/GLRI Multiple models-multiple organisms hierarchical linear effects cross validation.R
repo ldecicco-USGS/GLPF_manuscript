@@ -94,7 +94,7 @@ names(form) <- form_names[1:length(form)]
 # Set boundary tolerance for singularity consistent with "isSingular()"
 options(lmerControl(boundary.tol=1e-4))
 
-for (s in 1:length(site_combos)) {
+for (s in 3:length(site_combos)) {
   #   * Choose sites or states to be included
   sites <- site_combos[[s]]
 
