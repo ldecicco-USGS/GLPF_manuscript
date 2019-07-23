@@ -44,6 +44,11 @@ df <- df_GLRI
 response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls","E..coli.CFUs.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml")
 #response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
 
+#Set censored values to detection limit
+MDL <- c(225,225,1,225,1)
+names(MDL) <- response
+for(i in 1:length(response)){df[,response[i]] <- ifelse(df[,response[i]]<=MDL[response[i]],MDL[response[i]],df[,response[i]])}
+
 # * Transform seasonal variables
 df$sinDate <- fourier(df$psdate)[,1]
 df$cosDate <- fourier(df$psdate)[,2]
@@ -69,7 +74,9 @@ site_combos[[5]] <- c("PO", "MA", "RM")
 
 names(site_combos) <- c("All","no_JI","urban","CL_RO","Agricultural")
 
-form_names <- c("F","F2","F,T","F,Turb","F,S1","F,A254","F,Aresid","T","T2","T,Turb","Turb","Turb2","F,T,Turb", "F,T,Turb 2","F,T,Turb 3" )
+form_names <- c("F","F2","F,T","F,Turb","F,S1","F,A254","F,Aresid","T","T2","T,Turb",
+                "Turb","Turb2","F,T,Turb", "F,T,Turb 2","F,T,Turb 3",
+                "F,Turb 2","F,T 2","F,Aresid 2","Aresid","Aresid2","T,Turb 2")
 form <- list()
 form[[1]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosDate + (F + 1 | abbrev)")
 form[[2]] <- formula("log_response ~ F * cosDate + F * sinDate + (1 | abbrev)")
@@ -86,6 +93,14 @@ form[[12]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean 
 form[[13]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (F + Turbidity_mean | abbrev)")
 form[[14]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (F | abbrev)")
 form[[15]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (1 | abbrev)")
+form[[16]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (1 | abbrev)")
+form[[17]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (1 | abbrev)")
+form[[18]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  + (1 | abbrev)")
+form[[19]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  + (Aresid267 | abbrev)")
+form[[20]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  + (1 | abbrev)")
+form[[21]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T * sinDate + Turbidity_mean * sinDate + (1 | abbrev)")
+
+#Need to test F_Turb_2 (no slopes in random effects) vs F_Turb
 
 
 names(form) <- form_names[1:length(form)]
@@ -94,8 +109,9 @@ names(form) <- form_names[1:length(form)]
 # Set boundary tolerance for singularity consistent with "isSingular()"
 options(lmerControl(boundary.tol=1e-4))
 
-for (s in 3:length(site_combos)) {
-  #   * Choose sites or states to be included
+for (s in 1:(length(site_combos))) {
+#  for (s in 6:6) {
+    #   * Choose sites or states to be included
   sites <- site_combos[[s]]
 
     for (i in 1:length(response)) {
@@ -122,7 +138,7 @@ for (s in 3:length(site_combos)) {
     names(model_df_scaled) <- c("log_response",predictors,interactors,groupings)
     
     running_mean_cv_rmspe_list <- list()
-    for(f in 1:length(form)){
+    for(f in 16:length(form)){
       n_folds <- 5
       n_replications <- 50
       cv_rmspe = numeric()
@@ -232,12 +248,12 @@ for (s in 3:length(site_combos)) {
     multi.page <- ggarrange(model_plot, rmspeboxplot,
                             nrow = 1, ncol = 1)
     
-    filenm <- paste("GLRI_model_options_Jul_7_",names(site_combos)[s],"_",response[i],".pdf",sep="")
+    filenm <- paste("GLRI_model_options_Jul_7_Extra_",names(site_combos)[s],"_",response[i],".pdf",sep="")
     filenm <- file.path("model","out","plots",filenm)
     ggexport(multi.page, filename = filenm,width = 11,height = 8)
     
     }
-  saveRDS(rmse_df, file = paste("rmse_",names(site_combos)[s],".rds",sep=""))
+  saveRDS(rmse_df, file = paste("rmse_Extra",names(site_combos)[s],".rds",sep=""))
           
 }
 
