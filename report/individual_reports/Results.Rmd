@@ -65,7 +65,7 @@ wilcox.result2 <- wilcox.test(hmMINYEvent,hmMINYLowflow)
 ```
 There were differences in HB concentrations among sites and by hydrologic condition. At the small scale, median concentrations of HB were `r WI_ratio_median` times greater at the Wisconsin sites than those from the other states (p < 0.05). In samples from Michigan and New York, results indicated greater HB concentrations during runoff events than during periods of low flow (p < 0.05), but results from the small scale Wisconsin sites indicated no significant difference in HB concentrations by hydrologic event. 
 
-Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater HB concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of HIB at sites with less than 25% urban land cover at these two scales were not significantly different. 
+Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater HB concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of HIB at sites with less than 25% urban land cover at these two scales did not vary significantly by hydrologic condition. 
 
 
 Actions needed:

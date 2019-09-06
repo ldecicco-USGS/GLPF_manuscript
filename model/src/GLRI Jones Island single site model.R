@@ -1,10 +1,4 @@
-# Reference to Sam's dissertation:  
-# https://github.com/limnoliver/CSI-Nutrient-Time-Series/blob/master/Code/05_analysis_hlm.R
-#
-
-# Intro to Linear mixed models: https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/
-# lme4 package vignette describing method with Table 2 describing grouping options:
-#   https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
+# Hueristic Optical-bacteria regressions for GLRI Jones Island site
 
 # 1. Load data
 # 2. General modeling setup:
@@ -12,18 +6,14 @@
 #     * Transform response variables
 #   * Define predictors
 #     * Define interactions
-#     * Define grouping variables (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
-#         *Using this form: x + (x || g) 1 + x + (1 | g) + (0 + x | g) Uncorrelated random intercept and slope.
 
 #   * Construct formula
-#   * Choose sites or states to be included
-#   * Filter data to sites and make model df
+#   * Filter data to Jones Island site and make model df
 
-# 3. Run LME model for all response variables
+# 3. Run OLS model for all response variables
 # 4. Graph results
 
 
-library(lme4)
 library(smwrBase)
 library(car)
 library(dplyr)
@@ -66,59 +56,50 @@ interactors <- c("sinDate","cosDate")
 groupings <- c("abbrev")
 
 site_combos <- list()
-site_combos[[1]] <- c("JI","PO", "MA", "CL", "RO", "RM")
-site_combos[[2]] <- c("PO", "MA", "CL", "RO", "RM")
-site_combos[[3]] <- c("JI","CL", "RO")
-site_combos[[4]] <- c("CL", "RO")
-site_combos[[5]] <- c("PO", "MA", "RM")
+site_combos[[1]] <- c("JI")
 
-names(site_combos) <- c("All","no_JI","urban","CL_RO","Agricultural")
+names(site_combos) <- c("JI")
 
 form_names <- c("F","F2","F,T","F,Turb","F,S1","F,A254","F,Aresid","T","T2","T,Turb",
                 "Turb","Turb2","F,T,Turb", "F,T,Turb 2","F,T,Turb 3",
                 "F,Turb 2","F,T 2","F,Aresid 2","Aresid","Aresid2","T,Turb 2")
 form <- list()
-form[[1]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosDate + (F + 1 | abbrev)")
-form[[2]] <- formula("log_response ~ F * cosDate + F * sinDate + (1 | abbrev)")
-form[[3]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (F + 1 | abbrev)")
-form[[4]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (F + 1 | abbrev)")
-form[[5]] <- formula("log_response ~ F * cosDate + F * sinDate + S1.25 * cosDate + S1.25 * sinDate  + (S1.25 | abbrev)")
-form[[6]] <- formula("log_response ~ F * cosDate + F * sinDate + A254 * cosDate + A254 * sinDate  + (F | abbrev)")
-form[[7]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  + (Aresid267 | abbrev)")
-form[[8]] <- formula("log_response ~ T * cosDate + T * sinDate  + (T + 1 | abbrev)")
-form[[9]] <- formula("log_response ~ T * cosDate + T * sinDate + (1 | abbrev)")
-form[[10]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T * sinDate + Turbidity_mean * sinDate + (Turbidity_mean + 1 | abbrev)")
-form[[11]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate  + (Turbidity_mean | abbrev)")
-form[[12]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + (1 | abbrev)")
-form[[13]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (F + Turbidity_mean | abbrev)")
-form[[14]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (F | abbrev)")
-form[[15]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (1 | abbrev)")
-form[[16]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (1 | abbrev)")
-form[[17]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (1 | abbrev)")
-form[[18]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  + (1 | abbrev)")
-form[[19]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  + (Aresid267 | abbrev)")
-form[[20]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  + (1 | abbrev)")
-form[[21]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T * sinDate + Turbidity_mean * sinDate + (1 | abbrev)")
+form[[1]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosDate ")
+form[[2]] <- formula("log_response ~ F * cosDate + F * sinDate ")
+form[[3]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate ")
+form[[4]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate ")
+form[[5]] <- formula("log_response ~ F * cosDate + F * sinDate + S1.25 * cosDate + S1.25 * sinDate  ")
+form[[6]] <- formula("log_response ~ F * cosDate + F * sinDate + A254 * cosDate + A254 * sinDate  ")
+form[[7]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  ")
+form[[8]] <- formula("log_response ~ T * cosDate + T * sinDate  ")
+form[[9]] <- formula("log_response ~ T * cosDate + T * sinDate ")
+form[[10]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T * sinDate + Turbidity_mean * sinDate ")
+form[[11]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate  ")
+form[[12]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate ")
+form[[13]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate ")
+form[[14]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate ")
+form[[15]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate ")
+form[[16]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate ")
+form[[17]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate ")
+form[[18]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate ")
+form[[19]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  ")
+form[[20]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  ")
+form[[21]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T * sinDate + Turbidity_mean * sinDate ")
 
 
 
 names(form) <- form_names[1:length(form)]
-# # 3. Run LME model for all response variables
+# # 3. Run OLS model for all response variables
 
-# Set boundary tolerance for singularity consistent with "isSingular()"
-options(lmerControl(boundary.tol=1e-4))
 
-#for (s in 2:(length(site_combos))) {
-  for (s in 1:1) {
-    #  for (s in 6:6) {
+for (s in 1:(length(site_combos))) {
+
     #   * Choose sites or states to be included
   sites <- site_combos[[s]]
+  
+  for (i in 1:length(response)) {
+    
 
-    for (i in 1:length(response)) {
-    
-    #filenm <- paste("GLRI_predictions_",response[i],".pdf",sep="")
-    #  pdf(filenm)
-    
     #   * transform response variable
     df$log_response <- log10(df[,response[i]])
     
@@ -152,7 +133,7 @@ options(lmerControl(boundary.tol=1e-4))
           df_cv <- model_df_scaled[include,]
           df_predict <- model_df_scaled[-include,]
           #   * Run model
-          m <- lmer(form[[f]],data=df_cv)
+          m <- lm(form[[f]],data=df_cv)
           df_predict$predictions <- predict(m,newdata=df_predict)
           if(j == 1) {df_predictions <- df_predict
           }else{df_predictions <- rbind(df_predictions,df_predict)
@@ -188,10 +169,7 @@ options(lmerControl(boundary.tol=1e-4))
     
     names(df_running_mean_cv_rmspe) <-  paste("form",c(1:length(form)),sep="_")
     
-    #}
-    #  dev.off()
-    #  shell.exec(filenm)
-    
+
     #Develop boxplot analysis of RMSE for each of the models for an individual organism
     # Used to choose model with least uncertainty in prediction
     # plot_df <- do.call(cbind,running_mean_cv_rmspe_list)
@@ -203,7 +181,9 @@ options(lmerControl(boundary.tol=1e-4))
     rmspeboxplot <- ggplot(data=plot_df,aes(x=key,y=value)) + 
       geom_boxplot() + 
       ggtitle(paste0(response[i],":    Root Mean Square Prediction Error for ",n_replications," replications of each Model Option")) +
-      theme(plot.title = element_text(size = 12))
+      theme(plot.title = element_text(size = 12),axis.text.x=element_text(angle=45,hjust=1))
+   
+      
     
     names(plot_df) <- c("model_vars",response[i])
     if(i == 1) {rmse_df <- plot_df
@@ -222,7 +202,7 @@ options(lmerControl(boundary.tol=1e-4))
     model_AICs <- numeric()
     model_results_df <- NULL
     for(f in 1:length(form)){
-      m <- lmer(form[[f]],data=model_df_scaled)
+      m <- lm(form[[f]],data=model_df_scaled)
       predicted <- predict(m,newdata=model_df_scaled)
       observed <- model_df_scaled$log_response
       model_name <- paste(response[i],form_names[f],sep=" ~ ")
@@ -240,6 +220,7 @@ options(lmerControl(boundary.tol=1e-4))
       geom_abline(intercept = 0, slope = 1, color="blue", 
                   linetype="dashed", size=0.5) +
       facet_wrap(~ model_name)
+
     
     
     
@@ -248,14 +229,13 @@ options(lmerControl(boundary.tol=1e-4))
     multi.page <- ggarrange(model_plot, rmspeboxplot,
                             nrow = 1, ncol = 1)
     
-    filenm <- paste("GLRI_model_options_Jul_24_",names(site_combos)[s],"_",response[i],".pdf",sep="")
+    filenm <- paste("GLRI_model_options__Jul_30_",names(site_combos)[s],"_",response[i],".pdf",sep="")
     filenm <- file.path("model","out","plots",filenm)
     ggexport(multi.page, filename = filenm,width = 11,height = 8)
     
-    }
+  }
   saveRDS(rmse_df, file = paste("rmse_Extra",names(site_combos)[s],".rds",sep=""))
-          
+  
 }
 
 
-        
