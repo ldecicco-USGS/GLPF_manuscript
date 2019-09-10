@@ -2,7 +2,11 @@
 title: "Results"
 author: "Steven R. Corsi, Laura A. De Cicco and others"
 date: "November 30, 2018"
-output: word_document
+#output: word_document
+output:
+  bookdown::word_document2:
+  fig_caption: yes
+  toc: yes
 editor_options: 
   chunk_output_type: console
 ---
@@ -33,17 +37,18 @@ dfHM$hm <- dfHM$bacHum + dfHM$lachno2
 maxHM <- round(max(dfHM$hm)/10^9,2)
 maxSite <- dfHM[which.max(dfHM$hm),"site"]
 maxScale <- dfHM[which.max(dfHM$hm),"scale"]
+
 ```
-Throughout the study, `r sum(dfHM_summary$n)` samples were collected, including `r dfHM_summary[1,"n"]` samples from `r dfHM_summary[1,"scale"]` scale sites, `r dfHM_summary[2,"n"]` samples from `r dfHM_summary[2,"scale"]` scale sites, and `r dfHM_summary[3,"n"]` samples from `r dfHM_summary[3,"scale"]` scale sites. The sum of the two human indicator bacteria markers (hereafter referred to as HIB) varied from below the reporting level to a maximum of `r maxHM` x 10^9^ cn/100 ml (Figure 2).
+Throughout the study, `r sum(dfHM_summary$n)` samples were collected, including `r dfHM_summary[1,"n"]` samples from `r dfHM_summary[1,"scale"]` scale sites, `r dfHM_summary[2,"n"]` samples from `r dfHM_summary[2,"scale"]` scale sites, and `r dfHM_summary[3,"n"]` samples from `r dfHM_summary[3,"scale"]` scale sites. The sum of the two human indicator bacteria markers (hereafter referred to as HIB) varied from below the reporting level to a maximum of `r maxHM` x 10^9^ cn/100 ml (Figure \@ref(fig:ConcAndOccurrenceFig)).
 
 
 
-```{r figure_2, fig.width=5,fig.height=5, fig.cap = "Figure 2. The sum of human indicator bacteria markers A. concentrations and b. Occurrence proportion in samples from small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). For each scale, sites are ordered by most to least urban land use percentage from left to right.", echo=FALSE}
+```{r ConcAndOccurrenceFig, fig.width=5,fig.height=5, fig.cap = "The sum of human indicator bacteria markers A. concentrations and b. Occurrence proportion in samples from small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). For each scale, sites are ordered by most to least urban land use percentage from left to right.", echo=FALSE}
 
 source(file = "plots/src/Figure_2.R")
 
-fig_2 <- plot_fig_2()
-print(fig_2)
+ConcOccurrenceFig <- plot_fig_2()
+print(ConcOccurrenceFig)
 
 ```
 
@@ -63,19 +68,47 @@ wilcox.result2 <- wilcox.test(hmMINYEvent,hmMINYLowflow)
 #for sites with > 25% urban vs sites with < 25% urban
 
 ```
-There were differences in HB concentrations among sites and by hydrologic condition. At the small scale, median concentrations of HB were `r WI_ratio_median` times greater at the Wisconsin sites than those from the other states (p < 0.05). In samples from Michigan and New York, results indicated greater HB concentrations during runoff events than during periods of low flow (p < 0.05), but results from the small scale Wisconsin sites indicated no significant difference in HB concentrations by hydrologic event. 
+
+
+There were differences in HB concentrations among sites and by hydrologic condition (Figure \@ref(fig:ConcAndOccurrenceFig)). At the small scale, median concentrations of HB were `r WI_ratio_median` times greater at the Wisconsin sites than those from the other states (p < 0.05). In samples from Michigan and New York, results indicated greater HB concentrations during runoff events than during periods of low flow (p < 0.05), but results from the small scale Wisconsin sites indicated no significant difference in HB concentrations by hydrologic event. 
 
 Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater HB concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of HIB at sites with less than 25% urban land cover at these two scales did not vary significantly by hydrologic condition. 
 
+## Modeling
 
-Actions needed:
+Regression modeling was used to define relations between bacteria concentrations (response variables) and optical signals (explanatory variables). From a practical standpoint for potential field application, variable selection for these regressions was done in three **(CHANGE TO TWO???)** potential stages: First, optical signals that were already available as field sensors were considered first (case 1). Next, if reasonable relationships could not be determined in case 1, optical signals that are in a reasonable excitation/emmission range for development of custom field sensors were then considered (case 2). When the first two cases did not result in reasonable results, explanatory variables were expanded to use of numerous additional optical signals or variables that could be derived from optical signals within the data set.
+
+
+**Describe the way models were chosen**
+
+  - minimizing the median cross validated sum of squared errors
+  - examining each model for reasonable description of variability for all sites included. At times there were reasonable regressions overall, but one or more sites did not fit well. These models were not chosen
+  - Groupings of sites
+    - All sites
+    - Elimination of JI (seiche)
+    - Groupings of like sites 
+    - Urban
+    - Ag
+    - JI only
+    + test
+
+
+### Selected models
+
+Describe models selected
+ + Groupings of sites
+Regression modeling for watershed and subwatershed sites resulted in among all of the 
+
+
+
+# Actions needed:
 1. Develop site characteristics table. Land cover for the watershed and subwatershed scales, and for the three primary small watersheds in the small scale.
     + need site IDs for middle branch Clinton and Red Creek, NY
 2. Use these characteristics to describe the hydrologic changes. Urban: hydro change, non-urban no hydro change.
 
-3. Run MDL scripts on all three data sets
+3. (DONE?) Run MDL scripts on all three data sets
 
-4. Run optical summary scripts for all three data sets
+4. (DONE) Run optical summary scripts for all three data sets
 
 5. Combine the three data sets into one with scale variable for subsetting.
 
