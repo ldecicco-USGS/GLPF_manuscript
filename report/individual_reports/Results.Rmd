@@ -5,9 +5,12 @@ date: "November 30, 2018"
 #output: word_document
 output:
   bookdown::word_document2:
+    css: environmental-science-and-technology.csl
     fig_caption: yes
     toc: no
     reference_docx: "word-styles-reference-orig.docx"
+bibliography: Optical properties.bib
+link-citations: yes
 editor_options: 
   chunk_output_type: console
 ---
@@ -78,13 +81,15 @@ Samples collected at sites with greater than 25% urban land cover at the watersh
 
 ## Modeling
 
-Regression modeling was used to define relations between bacteria concentrations (response variables) and optical signals (explanatory variables). From a practical standpoint for potential field application, variable selection for these regressions was done in two potential stages: First, optical signals that were already available as field sensors were considered first (case 1). Next, if reasonable relationships could not be determined in case 1, explanatory variables were expanded to use of numerous additional optical signals or variables that could be derived from optical signals within the data set. These signals included direct fluorescence or absorbance signals at specific wavelengths, means of fluorescence or absorbance signals over specified bandwidths, ratios of these signals, spectral slopes determined as the slope of the absorbance curve over specified wavelengths in exponential space (**<span custom-style="OrangeText">add reference here</span>**), and several optical indices that have been used in previous research (**<span custom-style="OrangeText">add references here</span>**). Final explanatory variables used in this analysis are presented in the supporting information (Table SI-xx). Given the potential for seasonality in dissolved organic matter composition in streams, seasonal varaibles (sine and cosine of julian day/(2$\pi$)) along with optical signals were used to develop interaction terms (Kaiser et. al, 2001, Coble et al., 2016).
+Regression modeling was used to define relations between bacteria concentrations (response variables) and optical signals (explanatory variables). All five measures of bacteria were included in regression analysis for watershed and subwatershed sites. For the small scale sites the four QPCR markers were included in regression analysis, but E. coli was not analyzed by culture for these sites. In all cases response variables were log base 10 transformed. From a practical standpoint for potential field application, explanatory variable selection for these regressions was done in two potential stages: First, optical signals that were already available as field sensors were considered (case 1). Next, if reasonable relationships could not be determined in case 1, explanatory variables were expanded to use of numerous additional optical signals or variables that could be derived from optical signals within the data set. These signals included direct fluorescence or absorbance signals at specific wavelengths, means of fluorescence or absorbance signals over specified bandwidths, ratios of these signals, spectral slopes determined as the slope of the absorbance curve over specified wavelengths in exponential space (**<span custom-style="OrangeText">add reference here</span>**), and several optical indices that have been used in previous research (**<span custom-style="OrangeText">add references here</span>**). Given the potential for seasonality in dissolved organic matter composition in streams (@kaiser_seasonal_2001, @coble_temporal_2016), seasonal varaibles (sine and cosine of julian day/(2$\pi$)) along with optical signals were used to develop interaction terms. Optical signals used as case 1 variables included signals F (commonly called fDOM or CDOM) and T (often referred to as tryptophan-like fluorescence) as well as turbidity. Final explanatory variables used in this analysis are presented in the supporting information (Table SI-xx).
 
-Exploration of potential regression models was conducted using data sets that included multiple sites as well as one single-site data set (Milwaukee River). The Milwaukee River was modeled independently from other sites because the nature of organic matter influence was substantially different than other sites: The moniotoring station at this site was near Lake Michigan and a seiche effect is commonly present, posing the potential for Lake Michigan water influence. In addition, sites with similar land cover were grouped into one data set (e.g. urban, agrucultural). For the single-site data set, ordinary least squares regression was used, and for data sets with more than one site included, heirarchical mixed effects models were used to account for potential shifts in the statistical relationships among sites (add references for base r and lme4). For both modeling techniques, 5-fold cross validation repeated 50 times was conducted to estimate predictive accuracy. The median sum of squared residuals for the 50 fits was used to compare among models with different explanatory variable combinations. Those models with the lowest median sum of squared residuals were evaluated graphically (scatter plots of observed vs. predicted values) for reasonable fit with data from each of the individual sites. 
+The model selection process included several steps with the ultimate goal of minimizing error in prediction while choosing a model that has a reasonable fit for all sites in the data set. It was not uncommon to find a model that appeared to be a good fit overall but did not provide a good fit for data from one or more of the  individual sites. For this reason, exploration of potential regression models was conducted using data sets that included multiple sites as well as one single-site data set (Milwaukee River). The Milwaukee River was modeled independently from other sites because the nature of organic matter influence was substantially different than other sites: The moniotoring station at this site was near Lake Michigan and a seiche effect is commonly present, posing the potential for Lake Michigan water influence. In addition, sites with similar land cover were grouped into one data set (e.g. urban, agrucultural). For the single-site data set, ordinary least squares regression (OLS) was used, and for data sets with more than one site included, linear heirarchical mixed effects models (LME) were used to account for potential shifts in the statistical relationships among sites (add references for base r and lme4). For both modeling techniques, 5-fold cross validation repeated 50 times was conducted to estimate predictive accuracy. The median sum of squared residuals for the 50 fits was used to compare among models with different explanatory variable combinations. Models with the lowest median sum of squared residuals were evaluated graphically (scatter plots of observed vs. predicted values) for reasonable fit with data from each of the sites individually. 
 
-The model selection process included several steps with the ultimate goal of minimizing error in prediction while choosing a model that has a reasonable fit for all sites in the data set. It was not uncommon to find a model that appeared to be a good fit overall but did not provide a good fit for data from one or more of the  individual sites.
 
-Five different measures of bacteria were included in regression analysis for watershed and subwatershed sites and XX measures of bacteria were included in regression analysis for small watershed sites (Table xx). 
+
+
+
+and XX measures of bacteria were included in regression analysis for small watershed sites (Table xx). 
 
 
 
@@ -112,6 +117,10 @@ Five different measures of bacteria were included in regression analysis for wat
 
 Describe models selected
  + Groupings of sites
+ + primary variables = F, T, Turbidity + seasonality + mixed effect with sites
+ + Same variables for all response variables
+ + Report median sum of squared residuals?
+ 
 Regression modeling for watershed and subwatershed sites resulted in among all of the 
 
 
@@ -154,3 +163,5 @@ Modeling points to make:
 1. MMSD: 
   a. There were three CSO events. All three of these are outliers in the model. The model underpredicts these values for all bacteria modeled. Adding a CSO term aligns these with the rest of the model (adjustment of the intercept), but three observations is not enough to provide confidence in that model term. Additional CSO event samples would be needed to provide sufficient confidence in these results.
 
+
+#References

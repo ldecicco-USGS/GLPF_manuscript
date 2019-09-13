@@ -54,7 +54,7 @@ df$sinDate <- fourier(df$psdate)[,1]
 df$cosDate <- fourier(df$psdate)[,2]
 
 # Define predictors and interaction terms
-predictors<- c("Turbidity_mean", "T", "F","OB1","Aresid267","S1.25","rF_T","A254")
+predictors<- c("Turbidity_mean", "T", "F","M")
 
 #non_int_predictors <- c("CSO")
 interactors <- c("sinDate","cosDate")
@@ -70,10 +70,10 @@ site_combos[[1]] <- c("JI","PO", "MA", "CL", "RO", "RM")
 site_combos[[2]] <- c("PO", "MA", "CL", "RO", "RM")
 site_combos[[3]] <- c("JI","CL", "RO")
 site_combos[[4]] <- c("CL", "RO")
-site_combos[[5]] <- c("PO", "MA", "RM")
-site_combos[[6]] <- c("PO", "MA", "RM","JI")
+site_combos[[5]] <- c("PO", "MA", "RM","JI")
+site_combos[[6]] <- c("PO", "MA", "RM")
 
-names(site_combos) <- c("All","no_JI","urban","CL_RO","Agricultural","AG_JI")
+names(site_combos) <- c("All","no_JI","urban","CL_RO","AG_JI","Agricultural")
 
 # form_names <- c("F","F2","F,T","F,Turb","F,S1","F,A254","F,Aresid","T","T2","T,Turb",
 #                 "Turb","Turb2","F,T,Turb", "F,T,Turb 2","F,T,Turb 3",
@@ -101,6 +101,9 @@ names(site_combos) <- c("All","no_JI","urban","CL_RO","Agricultural","AG_JI")
 # form[[20]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  + (1 | abbrev)")
 # form[[21]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T * sinDate + Turbidity_mean * sinDate + (1 | abbrev)")
 
+# Current sensor variables tried: F, T, S1, Turb. ** S1 was not useful beyond the others
+# Easily developed: M
+# Current sensors highly correlated with other current sensors: S2 (F), S3 (T), OB (F): r > 0.98
 
 form <- list()
 form[[1]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosDate + (1 | abbrev)")
@@ -113,7 +116,7 @@ form[[7]] <- formula("log_response ~ T * cosDate + T * sinDate + M * cosDate + M
 form[[8]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + sinDate + cosDate + (1 | abbrev)")
 form[[9]] <- formula("log_response ~ Turbidity_mean + T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
 form[[10]] <- formula("log_response ~ Turbidity_mean + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
-form[[11]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (Turb + 1 | abbrev)")
+form[[11]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (Turbidity_mean + 1 | abbrev)")
 form[[12]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
 form[[13]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
 form[[14]] <- formula("log_response ~ Turbidity_mean + T * cosDate + T * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
@@ -121,10 +124,15 @@ form[[15]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosD
 form[[16]] <- formula("log_response ~ T * cosDate + T * sinDate + sinDate + cosDate + (T + 1 | abbrev)")
 form[[17]] <- formula("log_response ~ M * cosDate + M * sinDate + sinDate + cosDate + (M + 1 | abbrev)")
 form[[18]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + sinDate + cosDate + (Turbidity_mean + 1 | abbrev)")
+form[[19]] <- formula("log_response ~ F + F * cosDate + F * sinDate + sinDate + cosDate + (1 | abbrev)")
 
-form_names <- c("F","F2","F,T","F,Turb","F,S1","F,A254","F,Aresid","T","T2","T,Turb",
-                "Turb","Turb2","F,T,Turb", "F,T,Turb 2","F,T,Turb 3",
-                "F,Turb 2","F,T 2","F,Aresid 2","Aresid","Aresid2","T,Turb 2")
+form_names <- c("F","T","M","Turb","F_T","F_M","T_M","Turb_F","Turb_T","Turb_M","F_T_M",
+                "Turb_F_T","Turb_F_M","Turb_T_M",
+                "F2","T2","M2","Turb2","F3")
+
+sensors <- c("F","T","M")
+
+turb <- "Turbidity_mean"
 
 names(form) <- form_names[1:length(form)]
 # # 3. Run LME model for all response variables
@@ -133,12 +141,12 @@ names(form) <- form_names[1:length(form)]
 options(lmerControl(boundary.tol=1e-4))
 
 #for (s in 2:(length(site_combos))) {
-  for (s in 6:6) {
-    #  for (s in 6:6) {
-    #   * Choose sites or states to be included
+for (s in 1:5) {
+  #  for (s in 6:6) {
+  #   * Choose sites or states to be included
   sites <- site_combos[[s]]
-
-    for (i in 1:length(response)) {
+  
+  for (i in 1:length(response)) {
     
     #filenm <- paste("GLRI_predictions_",response[i],".pdf",sep="")
     #  pdf(filenm)
@@ -163,7 +171,7 @@ options(lmerControl(boundary.tol=1e-4))
     
     running_mean_cv_rmspe_list <- list()
     for(f in 1:length(form)){
-      n_folds <- 5
+        n_folds <- 5
       n_replications <- 50
       cv_rmspe = numeric()
       running_mean_cv_rmspe <- numeric()
@@ -224,10 +232,14 @@ options(lmerControl(boundary.tol=1e-4))
     plot_df <- df_cv_rmspe
     
     plot_df <- tidyr::gather(plot_df)
+    
+    plot_df$key <- factor(plot_df$key,levels = form_names)
+    
     rmspeboxplot <- ggplot(data=plot_df,aes(x=key,y=value)) + 
       geom_boxplot() + 
       ggtitle(paste0(response[i],":    Root Mean Square Prediction Error for ",n_replications," replications of each Model Option")) +
-      theme(plot.title = element_text(size = 12))
+      theme(plot.title = element_text(size = 12)) +
+      theme(axis.text.x = element_text(angle = 45,hjust=1))
     
     names(plot_df) <- c("model_vars",response[i])
     if(i == 1) {rmse_df <- plot_df
@@ -276,10 +288,10 @@ options(lmerControl(boundary.tol=1e-4))
     filenm <- file.path("model","out","plots",filenm)
     ggexport(multi.page, filename = filenm,width = 11,height = 8)
     
-    }
-  saveRDS(rmse_df, file = paste("rmse_Extra",names(site_combos)[s],".rds",sep=""))
-          
+  }
+  filenm <- file.path("model","out",paste("rmse_",names(site_combos)[s],".rds",sep=""))
+  saveRDS(rmse_df, file = filenm)
+  
 }
 
 
-        

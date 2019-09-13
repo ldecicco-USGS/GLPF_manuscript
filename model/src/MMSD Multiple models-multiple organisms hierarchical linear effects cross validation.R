@@ -263,7 +263,7 @@ for (s in 1:(length(site_combos))) {
     ggexport(multi.page, filename = filenm,width = 11,height = 8)
     
     }
-  saveRDS(rmse_df, file = paste("rmse_Extra",names(site_combos)[s],".rds",sep=""))
+  saveRDS(rmse_df, file = paste("./model/out/rmse_Extra",names(site_combos)[s],".rds",sep=""))
           
 }
 
