@@ -3,7 +3,7 @@ library(dplyr)
 library(Hmisc)
 
 
-reduce_correlated_variables <- function() {
+reduce_correlated_variables <- function(df_cor) {
   # 1. Load data
   df_GLRI <- readRDS(file.path("process","out","glri_summary.rds"))
   df <- df_GLRI
@@ -58,7 +58,7 @@ reduce_correlated_variables <- function() {
 }
 
 
-correlated_to_primary_signals <- function() {
+correlated_to_primary_signals <- function(predictors) {
   # 1. Load data
   df_GLRI <- readRDS(file.path("process","out","glri_summary.rds"))
   df <- df_GLRI
