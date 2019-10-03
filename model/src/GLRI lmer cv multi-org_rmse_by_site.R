@@ -42,8 +42,8 @@ df <- df_GLRI
 # 2. General modeling setup:
 
 #  * Define response variables
-response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls","E..coli.CFUs.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml")
-#response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
+# response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls","E..coli.CFUs.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml")
+response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
 
 #Set censored values to detection limit
 MDL <- c(225,225,1,225,1)
@@ -68,8 +68,8 @@ groupings <- c("abbrev")
 
 site_combos <- list()
 site_combos[[1]] <- c("CL", "RO")
-site_combos[[2]] <- c("PO", "MA", "RM")
-site_combos[[3]] <- c("JI","OC")
+# site_combos[[2]] <- c("PO", "MA", "RM")
+# site_combos[[3]] <- c("JI","OC")
 #site_combos[[1]] <- c("PO", "MA", "RM","OC","EE")
 #site_combos[[1]] <- c("OC","EE")
 # site_combos[[3]] <- c("JI","CL", "RO")
@@ -205,7 +205,7 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
         n_folds <- 5
       n_replications <- 50
       cv_rmspe = numeric()
-      cv_sites <- character()
+      cv_sites <- data.frame(abbrev=character(),predictions = numeric(),log_response = numeric())
       running_mean_cv_rmspe <- numeric()
       folds <- cvFolds(nrow(model_df), K=n_folds, R = n_replications)
       
@@ -225,7 +225,7 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
         }
         
         cv_rmspe <- c(cv_rmspe,rmspe(df_predictions$log_response,df_predictions$predictions))
-        cv_sites <- c(cv_sites,df_predictions$abbrev)
+        cv_sites <- rbind(cv_sites,df_predictions[,c("abbrev","predictions","log_response")])
         running_mean_cv_rmspe <- c(running_mean_cv_rmspe,mean(cv_rmspe))
         # plot_model_cv(df_predictions,form[[f]])
         
