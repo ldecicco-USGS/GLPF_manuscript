@@ -173,6 +173,8 @@ names(form) <- form_names[1:length(form)]
 # Set boundary tolerance for singularity consistent with "isSingular()"
 options(lmerControl(boundary.tol=1e-4))
 
+cv_sites <- data.frame(abbrev=character(),predictions = numeric(),log_response = numeric(),
+                       model=character(),site_combo=character(),response=character())
 
 for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
   #   * Choose sites or states to be included
@@ -203,9 +205,8 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
     running_mean_cv_rmspe_list <- list()
     for(f in 1:length(form)){
         n_folds <- 5
-      n_replications <- 50
+      n_replications <- 5
       cv_rmspe = numeric()
-      cv_sites <- data.frame(abbrev=character(),predictions = numeric(),log_response = numeric())
       running_mean_cv_rmspe <- numeric()
       folds <- cvFolds(nrow(model_df), K=n_folds, R = n_replications)
       
@@ -225,7 +226,11 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
         }
         
         cv_rmspe <- c(cv_rmspe,rmspe(df_predictions$log_response,df_predictions$predictions))
-        cv_sites <- rbind(cv_sites,df_predictions[,c("abbrev","predictions","log_response")])
+        cv_sites_addition <- df_predictions[,c("abbrev","predictions","log_response")]
+        cv_sites_addition$model <- form_names[f]
+        cv_sites_addition$site_combo <- site_combos[s]
+        cv_sites_addition$response <- response[i]
+        cv_sites <- rbind(cv_sites,cv_sites_addition)
         running_mean_cv_rmspe <- c(running_mean_cv_rmspe,mean(cv_rmspe))
         # plot_model_cv(df_predictions,form[[f]])
         
