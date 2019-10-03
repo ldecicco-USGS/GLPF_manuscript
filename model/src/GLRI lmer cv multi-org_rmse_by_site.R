@@ -174,10 +174,9 @@ names(form) <- form_names[1:length(form)]
 options(lmerControl(boundary.tol=1e-4))
 
 
-for (s in 1:1) {  #Solo JI doesn't need lmer, but just lm
+for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
   #   * Choose sites or states to be included
   sites <- site_combos[[s]]
-  
   for (i in 1:length(response)) {
     
     #filenm <- paste("GLRI_predictions_",response[i],".pdf",sep="")
@@ -206,6 +205,7 @@ for (s in 1:1) {  #Solo JI doesn't need lmer, but just lm
         n_folds <- 5
       n_replications <- 50
       cv_rmspe = numeric()
+      cv_sites <- character()
       running_mean_cv_rmspe <- numeric()
       folds <- cvFolds(nrow(model_df), K=n_folds, R = n_replications)
       
@@ -225,15 +225,18 @@ for (s in 1:1) {  #Solo JI doesn't need lmer, but just lm
         }
         
         cv_rmspe <- c(cv_rmspe,rmspe(df_predictions$log_response,df_predictions$predictions))
+        cv_sites <- c(cv_sites,df_predictions$abbrev)
         running_mean_cv_rmspe <- c(running_mean_cv_rmspe,mean(cv_rmspe))
         # plot_model_cv(df_predictions,form[[f]])
         
       }
       if(f==1) {
         df_cv_rmspe <- data.frame(form1 = cv_rmspe)
+        df_cv_sites <- data.frame(sites=cv_sites)
         df_running_mean_cv_rmspe <- data.frame(form1 = running_mean_cv_rmspe)
       }else{
         df_cv_rmspe <- cbind(df_cv_rmspe, cv_rmspe)
+        df_cv_sites <- cbind(df_cv_sites,cv_sites)
         df_running_mean_cv_rmspe <- cbind(df_running_mean_cv_rmspe, running_mean_cv_rmspe)
         
       }
@@ -249,6 +252,7 @@ for (s in 1:1) {  #Solo JI doesn't need lmer, but just lm
       
     }
     names(df_cv_rmspe) <- gsub("\\.","_", make.names(names(form)))
+    names(df_cv_sites) <- paste0(gsub("\\.","_", make.names(names(form))),"_cv")
     
     names(df_running_mean_cv_rmspe) <-  paste("form",c(1:length(form)),sep="_")
     
@@ -320,9 +324,16 @@ for (s in 1:1) {  #Solo JI doesn't need lmer, but just lm
     filenm <- file.path("model","out","plots",filenm)
     ggexport(multi.page, filename = filenm,width = 11,height = 8)
     
+    df_cv_rmspe$response <- response[i]
+    
   }
+  df_rmse_and_sites <- cbind(df_cv_rmspe,df_cv_sites)
   filenm <- file.path("model","out",paste("rmse_Oct_3_",names(site_combos)[s],".rds",sep=""))
   saveRDS(rmse_df, file = filenm)
+  
+  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_3_",names(site_combos)[s],".rds",sep=""))
+  saveRDS(df_rmse_and_sites, file = filenm)
+  
   
 }
 
