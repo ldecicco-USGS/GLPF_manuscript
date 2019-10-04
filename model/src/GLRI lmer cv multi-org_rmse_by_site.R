@@ -42,8 +42,8 @@ df <- df_GLRI
 # 2. General modeling setup:
 
 #  * Define response variables
-# response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls","E..coli.CFUs.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml")
-response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
+response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls","E..coli.CFUs.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml")
+#response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
 
 #Set censored values to detection limit
 MDL <- c(225,225,1,225,1)
@@ -77,7 +77,7 @@ site_combos[[2]] <- c("PO", "MA", "RM")
 # site_combos[[5]] <- c("JI","PO", "MA", "CL", "RO", "RM")
 # site_combos[[6]] <- c("PO", "MA", "CL", "RO", "RM")
 
-names(site_combos) <- c("CL_RO")#,"Agriculture","South_WI")
+names(site_combos) <- c("CL_RO","Agriculture")
 
 
 form <- list()
@@ -147,7 +147,7 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     running_mean_cv_rmspe_list <- list()
     for(f in 1:length(form)){
         n_folds <- 5
-      n_replications <- 50
+      n_replications <- 5
       cv_rmspe = numeric()
       running_mean_cv_rmspe <- numeric()
       folds <- cvFolds(nrow(model_df), K=n_folds, R = n_replications)
