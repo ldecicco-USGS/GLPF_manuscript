@@ -68,7 +68,7 @@ groupings <- c("abbrev")
 
 site_combos <- list()
 site_combos[[1]] <- c("CL", "RO")
-# site_combos[[2]] <- c("PO", "MA", "RM")
+site_combos[[2]] <- c("PO", "MA", "RM")
 # site_combos[[3]] <- c("JI","OC")
 #site_combos[[1]] <- c("PO", "MA", "RM","OC","EE")
 #site_combos[[1]] <- c("OC","EE")
@@ -77,65 +77,7 @@ site_combos[[1]] <- c("CL", "RO")
 # site_combos[[5]] <- c("JI","PO", "MA", "CL", "RO", "RM")
 # site_combos[[6]] <- c("PO", "MA", "CL", "RO", "RM")
 
-names(site_combos) <- c("CL_RO","Agriculture","South_WI")
-
-
-#names(site_combos) <- c("All","no_JI","urban","CL_RO","AG_JI","Agricultural")
-
-# form_names <- c("F","F2","F,T","F,Turb","F,S1","F,A254","F,Aresid","T","T2","T,Turb",
-#                 "Turb","Turb2","F,T,Turb", "F,T,Turb 2","F,T,Turb 3",
-#                 "F,Turb 2","F,T 2","F,Aresid 2","Aresid","Aresid2","T,Turb 2")
-# form <- list()
-# form[[1]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosDate + (F + 1 | abbrev)")
-# form[[2]] <- formula("log_response ~ F * cosDate + F * sinDate + (1 | abbrev)")
-# form[[3]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (F + 1 | abbrev)")
-# form[[4]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (F + 1 | abbrev)")
-# form[[5]] <- formula("log_response ~ F * cosDate + F * sinDate + S1.25 * cosDate + S1.25 * sinDate  + (S1.25 | abbrev)")
-# form[[6]] <- formula("log_response ~ F * cosDate + F * sinDate + A254 * cosDate + A254 * sinDate  + (F | abbrev)")
-# form[[7]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  + (Aresid267 | abbrev)")
-# form[[8]] <- formula("log_response ~ T * cosDate + T * sinDate  + (T + 1 | abbrev)")
-# form[[9]] <- formula("log_response ~ T * cosDate + T * sinDate + (1 | abbrev)")
-# form[[10]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T * sinDate + Turbidity_mean * sinDate + (Turbidity_mean + 1 | abbrev)")
-# form[[11]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate  + (Turbidity_mean | abbrev)")
-# form[[12]] <- formula("log_response ~ Turbidity_m * cosDate + Turbidity_mean * sinDate + (1 | abbrev)")
-# form[[13]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (F + Turbidity_mean | abbrev)")
-# form[[14]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (F | abbrev)")
-# form[[15]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate  + Turbidity_mean * cosDate + Turbidity_mean * sinDate + (1 | abbrev)")
-# form[[16]] <- formula("log_response ~ F * cosDate + Turbidity_mean * cosDate + F * sinDate + Turbidity_mean * sinDate + (1 | abbrev)")
-# form[[17]] <- formula("log_response ~ F * cosDate + T * cosDate + F * sinDate + T * sinDate + (1 | abbrev)")
-# form[[18]] <- formula("log_response ~ F * cosDate + F * sinDate + Aresid267 * cosDate + Aresid267 * sinDate  + (1 | abbrev)")
-# form[[19]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  + (Aresid267 | abbrev)")
-# form[[20]] <- formula("log_response ~ Aresid267 * cosDate + Aresid267 * sinDate  + (1 | abbrev)")
-# form[[21]] <- formula("log_response ~ T * cosDate + Turbidity_mean * cosDate + T * sinDate + Turbidity_mean * sinDate + (1 | abbrev)")
-
-# Current sensor variables tried: F, T, S1, Turb. ** S1 was not useful beyond the others
-# Easily developed: M
-# Current sensors highly correlated with other current sensors: S2 (F), S3 (T), OB (F): r > 0.98
-# 
-# form <- list()
-# form[[1]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[2]] <- formula("log_response ~ T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[3]] <- formula("log_response ~ M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[4]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[5]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[6]] <- formula("log_response ~ F * cosDate + F * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[7]] <- formula("log_response ~ T * cosDate + T * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[8]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[9]] <- formula("log_response ~ Turbidity_mean + T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[10]] <- formula("log_response ~ Turbidity_mean + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[11]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (Turbidity_mean + 1 | abbrev)")
-# form[[12]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[13]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[14]] <- formula("log_response ~ Turbidity_mean + T * cosDate + T * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
-# form[[15]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosDate + (F + 1 | abbrev)")
-# form[[16]] <- formula("log_response ~ T * cosDate + T * sinDate + sinDate + cosDate + (T + 1 | abbrev)")
-# form[[17]] <- formula("log_response ~ M * cosDate + M * sinDate + sinDate + cosDate + (M + 1 | abbrev)")
-# form[[18]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + sinDate + cosDate + (Turbidity_mean + 1 | abbrev)")
-# form[[19]] <- formula("log_response ~ F + F * cosDate + F * sinDate + sinDate + cosDate + (1 | abbrev)")
-# 
-# form_names <- c("F","T","M","Turb","F_T","F_M","T_M","Turb_F","Turb_T","Turb_M","F_T_M",
-#                 "Turb_F_T","Turb_F_M","Turb_T_M",
-#                 "F2","T2","M2","Turb2","F3")
+names(site_combos) <- c("CL_RO")#,"Agriculture","South_WI")
 
 
 form <- list()
@@ -174,9 +116,9 @@ names(form) <- form_names[1:length(form)]
 options(lmerControl(boundary.tol=1e-4))
 
 cv_sites <- data.frame(abbrev=character(),predictions = numeric(),log_response = numeric(),
-                       model=character(),site_combo=character(),response=character())
+                       model=character(),site_combo=character(),response=character(),replication = numeric())
 
-for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
+for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
   #   * Choose sites or states to be included
   sites <- site_combos[[s]]
   for (i in 1:length(response)) {
@@ -205,7 +147,7 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
     running_mean_cv_rmspe_list <- list()
     for(f in 1:length(form)){
         n_folds <- 5
-      n_replications <- 5
+      n_replications <- 50
       cv_rmspe = numeric()
       running_mean_cv_rmspe <- numeric()
       folds <- cvFolds(nrow(model_df), K=n_folds, R = n_replications)
@@ -228,8 +170,9 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
         cv_rmspe <- c(cv_rmspe,rmspe(df_predictions$log_response,df_predictions$predictions))
         cv_sites_addition <- df_predictions[,c("abbrev","predictions","log_response")]
         cv_sites_addition$model <- form_names[f]
-        cv_sites_addition$site_combo <- site_combos[s]
+        cv_sites_addition$site_combo <- names(site_combos)[s]
         cv_sites_addition$response <- response[i]
+        cv_sites_addition$replication <- r
         cv_sites <- rbind(cv_sites,cv_sites_addition)
         running_mean_cv_rmspe <- c(running_mean_cv_rmspe,mean(cv_rmspe))
         # plot_model_cv(df_predictions,form[[f]])
@@ -237,11 +180,11 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
       }
       if(f==1) {
         df_cv_rmspe <- data.frame(form1 = cv_rmspe)
-        df_cv_sites <- data.frame(sites=cv_sites)
+        #df_cv_sites <- data.frame(sites=cv_sites)
         df_running_mean_cv_rmspe <- data.frame(form1 = running_mean_cv_rmspe)
       }else{
         df_cv_rmspe <- cbind(df_cv_rmspe, cv_rmspe)
-        df_cv_sites <- cbind(df_cv_sites,cv_sites)
+        #df_cv_sites <- cbind(df_cv_sites,cv_sites)
         df_running_mean_cv_rmspe <- cbind(df_running_mean_cv_rmspe, running_mean_cv_rmspe)
         
       }
@@ -257,7 +200,7 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
       
     }
     names(df_cv_rmspe) <- gsub("\\.","_", make.names(names(form)))
-    names(df_cv_sites) <- paste0(gsub("\\.","_", make.names(names(form))),"_cv")
+    #names(df_cv_sites) <- paste0(gsub("\\.","_", make.names(names(form))),"_cv")
     
     names(df_running_mean_cv_rmspe) <-  paste("form",c(1:length(form)),sep="_")
     
@@ -332,12 +275,12 @@ for (s in 1:2) {  #Solo JI doesn't need lmer, but just lm
     df_cv_rmspe$response <- response[i]
     
   }
-  df_rmse_and_sites <- cbind(df_cv_rmspe,df_cv_sites)
+  #df_rmse_and_sites <- cbind(df_cv_rmspe,df_cv_sites)
   filenm <- file.path("model","out",paste("rmse_Oct_3_",names(site_combos)[s],".rds",sep=""))
   saveRDS(rmse_df, file = filenm)
   
   filenm <- file.path("model","out",paste("rmse_and_sites_Oct_3_",names(site_combos)[s],".rds",sep=""))
-  saveRDS(df_rmse_and_sites, file = filenm)
+  saveRDS(cv_sites, file = filenm)
   
   
 }
