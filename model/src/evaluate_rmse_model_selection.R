@@ -11,11 +11,11 @@ site_combos[[3]] <- c("JI","OC")
 
 names(site_combos) <- c("CL_RO","Agriculture","South_WI")
 
-s <- 1
+s <- 2
 # filenm <- file.path("model","out",paste("rmse_Oct_3_",names(site_combos)[s],".rds",sep=""))
 # df_rmse <- readRDS(file = filenm)
 
-filenm <- file.path("model","out",paste("rmse_and_sites_Oct_3_",names(site_combos)[s],".rds",sep=""))
+filenm <- file.path("model","out",paste("rmse_and_sites_Oct_7_",names(site_combos)[s],".rds",sep=""))
 df <- readRDS(file=filenm)
 
 
