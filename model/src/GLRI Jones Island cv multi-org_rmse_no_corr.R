@@ -1,9 +1,8 @@
-# OLS regression for single sites, including Jones Island, Rouige, and Clinton
 # Reference to Sam's dissertation:  
 # https://github.com/limnoliver/CSI-Nutrient-Time-Series/blob/master/Code/05_analysis_hlm.R
 #
 
-# NOT RELEVANT FOR SINGLE SITE MODEL
+# NOT RELEVANT FOR THIS OLS MODELING FOR SINGLE SITES
 # Intro to Linear mixed models: https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/
 # lme4 package vignette describing method with Table 2 describing grouping options:
 #   https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
@@ -56,8 +55,6 @@ for(i in 1:length(response)){df[,response[i]] <- ifelse(df[,response[i]]<=MDL[re
 df$sinDate <- fourier(df$psdate)[,1]
 df$cosDate <- fourier(df$psdate)[,2]
 
-# Define predictors and interaction terms
-predictors<- c("Turbidity_mean", "T", "F","M")
 
 #non_int_predictors <- c("CSO")
 interactors <- c("sinDate","cosDate")
@@ -76,36 +73,32 @@ site_combos[[3]] <- c("RO")
 names(site_combos) <- c("JI","CL","RO")
 
 
+
+Initial_predictors<- c("Turbidity_mean", "T", "F","M")
+
+df_cor <- correlated_to_primary_signals(Initial_predictors)
+sensors <- reduce_correlated_variables(df_cor)
+sensors <- sensors[-grep("rSag",sensors)]
+sensors <- sensors[-grep("A_",sensors)]
+sensors <- sensors[-grep("LA",sensors)] #remove LA signal--high error in models distorts graphics
+sensors <- sensors[-grep("H2",sensors)] #remove H2 signal--high error in models distorts graphics
+
+sensors <- c(sensors,Initial_predictors)
+
 form <- list()
-form[[1]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + sinDate + cosDate")
-form[[2]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + sinDate + cosDate")
-form[[3]] <- formula("log_response ~ Turbidity_mean + T * cosDate + T * sinDate + sinDate + cosDate")
-form[[4]] <- formula("log_response ~ Turbidity_mean + M * cosDate + M * sinDate + sinDate + cosDate")
-form[[5]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + F * cosDate + F * sinDate + sinDate + cosDate")
-form[[6]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + T * cosDate + T * sinDate + sinDate + cosDate")
-form[[7]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + M * cosDate + M * sinDate + sinDate + cosDate")
-form[[8]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + T * cosDate + T * sinDate + sinDate + cosDate")
-form[[9]] <- formula("log_response ~ Turbidity_mean + F * cosDate + F * sinDate + M * cosDate + M * sinDate + sinDate + cosDate")
-form[[10]] <- formula("log_response ~ Turbidity_mean + T * cosDate + T * sinDate + M * cosDate + M * sinDate + sinDate + cosDate")
-form[[11]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + F * cosDate + F * sinDate + T * cosDate + T * sinDate + sinDate + cosDate")
-form[[12]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + F * cosDate + F * sinDate + M * cosDate + M * sinDate + sinDate + cosDate")
-form[[13]] <- formula("log_response ~ Turbidity_mean * cosDate + Turbidity_mean * sinDate + T * cosDate + T * sinDate + M * cosDate + M * sinDate + sinDate + cosDate")
-form[[14]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate + sinDate + cosDate")
-form[[15]] <- formula("log_response ~ F * cosDate + F * sinDate + M * cosDate + M * sinDate + sinDate + cosDate")
-form[[16]] <- formula("log_response ~ M * cosDate + M * sinDate + T * cosDate + T * sinDate + sinDate + cosDate")
+form_names <- character()
+for(i in 1:length(sensors)) {
+  form[[(i*2-1)]] <- formula(paste("log_response ~ ",paste(sensors[i],c("* sinDate","* cosDate"),collapse=" + "),"+ sinDate + cosDate "))
+  form[[(i*2)]] <- formula(paste("log_response ~ ","Turbidity_mean + ",
+                                 paste(sensors[i],c("* sinDate","* cosDate"),collapse=" + "),"+ sinDate + cosDate "))
+  form_names <- c(form_names,sensors[i],paste0(sensors[i],"_","Turb"))
+}
+
+names(form) <- form_names
+
+predictors <- sensors
 
 
-form_names <- c("Turb","Turb_F","Turb_T","Turb_M","Turb_F2","Turb_T2","Turb_M2",
-                "Turb_F_T","Turb_F_M","Turb_T_M","Turb_F_T2","Turb_F_M2","Turb_T_M2",
-                "F_T","F_M","T_M")
-
-#df_cor <- correlated_to_primary_signals()
-#variables <- reduce_correlated_variables(df_cor)
-sensors <- c("F","T","M")
-
-turb <- "Turbidity_mean"
-
-names(form) <- form_names[1:length(form)]
 # # 3. Run LME model for all response variables
 
 # Set boundary tolerance for singularity consistent with "isSingular()"
@@ -118,10 +111,7 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
   #   * Choose sites or states to be included
   sites <- site_combos[[s]]
   for (i in 1:length(response)) {
-    
-    #filenm <- paste("GLRI_predictions_",response[i],".pdf",sep="")
-    #  pdf(filenm)
-    
+
     #   * transform response variable
     df$log_response <- log10(df[,response[i]])
     
@@ -201,10 +191,6 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     
     names(df_running_mean_cv_rmspe) <-  paste("form",c(1:length(form)),sep="_")
     
-    #}
-    #  dev.off()
-    #  shell.exec(filenm)
-    
     #Develop boxplot analysis of RMSE for each of the models for an individual organism
     # Used to choose model with least uncertainty in prediction
     # plot_df <- do.call(cbind,running_mean_cv_rmspe_list)
@@ -213,9 +199,9 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     plot_df <- df_cv_rmspe
     
     plot_df <- tidyr::gather(plot_df)
+    plot_df$key <- factor(plot_df$key,levels = gsub("\\.","_", make.names(names(form))))
     
-    plot_df$key <- factor(plot_df$key,levels = form_names)
-    
+
     rmspeboxplot <- ggplot(data=plot_df,aes(x=key,y=value)) + 
       geom_boxplot() + 
       ggtitle(paste0(response[i],":    Root Mean Square Prediction Error for ",n_replications," replications of each Model Option")) +
@@ -265,7 +251,7 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     multi.page <- ggarrange(model_plot, rmspeboxplot,
                             nrow = 1, ncol = 1)
     
-    filenm <- paste("GLRI_Oct_10_",names(site_combos)[s],"_",response[i],".pdf",sep="")
+    filenm <- paste("GLRI_Oct_10_no_corr",names(site_combos)[s],"_",response[i],".pdf",sep="")
     filenm <- file.path("model","out","plots",filenm)
     ggexport(multi.page, filename = filenm,width = 11,height = 8)
     
@@ -273,10 +259,10 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     
   }
   #df_rmse_and_sites <- cbind(df_cv_rmspe,df_cv_sites)
-  filenm <- file.path("model","out",paste("rmse_Oct_10_",names(site_combos)[s],".rds",sep=""))
+  filenm <- file.path("model","out",paste("rmse_Oct_10_no_corr",names(site_combos)[s],".rds",sep=""))
   saveRDS(rmse_df, file = filenm)
   
-  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_10_",names(site_combos)[s],".rds",sep=""))
+  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_10_no_corr",names(site_combos)[s],".rds",sep=""))
   saveRDS(cv_sites, file = filenm)
   
   
