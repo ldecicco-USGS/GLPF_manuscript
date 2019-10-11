@@ -3,11 +3,10 @@ library(dplyr)
 library(Hmisc)
 
 
-reduce_correlated_variables <- function(df_cor) {
+reduce_correlated_variables <- function(df_cor,filenm = "glri_summary.rds") {
   # 1. Load data
-  df_GLRI <- readRDS(file.path("process","out","glri_summary.rds"))
-  df <- df_GLRI
-  
+  df <- readRDS(file.path("process","out",filenm))
+
   
   #Determine which variables are highly correlated and remove to get less correlated variables for regressions
   
@@ -58,12 +57,17 @@ reduce_correlated_variables <- function(df_cor) {
 }
 
 
-correlated_to_primary_signals <- function(predictors) {
+correlated_to_primary_signals <- function(predictors,filenm = "glri_summary.rds") {
   # 1. Load data
-  df_GLRI <- readRDS(file.path("process","out","glri_summary.rds"))
-  df <- df_GLRI
+  df <- readRDS(file.path("process","out",filenm))
   
+  if(filenm == "glri_summary.rds") {
   All_signals <- names(df)[258:dim(df)[2]]
+  }else {
+    if(filenm == "mmsd_summary.rds") {
+      All_signals <- names(df)[28:dim(df)[2]]
+    }
+  }
   
   signals <- All_signals[-which(All_signals %in% predictors)]
   
