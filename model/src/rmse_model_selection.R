@@ -6,7 +6,7 @@ rmse_model_selection <- function(df,deviation_threshold = 0.03, max_deviation_th
   library(cvTools)
   
   # 1. Determine overall model rmspe stats
-  # 2. filter out models with median RMSPE > deviation threshold (5%?)
+  # 2. filter out models with median RMSPE > deviation threshold (3%)
   # 3. Determine rmspe stats for each model for individual sites
   # 4. Reduce models by considering deviation threshold from min RMSPE for individual sites
   deviation_threshold <- 0.03
@@ -53,6 +53,8 @@ rmse_model_selection <- function(df,deviation_threshold = 0.03, max_deviation_th
     group_by(site_combo,response,model) %>%
     summarise(max_site_deviation = max(rmse_median)) %>%
     filter((max_site_deviation-min(max_site_deviation))/min(max_site_deviation) < ind_dev_threshold)
+  
+  final_models <- left_join(final_models,median_deviation)
   
   return(final_models)
 }

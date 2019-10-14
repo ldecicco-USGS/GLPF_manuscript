@@ -3,19 +3,19 @@ library(dplyr)
 library(Hmisc)
 
 
-reduce_correlated_variables <- function(df_cor,filenm = "glri_summary.rds") {
+reduce_correlated_variables <- function(df_cor,filenm,predictors) {
   # 1. Load data
   df <- readRDS(file.path("process","out",filenm))
-
+  r_thresh <- 0.95
   
   #Determine which variables are highly correlated and remove to get less correlated variables for regressions
   
-  predictors<- c("Turbidity_mean", "T", "F","M") #sensor variables
+#  predictors<- c("Turbidity_mean", "T", "F","M") #sensor variables
   
   # Remove varables that are highly correlated to sensor variables 
-  df_cor2 <- df_cor[-which(abs(df_cor$Correlations) > 0.95),]
+  df_cor2 <- df_cor[-which(abs(df_cor$Correlations) > r_thresh),]
   df_cor_vars <- as.data.frame(table(df_cor2$signal),stringsAsFactors = FALSE)
-  df_cor_vars <- filter(df_cor_vars,Freq > 3)
+  df_cor_vars <- filter(df_cor_vars,Freq == length(predictors))
   
   # Now test whether the remaing variables are highly correlated to each other and reduce
   
@@ -26,7 +26,7 @@ reduce_correlated_variables <- function(df_cor,filenm = "glri_summary.rds") {
   variables <- variables[-grep("Mrange.50",variables)]
   
   
-  r_thresh <- 0.95
+
   i <- 1
   keep <- variables[1]
   continue <- TRUE
@@ -57,7 +57,7 @@ reduce_correlated_variables <- function(df_cor,filenm = "glri_summary.rds") {
 }
 
 
-correlated_to_primary_signals <- function(predictors,filenm = "glri_summary.rds") {
+correlated_to_primary_signals <- function(predictors,filenm) {
   # 1. Load data
   df <- readRDS(file.path("process","out",filenm))
   

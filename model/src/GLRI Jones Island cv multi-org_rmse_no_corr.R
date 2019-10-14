@@ -75,9 +75,10 @@ names(site_combos) <- c("JI","CL","RO")
 
 
 Initial_predictors<- c("Turbidity_mean", "T", "F","M")
+#Initial_predictors<- c("Turbidity_mean", "T", "F")
 
-df_cor <- correlated_to_primary_signals(Initial_predictors)
-sensors <- reduce_correlated_variables(df_cor)
+df_cor <- correlated_to_primary_signals(Initial_predictors,filenm="glri_summary.rds")
+sensors <- reduce_correlated_variables(df_cor,filenm="glri_summary.rds",Initial_predictors)
 sensors <- sensors[-grep("rSag",sensors)]
 sensors <- sensors[-grep("A_",sensors)]
 sensors <- sensors[-grep("LA",sensors)] #remove LA signal--high error in models distorts graphics
