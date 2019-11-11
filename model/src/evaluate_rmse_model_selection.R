@@ -1,5 +1,5 @@
 
-library(dplyr)
+library(tidyverse)
 source(file.path("model","src","rmse_model_selection.R"))
 
 
@@ -27,7 +27,7 @@ GLRI_LMER_non_cor_selection <- rmse_model_selection(df)
 GLRI_LMER_selection$model_run <- "sensors"
 GLRI_LMER_non_cor_selection$model_run <- "non-cor"
 GLRI_LMER <- full_join(GLRI_LMER_selection,GLRI_LMER_non_cor_selection)
-GRLI_LMER$model <- factor(GRLI_LMER$model,levels = unique(c(GLRI_LMER_selection$model,GLRI_LMER_non_cor_selection$model)))
+GLRI_LMER$model <- factor(GLRI_LMER$model,levels = unique(c(GLRI_LMER_selection$model,GLRI_LMER_non_cor_selection$model)))
 
 
 #Evaluate GLRI single site OLS models
@@ -50,7 +50,7 @@ GLRI_OLS_non_cor_selection <- rmse_model_selection(df)
 GLRI_OLS_selection$model_run <- "sensors"
 GLRI_OLS_non_cor_selection$model_run <- "non-cor"
 GLRI_OLS <- full_join(GLRI_OLS_selection,GLRI_OLS_non_cor_selection)
-GRLI_OLS$model <- factor(GRLI_OLS$model,levels = unique(c(GLRI_OLS_selection$model,GLRI_OLS_non_cor_selection$model)))
+GLRI_OLS$model <- factor(GLRI_OLS$model,levels = unique(c(GLRI_OLS_selection$model,GLRI_OLS_non_cor_selection$model)))
 
 
 ### MMSD ###
@@ -84,7 +84,7 @@ unique(MMSD$model)
 
 
 p <- ggplot(data=MMSD, aes(x=response, y=rmse_median,fill=model_run)) +
-  geom_bar(stat="identity", color="black", position=position_dodge())+
+  geom_bar(stat="min", color="black", position=position_dodge())+
   theme_minimal()
 # Use brewer color palettes
 p <- p + scale_fill_brewer(palette="Blues")
@@ -98,6 +98,15 @@ ggplot(data=MMSD, aes(x=response, y=rmse_median, fill=model)) +
   ggtitle("MMSD")) +
   theme_minimal()
 
+site_combo_choice <- "3-sites"
+df_plot <- filter(MMSD,site_combo == site_combo_choice) 
+ggplot(data=df_plot, aes(x=model, y=rmse_median, fill=model)) +
+  geom_bar(stat="identity", position=position_dodge(preserve = "single"))+
+  #  scale_fill_brewer(palette="Paired")+
+  ggtitle(site_combo_choice) +
+  theme_minimal() +
+  facet_wrap(~ response)
+
 site_combo_choice <- "Agriculture"
 df_plot <- filter(GLRI_LMER,site_combo == site_combo_choice) 
 ggplot(data=df_plot, aes(x=model, y=rmse_median, fill=model)) +
@@ -108,7 +117,7 @@ ggplot(data=df_plot, aes(x=model, y=rmse_median, fill=model)) +
   facet_wrap(~ response)
 
 site_combo_choice <- "CL_RO"
-df_plot <- filter(GLRI_OLS,site_combo == site_combo_choice) 
+df_plot <- filter(GLRI_LMER,site_combo == site_combo_choice) 
 ggplot(data=df_plot, aes(x=model, y=rmse_median, fill=model)) +
   geom_bar(stat="identity", position=position_dodge(preserve = "single"))+
   #  scale_fill_brewer(palette="Paired")+
@@ -126,3 +135,27 @@ ggplot(data=df_plot, aes(x=model, y=rmse_median, fill=model)) +
   theme_minimal() +
   facet_wrap(~ response)
 
+site_combo_choice <- "CL"
+df_plot <- filter(GLRI_OLS,site_combo == site_combo_choice) 
+ggplot(data=df_plot, aes(x=model, y=rmse_median, fill=model)) +
+  geom_bar(stat="identity", position=position_dodge(preserve = "single"))+
+  #  scale_fill_brewer(palette="Paired")+
+  ggtitle(site_combo_choice) +
+  theme_minimal() +
+  facet_wrap(~ response)
+
+site_combo_choice <- "RO"
+df_plot <- filter(GLRI_OLS,site_combo == site_combo_choice) 
+ggplot(data=df_plot, aes(x=model, y=rmse_median, fill=model)) +
+  geom_bar(stat="identity", position=position_dodge(preserve = "single"))+
+  #  scale_fill_brewer(palette="Paired")+
+  ggtitle(site_combo_choice) +
+  theme_minimal() +
+  facet_wrap(~ response)
+
+# Rind min RMSE for "sensors" options and "non-cor" options and construct table
+
+#Final site combos = Agriculture, CL_RO, GLRI, 3-Site
+
+GLRI_LMER -> group_by(site_combo, response) %>%
+  
