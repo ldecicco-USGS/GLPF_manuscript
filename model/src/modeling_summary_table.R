@@ -1,5 +1,5 @@
 # Prepare final model summary table for large and sub-watershed scales
-library(tidyr)
+library(tidyverse)
 
 GLRI_LMER <- readRDS(file.path("model","out","GLRI_LMER_model_rankings.rds"))
 GLRI_OLS <- readRDS(file.path("model","out","GLRI_OLS_model_rankings.rds"))
@@ -35,10 +35,16 @@ GLRI_OLS_models <- GLRI_OLS %>%
 
 GLRI_models <- as.data.frame(rbind(GLRI_LMER_models,GLRI_OLS_models)) %>%
 #  mutate(organism = paste(response,model_run,sep="_")) %>%
-  select(model_run,site_combo,model,response,rmse_median)
+  select(site_combo,model_run,model,response,rmse_median)
 
 test <- pivot_wider(data = GLRI_models,names_from = response, values_from = c(model,rmse_median))
 
+
+
+df <- data.frame(site_combos = c(rep("n1",8),rep("n2",8)),model_run = rep(c("x","y"),8),response = c(rep(c(org1,org2,letters[1:8]),model = 1:16,rmse = 101:116)
+
+duh <- pivot_wider(df,names_from = response,values_from = c(model,rmse))
+duh
 
 fish_encounters
 fish_encounters %>%

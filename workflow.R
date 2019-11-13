@@ -152,14 +152,16 @@ get_summaries()
 # Model
 ##########################################
 # Source any functions:
-# source(file = file.path("model","src","model_script.R"))
+# DO NOT RUN this again. It takes hours: scripts used = 
+# DO NOT RUN again: MMSD lmer cv multi-org_rmse_by_site.R
+# DO NOT RUN again: MMSD lmer cv multi-org_rmse_by_site_no_corr.R
+# DO NOT RUN again: GLRI Jones Island cv multi-org_rmse.R
+# DO NOT RUN again: GLRI Jones Island cv multi-org_rmse_no_corr.R
+# DO NOT RUN again: GLRI lmer cv multi-org_rmse_by_site.R
+# DO NOT RUN again: GLRI lmer cv multi-org_rmse_by_site_no_corr.R
+# Output is used in the evaluation scripts below
 
-# Models are run outside of this workflow as they take quite a long time to run
-# Resulting files: 
-
-
-
-# Process model results
+# Evaluate model results
 source(file.path("model","src","rmse_model_selection.R"))
 source(file.path("model","src","evaluate_rmse_model_selection.R"))
 
