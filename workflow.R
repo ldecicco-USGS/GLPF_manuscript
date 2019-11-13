@@ -167,6 +167,8 @@ source(file.path("model","src","evaluate_rmse_model_selection.R"))
 
 #Develop final modeling table for large and sub-watersheds
 source(file.path("model","src","modeling_summary_table.R"))
+model_summary <- modeling_summary_table()
+saveRDS(model_summary,file.path("model","out","modeling_summary_table.rds"))
 
 
 ##########################################

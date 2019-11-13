@@ -77,7 +77,7 @@ evaluate_rmse_model_selection <- function() {
   
   MMSD <- full_join(MMSD_selection,MMSD_non_cor_selection)
   MMSD$model <- factor(MMSD$model,levels = unique(c(MMSD_selection$model,MMSD_non_cor_selection$model)))
-  
+  MMSD <- MMSD[-which(MMSD$model == "Turbidity_mean_Turb"),] # remove redundant turbidity model
   
   saveRDS(GLRI_LMER,file.path("model","out","GLRI_LMER_model_rankings.rds"))
   saveRDS(GLRI_OLS,file.path("model","out","GLRI_OLS_model_rankings.rds"))
