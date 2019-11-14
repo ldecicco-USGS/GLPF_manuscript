@@ -5,12 +5,12 @@ date: "November 30, 2018"
 #output: word_document
 output:
   bookdown::word_document2:
-    css: environmental-science-and-technology.csl
+#    css: environmental-science-and-technology.csl
     fig_caption: yes
     toc: no
     reference_docx: "word-styles-reference-orig.docx"
-bibliography: Optical properties.bib
-link-citations: yes
+#bibliography: Optical properties.bib
+#link-citations: yes
 editor_options: 
   chunk_output_type: console
 ---
@@ -23,6 +23,15 @@ knitr::opts_knit$set(root.dir = '../../')
 ```
 
 
+```{r read_sites, echo=FALSE}
+
+
+model_summary <- readRDS("model/out/modeling_summary_table.rds")
+
+font_size <- 4
+
+```
+
 # Results {#results}
 
 ```{r,echo=FALSE}
@@ -30,6 +39,7 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 library(cowplot)
+library(flextable)
 
 dfHM <- readRDS("process/out/combined_human_markers.rds")
 occur <- function(x) mean(x>225)
@@ -91,7 +101,12 @@ The model selection process included several steps with the ultimate goal of min
 
 and XX measures of bacteria were included in regression analysis for small watershed sites (Table xx). 
 
+```{r, table, echo=FALSE}
+font = 2
+table1 <- flextable(model_summary)
+table1
 
+```
 
 
 <span custom-style="RedCharactersText">few words</span> 
