@@ -21,6 +21,7 @@ rmse_model_selection <- function(df,deviation_threshold = 0.03, max_deviation_th
               rmse_max = max(rmse),
               rmse_90 = quantile(rmse,0.9))
   
+  # Step 2
   median_deviation <- df_rmspe %>%
     group_by(site_combo,response) %>%
     mutate(ranks = rank(rmse_median),
@@ -30,9 +31,10 @@ rmse_model_selection <- function(df,deviation_threshold = 0.03, max_deviation_th
   priority_rows <- which(paste0(df$site_combo,df$response,df$model) %in%
                            paste0(median_deviation$site_combo,median_deviation$response,median_deviation$model))
   
+
   df_priority_models <- df[priority_rows,]
   
-  
+  #Step 3
   df_rmspe_priority_models <- df_priority_models %>%
     group_by(site_combo,response,model,replication,abbrev) %>%
     summarise(rmse = rmspe(log_response,predictions)) %>%
@@ -41,7 +43,7 @@ rmse_model_selection <- function(df,deviation_threshold = 0.03, max_deviation_th
               rmse_max = max(rmse),
               rmse_90 = quantile(rmse,0.9))
   
-  
+  #Step 4
   #Set criteria for choosing final model using individual sites
   
   #1. Determine minimum and maximum individual site "median_rmse" values

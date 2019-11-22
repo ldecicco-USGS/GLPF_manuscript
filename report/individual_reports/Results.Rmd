@@ -5,12 +5,12 @@ date: "November 30, 2018"
 #output: word_document
 output:
   bookdown::word_document2:
-    css: environmental-science-and-technology.csl
+#    css: environmental-science-and-technology.csl
     fig_caption: yes
     toc: no
     reference_docx: "word-styles-reference-orig.docx"
-bibliography: Optical properties.bib
-link-citations: yes
+#bibliography: Optical properties.bib
+#link-citations: yes
 editor_options: 
   chunk_output_type: console
 ---
@@ -23,6 +23,15 @@ knitr::opts_knit$set(root.dir = '../../')
 ```
 
 
+```{r read_sites, echo=FALSE}
+
+
+model_summary <- readRDS("model/out/modeling_summary_table.rds")
+
+font_size <- 4
+
+```
+
 # Results {#results}
 
 ```{r,echo=FALSE}
@@ -30,6 +39,7 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 library(cowplot)
+library(flextable)
 
 dfHM <- readRDS("process/out/combined_human_markers.rds")
 occur <- function(x) mean(x>225)
@@ -43,11 +53,11 @@ maxSite <- dfHM[which.max(dfHM$hm),"site"]
 maxScale <- dfHM[which.max(dfHM$hm),"scale"]
 
 ```
-Throughout the study, `r sum(dfHM_summary$n)` samples were collected, including `r dfHM_summary[1,"n"]` samples from `r dfHM_summary[1,"scale"]` scale sites, `r dfHM_summary[2,"n"]` samples from `r dfHM_summary[2,"scale"]` scale sites, and `r dfHM_summary[3,"n"]` samples from `r dfHM_summary[3,"scale"]` scale sites. The sum of the two human indicator bacteria markers (hereafter referred to as HIB) varied from below the reporting level to a maximum of `r maxHM` x 10^9^ cn/100 ml (Figure \@ref(fig:ConcAndOccurrenceFig)).
+Throughout the study, `r sum(dfHM_summary$n)` samples were collected, including `r dfHM_summary[1,"n"]` samples from `r dfHM_summary[1,"scale"]` scale sites, `r dfHM_summary[2,"n"]` samples from `r dfHM_summary[2,"scale"]` scale sites, and `r dfHM_summary[3,"n"]` samples from `r dfHM_summary[3,"scale"]` scale sites. The sum of the two human indicator bacteria markers (hereafter referred to as sHIB) varied from below the reporting level to a maximum of `r maxHM` x 10^9^ cn/100 ml (Figure \@ref(fig:ConcAndOccurrenceFig)).
 
 
 
-```{r ConcAndOccurrenceFig, fig.width=5,fig.height=5, fig.cap = "The sum of human indicator bacteria markers A. concentrations and b. Occurrence proportion in samples from small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). For each scale, sites are ordered by most to least urban land use percentage from left to right.", echo=FALSE}
+```{r ConcAndOccurrenceFig, fig.width=5,fig.height=5, fig.cap = "The sum of human indicator bacteria markers A. concentrations and B. Occurrence proportion in samples from small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). For each scale, sites are ordered by most to least urban land use percentage from left to right.", echo=FALSE}
 
 source(file = "plots/src/Figure_2.R")
 
@@ -75,13 +85,13 @@ wilcox.result2 <- wilcox.test(hmMINYEvent,hmMINYLowflow)
 ```
 
 
-There were differences in HB concentrations among sites and by hydrologic condition (Figure \@ref(fig:ConcAndOccurrenceFig)). At the small scale, median concentrations of HB were `r WI_ratio_median` times greater at the Wisconsin sites than those from the other states (p < 0.05). In samples from Michigan and New York, results indicated greater HB concentrations during runoff events than during periods of low flow (p < 0.05), but results from the small scale Wisconsin sites indicated no significant difference in HB concentrations by hydrologic event. 
+There were differences in sHIB concentrations among sites and by hydrologic condition (Figure \@ref(fig:ConcAndOccurrenceFig)). At the small scale, median concentrations of sHIB were `r WI_ratio_median` times greater at the Wisconsin sites than those from the other states (p < 0.05). In samples from Michigan and New York, results indicated greater sHIB concentrations during runoff events than during periods of low flow (p < 0.05), but results from the small scale Wisconsin sites indicated no significant difference in sHIB concentrations by hydrologic event. 
 
-Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater HB concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of HIB at sites with less than 25% urban land cover at these two scales did not vary significantly by hydrologic condition. 
+Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater sHIB concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of sHIB at sites with less than 25% urban land cover at these two scales did not vary significantly by hydrologic condition. 
 
 ## Modeling
 
-Regression modeling was used to define relations between bacteria concentrations (response variables) and optical signals (explanatory variables). All five measures of bacteria were included in regression analysis for watershed and subwatershed sites. For the small scale sites the four QPCR markers were included in regression analysis, but E. coli was not analyzed by culture for these sites. In all cases response variables were log base 10 transformed. From a practical standpoint for potential field application, explanatory variable selection for these regressions was done in two potential stages: First, optical signals that were already available as field sensors were considered (case 1). Next, if reasonable relationships could not be determined in case 1, explanatory variables were expanded to use of numerous additional optical signals or variables that could be derived from optical signals within the data set. These signals included direct fluorescence or absorbance signals at specific wavelengths, means of fluorescence or absorbance signals over specified bandwidths, ratios of these signals, spectral slopes determined as the slope of the absorbance curve over specified wavelengths in exponential space (**<span custom-style="OrangeText">add reference here</span>**), and several optical indices that have been used in previous research (**<span custom-style="OrangeText">add references here</span>**). Given the potential for seasonality in dissolved organic matter composition in streams (@kaiser_seasonal_2001, @coble_temporal_2016), seasonal varaibles (sine and cosine of julian day/(2$\pi$)) along with optical signals were used to develop interaction terms. Optical signals used as case 1 variables included signals F (commonly called fDOM or CDOM) and T (often referred to as tryptophan-like fluorescence) as well as turbidity. Final explanatory variables used in this analysis are presented in the supporting information (Table SI-xx).
+Regression modeling was used to define relations between bacteria concentrations (response variables) and optical signals (explanatory variables). All five measures of bacteria were included in regression analysis for watershed and subwatershed sites. For the small scale sites the four QPCR markers were included in regression analysis, but E. coli was not analyzed by culture for these sites. In all cases, response variables were log base 10 transformed. From a practical standpoint for potential field application, explanatory variable selection for these regressions was done in two potential stages: First, optical signals that were already available as field sensors were considered (case 1). Next, explanatory variables were expanded to use of optical signals or variables that could be derived from optical signals within the data set that were not correlated to the field sensor signals with a correlation coefficient of 0.95 or greater. These signals included direct fluorescence or absorbance signals at specific wavelengths, means of fluorescence or absorbance signals over specified bandwidths, ratios of these signals, spectral slopes determined as the slope of the absorbance curve over specified wavelengths in exponential space (**<span custom-style="OrangeText">add reference here</span>**), and several optical indices that have been used in previous research (**<span custom-style="OrangeText">add references here</span>**). Given the potential for seasonality in dissolved organic matter composition in streams (@kaiser_seasonal_2001, @coble_temporal_2016), seasonal varaibles (sine and cosine of julian day/(2$\pi$)) along with optical signals were used to develop interaction terms. Optical signals used as case 1 variables included signals F (commonly called fDOM or CDOM) and T (often referred to as tryptophan-like fluorescence) as well as turbidity. Final explanatory variables used in this analysis are presented in the supporting information (Table SI-xx).
 
 The model selection process included several steps with the ultimate goal of minimizing error in prediction while choosing a model that has a reasonable fit for all sites in the data set. It was not uncommon to find a model that appeared to be a good fit overall but did not provide a good fit for data from one or more of the  individual sites. For this reason, exploration of potential regression models was conducted using data sets that included multiple sites as well as one single-site data set (Milwaukee River). The Milwaukee River was modeled independently from other sites because the nature of organic matter influence was substantially different than other sites: The moniotoring station at this site was near Lake Michigan and a seiche effect is commonly present, posing the potential for Lake Michigan water influence. In addition, sites with similar land cover were grouped into one data set (e.g. urban, agrucultural). For the single-site data set, ordinary least squares regression (OLS) was used, and for data sets with more than one site included, linear heirarchical mixed effects models (LME) were used to account for potential shifts in the statistical relationships among sites (add references for base r and lme4). For both modeling techniques, 5-fold cross validation repeated 50 times was conducted to estimate predictive accuracy. The median sum of squared residuals for the 50 fits was used to compare among models with different explanatory variable combinations. Models with the lowest median sum of squared residuals were evaluated graphically (scatter plots of observed vs. predicted values) for reasonable fit with data from each of the sites individually. 
 
@@ -91,7 +101,12 @@ The model selection process included several steps with the ultimate goal of min
 
 and XX measures of bacteria were included in regression analysis for small watershed sites (Table xx). 
 
+```{r, table, echo=FALSE}
+font = 2
+table1 <- flextable(model_summary)
+table1
 
+```
 
 
 <span custom-style="RedCharactersText">few words</span> 

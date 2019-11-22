@@ -34,7 +34,7 @@
 #    iii. Explore additional parameters for watersheds where that doesn't work
 #    iv.  Develop summary table of models
 #  b. Subwatersheds
-#    i.  OLS modeling with common parameters: this works
+#    i.  LME modeling with common parameters
 #    ii. Include in modeling table with Large watersheds
 #  c. Small 
 #
@@ -152,46 +152,42 @@ get_summaries()
 # Model
 ##########################################
 # Source any functions:
-# source(file = file.path("model","src","model_script.R"))
+# DO NOT RUN this again. It takes hours: scripts used = 
+# DO NOT RUN again: MMSD lmer cv multi-org_rmse_by_site.R
+# DO NOT RUN again: MMSD lmer cv multi-org_rmse_by_site_no_corr.R
+# DO NOT RUN again: GLRI Jones Island cv multi-org_rmse.R
+# DO NOT RUN again: GLRI Jones Island cv multi-org_rmse_no_corr.R
+# DO NOT RUN again: GLRI lmer cv multi-org_rmse_by_site.R
+# DO NOT RUN again: GLRI lmer cv multi-org_rmse_by_site_no_corr.R
+# Output is used in the evaluation scripts below
 
-# This is where `remake` would come in handy!
+# Evaluate model results
+source(file.path("model","src","rmse_model_selection.R"))
+source(file.path("model","src","evaluate_rmse_model_selection.R"))
+
+#Develop final modeling table for large and sub-watersheds
+source(file.path("model","src","modeling_summary_table.R"))
+model_summary <- modeling_summary_table()
+saveRDS(model_summary,file.path("model","out","modeling_summary_table.rds"))
+
 
 ##########################################
 # Visualize
 ##########################################
-# Source the functions:
-source(file = file.path("plots","src","plot_EEM.R"))
-source(file = file.path("plots","src","plot_base.R"))
 
-# My vote would be that here we have a source file
-# that creates functions to call, then here we call
-# those functions. This makes what is happening in the 
-# source file a little more transparent, and allows
-# some fiddling here. 
 
 source(file = file.path("plots","src","Figure_2.R"))
+source(file = file.path("plots","src","graph_model_selections.R"))
+
+model_plots <- graph_model_selections()
+pdf(file.path("plots","out","model_selection_bar_charts.pdf"))
+for(i in 1:length(model_plots)) print(model_plots[[i]])
+dev.off()
+
 fig_2 <- plot_fig_2()
 ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.png"), width = 7, height = 5)
 
-########################
-# Plot an EEM heatmap:
-########################
 
-# # Call the functions:
-# summaryDF <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
-# EEMs <- readRDS(file.path("raw","GLPF","Optics", "EEMs3D_noQA.rds"))
-# EEMplot <- plot_single_EEM(EEMs, summaryDF$CAGRnumber[1])
-# # Save the plot:
-# ggsave(EEMplot, filename = file.path("plots","out","EEM.png"), width = 5, height = 5)
-########################
-
-########################
-# Plot an base-R thing:
-########################
-
-png(file.path("plots","out","base_r_example.png"))
-base_plot(summaryDF)
-dev.off()
 
 ##########################################
 # Report
