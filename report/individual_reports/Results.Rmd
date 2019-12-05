@@ -104,17 +104,13 @@ Samples collected at sites with greater than 25% urban land cover at the watersh
 Watershed sites were grouped into Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and a single site (Milwaukee), and the three subwatershed sites were grouped together for model development for model development (Table \@ref(tab:tabTest)). 
 
 Table \@ref(tab:tabTest) provided the results first.
-Table \@ref(tab:tabTest) provided the results second
-
 
 ```{r tabTest, echo= FALSE}
 source("./Report/Tables/Table1.R")
 table_1 <- make_table_1(model_summary)
+table_1 <- set_caption(table_1, "Table: (\\#tab:tabTest)")
 table_1
 ```
-
-
-
 
 Table \@ref(tab:tabTest1) provided the results second
 
@@ -158,6 +154,7 @@ Table \@ref(tab:tabTest1) provided the results second
   table1 <-merge_v(table1,j=~Sites) 
   table1 <-merge_h(table1,i=1,part="header") 
   table1 <- align(table1,i=1,align="center",part="header")
+  table1 <- set_caption(table1, "Table: (\\#tab:tabTest1)")
   table1
 ```
 
