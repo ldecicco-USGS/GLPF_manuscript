@@ -27,6 +27,11 @@ knitr::opts_knit$set(root.dir = '../../')
 
 
 model_summary <- readRDS("model/out/modeling_summary_table.rds")
+model_summary$Bachuman <- sub("Turbidity_mean","Turb",model_summary$Bachuman)
+model_summary$Bachuman <- sub("Turb","Turbidity",model_summary$Bachuman)
+vars <- unique(unlist(strsplit(model_summary$Bachuman,split = "_")))
+var_names <- c("Turbidity","F","T","M","N","A290","A295","T2","Turbidity")
+
 
 font_size <- 4
 
