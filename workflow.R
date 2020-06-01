@@ -45,9 +45,7 @@
 # Project Setup
 ##########################################
 
-# When you add a new package to your scripts, add 
-# it here too. This will just help make sure we each
-# have the right packages installed.
+# Packages in all scripts included here
 
 library(dplyr)
 library(tidyr)

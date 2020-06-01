@@ -1,6 +1,6 @@
 ---
 title: "Results"
-author: "Steven R. Corsi, Laura A. De Cicco and others"
+author: "Steven R. Corsi, Laura A. De Cicco, Angela Hanson, Peter Lenaker, Brian Bergamaschi, Brian Pellerin"
 date: "November 30, 2018"
 #output: word_document
 output:
@@ -41,7 +41,7 @@ font_size <- 4
 
 ## Regression modeling
 
-Regression modeling was used to explore relations between bacteria concentrations (response variables) and optical signals (explanatory variables). All available measures of bacteria were included in regression analysis for each of the watershed scales. In all cases, response variables were log base 10 transformed. From a practical standpoint for potential field application, explanatory variable selection for these regressions was done in two potential stages: First, optical signals that were already available as field sensors were considered (case 1). Next, explanatory variables were expanded to use of optical signals and variables that derived from optical signals. Only those variables that not correlated to the field sensor signals with a correlation coefficient of 0.95 or greater were considered. These signals included direct fluorescence or absorbance signals at specific wavelengths, means of fluorescence or absorbance signals over specified bandwidths, ratios of these signals, spectral slopes determined as the slope of the absorbance curve over specified wavelengths in exponential space (**<span custom-style="OrangeText">add reference here</span>**), and several optical indices that have been used in previous research (**<span custom-style="OrangeText">add references here</span>**). Given the potential for seasonality in dissolved organic matter composition in streams (@kaiser_seasonal_2001, @coble_temporal_2016), seasonal varaibles (sine and cosine of julian day/(2$\pi$)) along with optical signals were used to develop interaction terms. Optical signals used as case 1 variables included signals F (commonly called fDOM or CDOM) and T (often referred to as tryptophan-like fluorescence) as well as turbidity. Final explanatory variables used in this analysis are presented in the supporting information (Table SI-xx).
+Regression modeling was used to explore relations between bacteria concentrations (response variables) and optical signals (explanatory variables). All available measures of bacteria were included in regression analysis for each of the watershed scales. In all cases, response variables were log base 10 transformed. From a practical standpoint for potential field application, explanatory variable selection for these regressions was done in two potential stages: First, optical signals that were already available as field sensors were considered (case 1). Next, explanatory variables were expanded to use of optical signals and variables that were derived from optical signals. Only those variables that were not correlated to the field sensor signals with a correlation coefficient of 0.95 or greater were considered. These signals included direct fluorescence or absorbance signals at specific wavelengths, means of fluorescence or absorbance signals over specified bandwidths, ratios of these signals, spectral slopes determined as the slope of the absorbance curve over specified wavelengths in exponential space (**<span custom-style="OrangeText">add reference here</span>**), and several optical indices that have been used in previous research (**<span custom-style="OrangeText">add references here</span>**). Given the potential for seasonality in dissolved organic matter composition in streams (@kaiser_seasonal_2001, @coble_temporal_2016), seasonal varaibles (sine and cosine of julian day/(2$\pi$)) were used to develop interaction terms with optical signals. Optical signals used as case 1 variables included signals F (commonly called fDOM or CDOM) and T (often referred to as tryptophan-like fluorescence) as well as turbidity. Final explanatory variables used in this analysis are presented in the supporting information (Table SI-xx).
 
 The model selection process included several steps with the ultimate goal of minimizing error in prediction while choosing a model that has a reasonable fit for all sites in the data set. It was not uncommon to find a model that appeared to be a good fit overall but did not provide a good fit for data from one or more of the  individual sites. For this reason, exploration of potential regression models was conducted using data sets that included multiple sites as well as one single-site data set (Milwaukee River). The Milwaukee River was modeled independently from other sites because the nature of organic matter influence was substantially different than other sites: The moniotoring station at this site was near Lake Michigan and a seiche effect is commonly present, posing the potential for Lake Michigan water influence. In addition, sites with similar land cover were grouped into one data set (e.g. urban, agrucultural). For the single-site data set, ordinary least squares regression (OLS) was used. For data sets with more than one site included, linear heirarchical mixed effects models (LME) were used to account for potential shifts in the statistical relationships among sites (**<span custom-style="OrangeText">add references for base r and lme4</span>**). For both modeling techniques, 5-fold cross validation repeated 50 times was conducted to estimate predictive accuracy. The median root mean squared residuals (RMSE) for the 50 fits was used to compare among models with different explanatory variable combinations. For models that included only one site (Milwaukee River), the model with the lowest median sum of RMSE was chosen. For models that included multiple sites, model options within 3% of the of the lowest median sum of RMSE were evaluated further by considering the quality of fit for each individual site. The RMSE was computed individual sites, and the maximum and minimum individual site RMSE values for each model were identified. The final model was chosen based on the smallest difference between the maximum and minimum individual site RMSE. This minimized the chances that a multiple-site model with an individual site that has a poor fit would be chosen. 
 
@@ -100,15 +100,15 @@ wilcox.result2 <- wilcox.test(hmMINYEvent,hmMINYLowflow)
 ```
 
 
-There were differences in sHM concentrations among sites and by hydrologic condition (Figure \@ref(fig:ConcAndOccurrenceFig)). At the small scale, median concentrations of sHM were `r WI_ratio_median` times greater at the Wisconsin sites than those from the other states (p < 0.05). In samples from Michigan and New York, results indicated greater sHM concentrations during runoff events than during periods of low flow (p < 0.05), but results from the small scale Wisconsin sites indicated no significant difference in sHM concentrations by hydrologic event. 
+There were differences in sHM concentrations among sites and by hydrologic condition (Figure \@ref(fig:ConcAndOccurrenceFig)). At the small scale, median concentrations of sHM were `r WI_ratio_median` times greater at the Wisconsin sites than those from the other states (p < 0.05). In samples from Michigan and New York, results indicated greater sHM concentrations during runoff events than during periods of low flow (p < 0.05), but results from the small scale sites in Wisconsin indicated no significant difference in sHM concentrations by hydrologic event. 
 
 Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater sHM concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of sHM at sites with less than 25% urban land cover at these two scales did not vary significantly by hydrologic condition. 
 
 ## Regression Modeling
 
-Watershed sites were grouped into Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and a single site (Milwaukee), and the three subwatershed sites were grouped together for model development for model development (Table \@ref(tab:tabTest)). 
+Watershed sites were grouped into Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and a single site (Milwaukee), and the three subwatershed sites were all grouped together for model development (Table \@ref(tab:tabTest)). 
 
-Table \@ref(tab:tabTest) provided the results first.
+Table \@ref(tab:tabTest) using table 1 function.
 
 ```{r tabTest, echo= FALSE}
 source("./Report/Tables/Table1.R")
@@ -117,7 +117,7 @@ table_1 <- set_caption(table_1, "Table: (\\#tab:tabTest)")
 table_1
 ```
 
-Table \@ref(tab:tabTest1) provided the results second
+Table \@ref(tab:tabTest1) using inline code
 
 ```{r tabTest1, echo= FALSE}
   model_summary$Sites <- c("Watershed: Agriculture", "Watershed: Agriculture", 
