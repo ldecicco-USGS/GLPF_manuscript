@@ -105,8 +105,32 @@ There were differences in sHM concentrations among sites and by hydrologic condi
 Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater sHM concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of sHM at sites with less than 25% urban land cover at these two scales did not vary significantly by hydrologic condition. 
 
 ## Regression Modeling
+The first consideration in regression modeling was the choice of sites to include in common models. Watershed and subwatershed sites were initially grouped together for a unified model and small scale sites were grouped together. Next, categories from watershed and subwatershed sites were chosen for similarity in land cover and potential diversity of water quality influences as well as geographic proximity to minimize differences in background organic carbon that could lead to confounding signals in these regression relations. This resulted in four site categories; watershed sites were separated into three categories for model development including Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and single site (Milwaukee), and the three subwatershed sites were included as the fourth category. Separating sites into these four categories resulted in improved cross-validated predictive capability for resulting models over the watershed- and subwatershed-scale unified model, so these four categories were chosen for inclusion in final model selection (Table \@ref(tab:tabTest)). 
 
-Watershed sites were grouped into Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and a single site (Milwaukee), and the three subwatershed sites were all grouped together for model development (Table \@ref(tab:tabTest)). 
+Model development attempts for the small-scale sites included one unified model for all samples including all sites within the three regions, and separate models for each of the three regions. These attempts to develop models for the small-scale sites resulted in reasonable regressions when considering the fit for these overall data sets, but when put in context of the primary objective to identify optical signals for identifying contamination sources, no adequate models were discovered. To meet sensor development needs, regressions must provide increasing predictions for increasing human bacteria concentrations for individual events within a storm sewer system or small drainage basin. In order for the In order did not result in acceptable models. 
+
+when considering the objective of identifying optical signals for sensor development, did not prove to be adequate.
+
+did not reliably provide increasing predictions for increasing human bacteria observations for individual events within individual drainage basins. 
+
+ 
+
+
+
+
+
+attempts for small scale included
+ -unified model
+ -separate model for each region
+ All resulting model attempts resulted in unreasonable models
+  -overall models appeared to have a reasonable relation between optical signals and human bacteria,
+  -The objective is to develop a sensor that can to track contamination back to the source. To meet this objective, the regression must reliably predict an increasing signal with increasing human bacteria concentration for individual events within an individual storm sewer drainage basin. Examining the regressions in this context revealed that relations did not 
+  -but when examined by region and individual event, cross validated errors indicated that the resulting regressions were not of use for predicting human bacteria from optical signals.
+
+
+
+
+to provide the best chance of a consistent relation between organic carbon characterization and sewage contamination. The Maumee River, Portage River, and River Raisin are agricultural tributaries of Western Lake Erie, The Clinton River and River Rouge are watersheds with a high degree of urban influence within the Lake St. Claire-Detroit River corridor, the Milwaukee River was sampled in an area with a regular seiche effect that includes transitional influences from the Milwaukee River and Lake Michigan, and the subwatershed sites are at different locations within the same watershed. 
 
 Table \@ref(tab:tabTest) using table 1 function.
 
@@ -116,56 +140,6 @@ table_1 <- make_table_1(model_summary)
 table_1 <- set_caption(table_1, "Table: (\\#tab:tabTest)")
 table_1
 ```
-
-Table \@ref(tab:tabTest1) using inline code
-
-```{r tabTest1, echo= FALSE}
-  model_summary$Sites <- c("Watershed: Agriculture", "Watershed: Agriculture", 
-                           "Watershed: Urban", "Watershed: Urban", "Milwaukee River", 
-                           "Milwaukee River", "Subwatersheds", "Subwatersheds")
-  names(model_summary) <- make.names(names(model_summary))
-  
-  Header1 <- c("", "", "Human Bacteroides", "Human Bacteroides", 
-               "Lachnospiraceae", "Lachnospiraceae", 
-               "Enterococci","Enterococci", 
-               "Enterococci Culture", "Enterococci Culture", 
-               "E. coli", "E. coli")
-  
-  Header2 <- c("Sites", "Category", rep(c("Variables","RMSE"),5))
-  Type <- c(rep("character",2),rep(c("character","numeric"),5))
-  
-  header_df <- data.frame(col.keys = names(model_summary),
-                          #type = Type,
-                          what = Header1,
-                          measure = Header2,
-                          stringsAsFactors = FALSE)
-  
-  
-  #names(model_summary) <- header2
-  table1 <- flextable(model_summary, cwidth = 0.7)
-  table1 <- fontsize(table1, size = 7)
-  table1 <- width(table1, width = 0.5, j = grep("RMSE", names(model_summary)))
-  table1 <- set_header_df(table1,mapping=header_df, key = names(header_df)[1])
-  table1 <- height(table1, height = 0.3,
-                   part = "header")
-  table1 <- fontsize(table1, size = 8, part = "header")
-  
-  table1 <- align(table1,align="center",part = "all")
-  table1 <- align(table1,j=c(1,2,3,5,7,9,11),align="left",part = "all")
-  table1 <- align(table1,j=1,align="left")
-  table1 <- border_outer(table1, border = NULL, part = "all")
-  table1 <- hline(table1,i = 2, part = "header",border=fp_border(color="black",width=2)  )
-  table1 <- hline_top(table1,part = "header",border=fp_border(color="black",width = 2)  ) 
-  table1 <-merge_v(table1,j=~Sites) 
-  table1 <-merge_h(table1,i=1,part="header") 
-  table1 <- align(table1,i=1,align="center",part="header")
-  table1 <- set_caption(table1, "Table: (\\#tab:tabTest1)")
-  table1
-```
-
-
-  
-
 
 
 
