@@ -64,7 +64,7 @@ HVOccur$category_text <- factor(category_text,levels = category_levels)
 axis_text <- list()
 axis_text[[1]] <- parse(text=c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5"))
 axis_text[[2]] <- parse(text=c("0-100","100-235","235-10^3","10^3-10^4"," 10^4"))
-axis_text[[3]] <- parse(text=c("0-10^2","10^2-10^3","10^3-10^4","10^4-10^5","%>* 10^5"))
+axis_text[[3]] <- parse(text=c("0-10^2","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5"))
 # Need to add ">" in front of the last label for each panel.
 
 p <- ggplot(HVOccur,aes(x=category_text,y=Occurrence)) +
