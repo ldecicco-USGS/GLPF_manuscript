@@ -74,6 +74,7 @@ comboHM_HV <- function(filename){
   baseflow_Rows <- grep("base",dfHV$hydro_condition,ignore.case = TRUE)
   dfHV$hydro_condition[baseflow_Rows] <- "Low Flow"
   
+  sitesSmall <- c("WI","NY","MI")
   names(sitesSmall) <- c("Kinnickinnic","Red","Middle Clinton")
   sitesWatershed <- c("Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
   names(sitesWatershed) <- c("Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
