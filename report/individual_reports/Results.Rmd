@@ -103,6 +103,9 @@ There were differences in sHM concentrations among sites and by hydrologic condi
 
 Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater sHM concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of sHM at sites with less than 25% urban land cover at these two scales did not vary significantly by hydrologic condition. 
 
+Human-specific viruses were analyzed concurrently with bacteria samples at the Watershed- and subwatershed-scale sites. Human viruses are present in sewage only when they are present in the population, so the relation between human viruses and human-associated bacteria is expected to vary with human virus presence in the population. 
+
+
 **Add information on the relation between sHM and viruses?**
  + Bin sHM into the same categories as GLRI Phase I report
  + Add in Milwaukee data
