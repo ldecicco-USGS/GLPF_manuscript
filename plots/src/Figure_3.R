@@ -58,7 +58,8 @@ HVOccur$full_name <- factor(HVOccur$full_name, levels = response_names)
 # Set up ordered factor for graphing
 category_text <- c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5","0-10^2","10^2-235","235-10^3","10^3-10^4",
                    " 10^4","0-10^2","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5")
-category_levels <- c("0-10^2","0-450","10^2-235","10^2-10^3","235-10^3","450-10^3","10^3-10^4"," 10^4","10^4-10^5"," 10^5")
+category_text[category_text == " 10^5"] <- expression(""> 10^5)
+category_levels <- c("0-10^2","0-450","10^2-235","10^2-10^3","235-10^3","450-10^3","10^3-10^4"," 10^4","10^4-10^5",expression(""> 10^5))
 HVOccur$category_text <- factor(category_text,levels = category_levels)
 
 axis_text <- list()
@@ -66,6 +67,8 @@ axis_text[[1]] <- parse(text=c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5
 axis_text[[2]] <- parse(text=c("0-100","100-235","235-10^3","10^3-10^4"," 10^4"))
 axis_text[[3]] <- parse(text=c("0-10^2","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5"))
 # Need to add ">" in front of the last label for each panel.
+
+
 
 p <- ggplot(HVOccur,aes(x=category_text,y=Occurrence)) +
   geom_bar(stat = "identity") +
@@ -75,9 +78,10 @@ p <- ggplot(HVOccur,aes(x=category_text,y=Occurrence)) +
     stat='identity',
     nudge_y=0.05,
   )+
-  theme(axis.text.x=element_text(angle = 0, hjust = 0.5,size = 6)) +
+  theme(axis.text.x=element_text(angle = 0, hjust = 0.5,size = 6, )) +
   xlab("Indicator Bacteria Concentration") +
-  ylab("Human Virus Occurrence Proportion")
+  ylab("Human Virus Occurrence Proportion") +
+  scale_x_discrete(labels = function(l) parse(text=l))
 
 pdf("test.pdf",height = 6, width = 7/2.54)
 print(p)
