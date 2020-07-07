@@ -146,6 +146,10 @@ source(file.path("process", "src","get_summaries.R"))
 get_summaries()
 
 
+#Generate dataframe with bacteria markers and human virus data to feed into Figure 3
+source("Process/src/GenerateComboHM_Virus.R")
+comboHM_HV("HM_HV.rds")
+
 ##########################################
 # Model
 ##########################################
@@ -174,8 +178,9 @@ saveRDS(model_summary,file.path("model","out","modeling_summary_table.rds"))
 ##########################################
 
 
-source(file = file.path("plots","src","Figure_2.R"))
 source(file = file.path("plots","src","graph_model_selections.R"))
+source(file = file.path("plots","src","Figure_2.R"))
+source(file = file.path("plots","src","Figure_3.R"))
 
 model_plots <- graph_model_selections()
 pdf(file.path("plots","out","model_selection_bar_charts.pdf"))
@@ -183,8 +188,10 @@ for(i in 1:length(model_plots)) print(model_plots[[i]])
 dev.off()
 
 fig_2 <- plot_fig_2()
-ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.png"), width = 7, height = 5)
+ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.pdf"), width = 3, height = 5)
 
+fig_3 <- plot_fig_3()
+ggsave(fig_3, filename = file.path("plots","out","Figure_3_virus_bacteria_relations.pdf"), width = 3, height = 5)
 
 
 ##########################################
