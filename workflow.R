@@ -146,6 +146,10 @@ source(file.path("process", "src","get_summaries.R"))
 get_summaries()
 
 
+#Generate dataframe with bacteria markers and human virus data to feed into Figure 3
+source("Process/src/GenerateComboHM_Virus.R")
+comboHM_HV("HM_HV.rds")
+
 ##########################################
 # Model
 ##########################################
@@ -168,14 +172,30 @@ source(file.path("model","src","modeling_summary_table.R"))
 model_summary <- modeling_summary_table()
 saveRDS(model_summary,file.path("model","out","modeling_summary_table.rds"))
 
+#Save model objects from final models
+  #MMSD
+source(file.path("model","src","MMSD save final model objects.R"))
+mmsd_models <- save_mmsd_model_objects()
+
+  #GLRI
+source(file.path("model","src","GLRI save final model objects.R"))
+glri_models <- save_glri_model_objects()
+
+#Run the modeling routines and generate HIB predictions
+source(file.path("model","src","Generate_final_model_objects.R"))
+mmsd_model_objects <- generate_final_model_objects("mmsd_summary.rds","MMSD",mmsd_models)
+glri_model_objects <- generate_final_model_objects("glri_summary.rds","GLRI",glri_models)
+
 
 ##########################################
 # Visualize
 ##########################################
 
 
-source(file = file.path("plots","src","Figure_2.R"))
 source(file = file.path("plots","src","graph_model_selections.R"))
+source(file = file.path("plots","src","Figure_2.R"))
+source(file = file.path("plots","src","Figure_3.R"))
+source(file = file.path("plots","src","Figure_4.R"))
 
 model_plots <- graph_model_selections()
 pdf(file.path("plots","out","model_selection_bar_charts.pdf"))
@@ -183,8 +203,13 @@ for(i in 1:length(model_plots)) print(model_plots[[i]])
 dev.off()
 
 fig_2 <- plot_fig_2()
-ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.png"), width = 7, height = 5)
+ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.pdf"), width = 3, height = 5)
 
+fig_3 <- plot_fig_3()
+ggsave(fig_3, filename = file.path("plots","out","Figure_3_virus_bacteria_relations.pdf"), width = 3, height = 5)
+
+fig_3 <- plot_fig_3()
+ggsave(fig_3, filename = file.path("plots","out","Figure_4_virus_occurrence_from_bacteria_predictions.pdf"), width = 3, height = 5)
 
 
 ##########################################

@@ -1,6 +1,8 @@
 # Figure 2: Occurrence and boxplots by study
 
 plot_fig_2 <- function() {
+  library(tidyverse)
+  library(scales)
   dfHM <- readRDS(file.path("process","out","combined_human_markers.rds"))
   
   #Sum of human markers
@@ -22,7 +24,7 @@ plot_fig_2 <- function() {
           axis.title.x=element_blank(),
           axis.text.x=element_blank(),
           axis.ticks.x=element_blank(),
-          legend.position = c(0.7, 0.8),
+          legend.position = c(0.8, 0.8),
           legend.text = element_text(size = 8),               #legend text size
           legend.title = element_text(size = 8)) +            #legend title size
     guides(fill=guide_legend(title=element_blank())) +  #Legend title
@@ -35,14 +37,14 @@ plot_fig_2 <- function() {
   
   barp <- ggplot(HMoccurrence,aes(y=occur,x=site,group=hydro_condition,fill=hydro_condition)) +
     geom_bar(stat = "identity", position = 'dodge') +
-    geom_text(aes(y=1.1, label =  count), size = 2.5, angle = 90,nudge_x = rep(c(-0.25,0.25),16)) +
+    geom_text(aes(y=1.1, label =  count), size = 1.5, angle = 90,nudge_x = rep(c(-0.25,0.25),16)) +
     ylim(0.0,1.19) +
     facet_grid(~scale, scales='free_x', space = "free_x") +
     #  geom_hline(yintercept = 225) +
     #    xTickLabelFont=c(14,"bold", "#993333") +
     theme_bw() +
     theme(text = element_text(size=10),
-          axis.text.x = element_text(angle=90, hjust=1),
+          axis.text.x = element_text(angle=90, hjust=1.0,vjust = 0.5),
           strip.background = element_blank(),
           strip.text.x = element_blank(),
           legend.position='none') +
