@@ -59,5 +59,9 @@ save_mmsd_model_objects <- function() {
   mmsd_models[["Lachno"]] <- model_lachno
   mmsd_models[["Bachuman"]] <- model_bh
   
-  return(mmsd_models)
+  #run models and write to model object list
+  source(file.path("model","src","Generate_final_model_objects.R"))
+  mmsd_model_objects <- generate_final_model_objects("mmsd_summary.rds","MMSD",mmsd_models)
+  
+  return(mmsd_model_objects)
 }
