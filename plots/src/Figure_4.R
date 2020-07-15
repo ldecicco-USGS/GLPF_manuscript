@@ -4,6 +4,10 @@
 library(tidyverse)
 #Use model objects and extract predictions and virus occurrence from associated dataframes
 
+load(file = file.path("model","out","final_model_objects.RData"))
+mmsd_model_objects <- final_model_list[[1]]
+glri_model_objects <- final_model_list[[2]]
+
 #Start with MMSD
 df_predictions <- full_join(mmsd_model_objects[[1]][[2]],mmsd_model_objects[[2]][[2]])
 
@@ -102,20 +106,62 @@ for(i in 1:dim(dfsHM)[1]) {
   cumulative_Occur <- c(cumulative_Occur,mean(dfsHM[(1:i),"virus_occur"]))
 }
 
-dfsHM$sHM_obs <- ifelse(dfsHM$sHM_obs < 500,500,dfsHM$sHM_obs)
-plot(dfsHM$sHM,cumulative_Occur,log="x",pch = 20,cex=0.7)
+dfsHM$sHM_obs <- dfsHM$lachno2 + dfsHM$bacHum
+dfsHM$sHM_obs <- ifelse(dfsHM$sHM_obs < 450,450,dfsHM$sHM_obs)
+plot(dfsHM$sHM,cumulative_Occur,log="x",pch = "",cex=0.7)
+
+l <- loess(cumulative_Occur ~ dfsHM$sHM,span = 0.4)
+summary(l)
+lines(dfsHM$sHM,predict(l),col="green")
+
 lines(lowess(x=dfsHM$sHM,y=cumulative_Occur,f = 0.2))
 
 
-dfsHM$sHM_obs <- dfsHM$lachno2 + dfsHM$bacHum
 dfsHM <- arrange(dfsHM,sHM_obs)
 cumulative_Occur <- numeric()
 for(i in 1:dim(dfsHM)[1]) {
   cumulative_Occur <- c(cumulative_Occur,mean(dfsHM[(1:i),"virus_occur"]))
 }
-points(dfsHM$sHM_obs,cumulative_Occur,type = "l",col="blue")
+#points(dfsHM$sHM_obs,cumulative_Occur,pch=20,cex=0.7,col="blue")
+#lines(lowess(x=dfsHM$sHM_obs,y=cumulative_Occur,f = 0.2))
+l <- loess(cumulative_Occur ~ dfsHM$sHM_obs,span = 0.6)
+summary(l)
+lines(dfsHM$sHM_obs,predict(l),col="blue")
+
 
 plot(dfsHM$sHM_obs,dfsHM$sHM,log="xy")
+
+plot(dfsHM$sHM_obs,cumulative_Occur,pch=20,cex=0.7,col="blue",log="x")
+
+
+# X-point average distribution curve
+ave_window <- 40/2
+begin <- ave_window
+end <- dim(dfsHM)[1] - ave_window
+
+#Predicted values: compute means
+mean_prediction <- numeric()
+mean_occur_pred <- numeric()
+dfsHM <- arrange(dfsHM,sHM)
+for(i in begin:end) {
+  mean_prediction <- c(mean_prediction,mean(dfsHM[((i- ave_window):(i+ ave_window)),"sHM"]))
+  mean_occur_pred <- c(mean_occur_pred,mean(dfsHM[((i- ave_window):(i+ ave_window)),"virus_occur"]))
+}
+
+plot(mean_prediction,mean_occur_pred,type = "l",log="x",col = "blue")
+
+
+#Observed values: compute means
+mean_obs <- numeric()
+mean_occur_obs <- numeric()
+dfsHM <- arrange(dfsHM,sHM_obs)
+for(i in begin:end) {
+  mean_obs <- c(mean_obs,mean(dfsHM[((i- ave_window):(i+ ave_window)),"sHM_obs"]))
+  mean_occur_obs <- c(mean_occur_obs,mean(dfsHM[((i- ave_window):(i+ ave_window)),"virus_occur"]))
+}
+
+lines(mean_obs,mean_occur_obs,type = "l",col="orange")
+
 
 
 ### Individual HIB

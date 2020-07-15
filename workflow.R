@@ -186,6 +186,10 @@ source(file.path("model","src","Generate_final_model_objects.R"))
 mmsd_model_objects <- generate_final_model_objects("mmsd_summary.rds","MMSD",mmsd_models)
 glri_model_objects <- generate_final_model_objects("glri_summary.rds","GLRI",glri_models)
 
+final_model_list <- list(mmsd_model_objects,glri_model_objects)
+
+save(final_model_list, file = file.path("model","out","final_model_objects.RData"))
+
 
 ##########################################
 # Visualize

@@ -121,11 +121,9 @@ print(bacteria_vs_virus)
        + test
 
 ## Regression Modeling
-Regression models were explored for description of the variability of human-associated bacteria using optical signals. The first consideration in regression modeling was the choice of sites to include in common models. Watershed and subwatershed sites were initially grouped together for a unified model. These efforts resulted in poor cross-validated predictive capability, and no adequate models were discovered. Next, categories from watershed and subwatershed sites were chosen for similarity in land cover and potential diversity of water quality influences as well as geographic proximity. These groups were chosen to minimize differences in background organic carbon that could lead to confounding signals in regressions, resulting in in four site categories: Watershed-scale sites were separated into three categories for model development including Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and single site (Milwaukee), and the three subwatershed-scale sites were included as the fourth category. Separating sites into these four categories resulted in improved cross-validated predictive capability for resulting models over the watershed- and subwatershed-scale unified model, so the four categories were selected for inclusion in final model development (Table \@ref(tab:tabTest)). 
+Regression models were explored for description of the variability of human-associated bacteria using optical signals. The first consideration in regression modeling was the choice of sites to include in common models. Watershed and subwatershed sites were initially grouped together for a unified model. These efforts resulted in poor cross-validated predictive capability, and no adequate models were discovered. Next, categories from watershed and subwatershed sites were chosen for similarity in land cover and potential diversity of water quality influences as well as geographic proximity. These groups were chosen to minimize differences in background organic carbon that could lead to confounding signals in regressions, resulting in four site categories: Watershed-scale sites were separated into three categories for model development including Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and single site (Milwaukee), and the three subwatershed-scale sites were included as the fourth category. Separating sites into these four categories resulted in improved cross-validated predictive capability for resulting models over the watershed- and subwatershed-scale unified model, so the four categories were selected for inclusion in final model development (Table \@ref(tab:tabTest)). 
 
-Model development attempts for the small-scale sites also included four data groupings: first, data from all sites and samples within the three regions was used to develop one unified model, and second, separate data sets from each of the three regions was used to develop individual models. Resulting models for small-scale sites were all considered to be inadequate for the intended purpose: To meet sensor development needs for tracing contamination back t`o the source, regressions must provide increasing predictions with increasing human bacteria concentrations for individual events within a storm sewer system or small drainage basin. Attempts to develop models for the small-scale sites did not result in models that consistently met this need.
-
-
+Model development attempts for the small-scale sites also included four data groupings: first, data from all sites and samples within the three regions was used to develop one unified model, and second, separate data sets from each of the three regions was used to develop individual models. Resulting models for small-scale sites were all considered to be inadequate for the intended purpose: To meet sensor development needs for tracing contamination back to the source, regressions must provide increasing predictions with increasing human bacteria concentrations for individual events within a storm sewer system or small drainage basin. Attempts to develop models for the small-scale sites did not result in models that consistently met this need.
 
 Table \@ref(tab:tabTest) using table 1 function.
 
@@ -136,7 +134,11 @@ table_1 <- set_caption(table_1, "Table: (\\#tab:tabTest)")
 table_1
 ```
 
+-Mention seasonal interaction terms
+-Mention site terms in LMER routine
+-Sensors vs non-cor
 
+Models were developed with two sets of optical variables: First, using optical signals represent those used in commercially available field sensors (sensor signals), and second, using additional optical signals that were not highly correlated with at least one of the sensor signals (non-correlated signals). There was not substantial improvement in cross-validation error (root mean squared error, RMSE)  from including the non-correlated signals, suggesting that development of new sensors for prediction of sewage contamination may not improve what could be done using currently available sensors.
 
 <div custom-style="RedText">Whole paragraph of colored text</div>
 
