@@ -68,7 +68,11 @@ plot_fig_3 <- function(){
     theme(axis.text.x=element_text(angle = 0, hjust = 0.5,vjust=0.0,size = 6, )) +
     xlab("Indicator Bacteria Concentration") +
     ylab("Human Virus Occurrence Proportion") +
-    scale_x_discrete(labels = function(l) parse(text=l))
+    scale_x_discrete(labels = function(l) parse(text=l))+
+    theme(axis.title.x = element_text(size = 8),
+          axis.title.y = element_text(size = 8),
+          axis.text.x = element_text(size = 7,colour = "black"),
+          axis.text.y = element_text(size = 7,colour = "black"))
   return(bacteria_vs_virus)
 }
 

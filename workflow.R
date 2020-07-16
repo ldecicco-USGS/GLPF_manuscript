@@ -212,8 +212,8 @@ ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.pdf"), width 
 fig_3 <- plot_fig_3()
 ggsave(fig_3, filename = file.path("plots","out","Figure_3_virus_bacteria_relations.pdf"), width = 3, height = 5)
 
-fig_3 <- plot_fig_3()
-ggsave(fig_3, filename = file.path("plots","out","Figure_4_virus_occurrence_from_bacteria_predictions.pdf"), width = 3, height = 5)
+fig_4 <- plot_fig_4()
+ggsave(fig_4, filename = file.path("plots","out","Figure_4_virus_occurrence_from_bacteria_predictions.pdf"), width = 3, height = 5)
 
 
 ##########################################
