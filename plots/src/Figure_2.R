@@ -48,7 +48,9 @@ plot_fig_2 <- function() {
           strip.background = element_blank(),
           strip.text.x = element_blank(),
           legend.position='none') +
-    labs(x="",y="Occurrence ")
+    labs(x="",y="Occurrence ")+
+    theme(axis.text.x = element_text(colour = "black"),
+          axis.text.y = element_text(colour = "black"))
   
  # barp
   
