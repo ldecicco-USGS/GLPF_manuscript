@@ -46,14 +46,14 @@ save_mmsd_model_objects <- function() {
   HIB <- "Lachno"
   row_num <- which(model_table$Sites == sites_cat & model_table$`Parameter Category` == parm_cat)
   model_lachno_name <- first(model_table[names(response[HIB])])[row_num]
-  model_lachno <- form[model_bh_name]
+  model_lachno <- form[model_lachno_name]
   
   
   #Bachuman: 
   HIB <- "Bachuman"
   row_num <- which(model_table$Sites == sites_cat & model_table$`Parameter Category` == parm_cat)
   model_bh_name <- first(model_table[names(response[HIB])])[row_num]
-  model_bh <- form[model_lachno_name]
+  model_bh <- form[model_bh_name]
   
   mmsd_models <- list()
   mmsd_models[["Lachno"]] <- model_lachno

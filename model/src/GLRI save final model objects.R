@@ -136,5 +136,5 @@ save_glri_model_objects <- function() {
   source(file.path("model","src","Generate_final_model_objects.R"))
   glri_model_objects <- generate_final_model_objects("glri_summary.rds","GLRI",glri_models)
   
-  return(list(mmsd_models,glri_models))
+  return(glri_model_objects)
 }
