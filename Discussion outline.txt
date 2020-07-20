@@ -1,0 +1,23 @@
+Discussion outline
+
+Occurrence and concentrations of HIB and FIB and implications
+HIB
+	-magnitude at diff sites and scales
+	-evidence for indicator of sewage from this study
+	-compare to evidence of sewage from previous studies
+
+FIB
+	-lack of evidence for sewage indicator in current study
+	-lack of evidence for pathogen indicator in previous studies
+	-prevalence of use in permits and recreational use: epi studies that indicate increased sickness
+	-
+
+Regressions
+	-Site groupings and implications
+	-Small scale: doesn’t work. Reasons and implications
+	-Current sensors vs new sensors. Some incremental improvements may be made, but it isn’t likely that large improvements would be achieved. Correlation among many signals.
+
+Pros and cons
+Uses for these regressions
+Limitations with these methods
+
