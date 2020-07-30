@@ -186,18 +186,6 @@ EXAMPLE FOR FONT STYLE
 # Actions needed:
 1. Develop site characteristics table. Land cover for the watershed and subwatershed scales, and for the three primary small watersheds in the small scale.
     + need site IDs for middle branch Clinton and Red Creek, NY
-2. Use these characteristics to describe the hydrologic changes. Urban: hydro change, non-urban no hydro change.
-
-3. (DONE?) Run MDL scripts on all three data sets
-
-4. (DONE) Run optical summary scripts for all three data sets
-
-5. Combine the three data sets into one with scale variable for subsetting.
-
-
-
-
-
 
 
 1. ordered list
