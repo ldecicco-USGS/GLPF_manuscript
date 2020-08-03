@@ -4,6 +4,8 @@ Occurrence and concentrations of HIB and FIB and implications
 HIB
 	-magnitude at diff sites and scales
 	-evidence for indicator of sewage from this study
+	  -relation to human viruses
+	    -call out the problems with using viruses along (lack of presense when not in the population)
 	-compare to evidence of sewage from previous studies
 
 FIB
@@ -16,6 +18,14 @@ Regressions
 	-Site groupings and implications
 	-Small scale: doesn’t work. Reasons and implications
 	-Current sensors vs new sensors. Some incremental improvements may be made, but it isn’t likely that large improvements would be achieved. Correlation among many signals.
+	-HIB regressions for sewage presence, loadings of sewage, use in comparing loadings through watershed to compare magnitude of contributions from different areas of the watershed
+	-FIB regressions to provide info for the more commonly used indicators. Still useful for general fecal contamination assessment from a composite of many sources. These are more commonly used, much less expensive to monitor
+	-Limitations: 
+		-These are still surrogates and not actual measures of bacteria. 
+		-watershed-dependent: while some watersheds can be included in common regressions, it requires similar background DOM for it to work
+		-Doesn't work as well in some watersheds: Could be due to variable DOM sources that confound the signal.
+		-Regressions were developed based on composite samples. Discrete sampling would need to be done to explore whether optical signals can provide valuable info in short term variability.
+		-detection level: if contamination is low, it may be difficult to develop meaningful regressions due to background interference and ability to detect HIB.
 
 Pros and cons
 Uses for these regressions
