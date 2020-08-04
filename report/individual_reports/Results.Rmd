@@ -22,8 +22,12 @@ knitr::opts_chunk$set(echo = TRUE,
 knitr::opts_knit$set(root.dir = '../../') 
 ```
 
+```{r some_resources, echo=FALSE}
+
 # Resources: 
 # Commonly used symbols in R Markdown: https://people.ok.ubc.ca/jpither/modules/Symbols_markdown.html
+```
+
 
 ```{r read_sites, echo=FALSE}
 
