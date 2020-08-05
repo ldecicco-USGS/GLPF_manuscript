@@ -4,7 +4,9 @@ library(dataRetrieval)
 # Load GLPF + GLRI small scale data
 glpf <- readRDS(file.path("raw","GLPF", "summary_noQA.rds"))
 
-#Load MMSD Phase IV data (doesn't have WWTP data)
+#Load MMSD Phase IV data (ADD this after data arrives from Deb)
+# bacteria data
+# optical data
 
 #Load WWTP data from the spatial indicator study
 WWTP_JI <- readNWISqw("430125087540400", parameterCd = "All", startDate = "2007-01-01","2017-01-01")
@@ -45,8 +47,7 @@ WW_init <- WW %>%
 ggplot(WW, aes(x=Sewer_type,y=sHM)) +
   geom_boxplot() + geom_jitter(width = 0.1)
 
-WW_all <- full_join(WW_init,HIB_WW_P3) %>%
-  rename(Signal_T = T, Signal_F = F)
+WW_all <- full_join(WW_init,HIB_WW_P3)
 
 ggplot(WW_all, aes(x=Sewer_type,y = sHM)) + 
   geom_boxplot() + 
@@ -63,38 +64,3 @@ ggplot(WW_all_long, aes(x=Sewer_type,y=value)) +
   scale_y_log10()
 
   
-WW_local <- filter(WW_all, Sewer_type == "Sanitary_Grab")
-
-modeldf <- na.exclude(WW_local[,c("sHM","Signal_F","Signal_T")])
-
-modeldf <- as.data.frame(modeldf)
-m <- lm(formula(sHM ~ signal_F + signal_T),data == modeldf)
-
-
-sHM_vect <- modeldf$sHM
-F_vect <- modeldf$Signal_F
-T_vect <- modeldf$Signal_T
-
-m <- lm(log10(sHM_vect) ~ F_vect + T_vect)
-
-summary (m)
-
-
-#### need to check this once Phase IV data is incorporated   ####
-#### Currently there is only 4 observations                  ####
-
-WWTP <- filter(WW_all, Sewer_type == "WWTP")
-
-modeldf <- na.exclude(WWTP[,c("sHM","Signal_F","Signal_T")])
-
-modeldf <- as.data.frame(modeldf)
-m <- lm(formula(sHM ~ signal_F + signal_T),data == modeldf)
-
-
-sHM_vect <- modeldf$sHM
-F_vect <- modeldf$Signal_F
-T_vect <- modeldf$Signal_T
-
-m <- lm(log10(sHM_vect) ~ F_vect + T_vect)
-
-summary (m)
