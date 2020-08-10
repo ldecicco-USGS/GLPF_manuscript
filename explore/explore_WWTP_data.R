@@ -56,6 +56,7 @@ ggplot(WW_all, aes(x=Sewer_type,y = sHM)) +
 WW_all_long <- WW_all[c(1,2,4:7)] %>% pivot_longer(-Sewer_type, names_to = "parameter", values_to = "value") %>%
   filter(!is.na(value))
 
+WW_all_long$parameter <- factor(WW_all_long$parameter,levels = c("bacHum","lachno","DOCResult","Signal_F","Signal_T"))
 ggplot(WW_all_long, aes(x=Sewer_type,y=value)) +
   geom_boxplot() +
   geom_jitter(width = 0.1) +
