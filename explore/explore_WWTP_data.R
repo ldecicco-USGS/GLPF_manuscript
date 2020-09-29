@@ -11,8 +11,8 @@ WWTP_JI <- readNWISqw("430125087540400", parameterCd = "All", startDate = "2007-
 parms <- unique(WWTP_JI$parm_cd)
 parm_info <- readNWISpCode(parms)
 
-parms_HIB <- c(31742,31743)
-
+parms_HIB <- c(31742,31743,31745)
+names(parms_HIB) <- c("HB","Lachno","Ent")
 HIB_WW_P3_long <- filter(WWTP_JI,parm_cd %in% parms_HIB) %>%
   select(site_no,startDateTime,endDateTime,parm_cd,remark_cd,result_va,val_qual_tx)
 HIB_WW_P3 <- HIB_WW_P3_long %>% pivot_wider(names_from = parm_cd,values_from = result_va)
@@ -69,8 +69,9 @@ WW_local <- filter(WW_all, Sewer_type == "Sanitary_Grab")
 modeldf <- na.exclude(WW_local[,c("sHM","Signal_F","Signal_T")])
 
 modeldf <- as.data.frame(modeldf)
-m <- lm(formula(sHM ~ signal_F + signal_T),data == modeldf)
-
+m <- lm(log(sHM) ~ Signal_F  + Signal_T,data == modeldf)
+m <- lm(formula(log(modeldf$sHM) ~ modeldf$Signal_F  + modeldf$Signal_T))
+summary(m)
 
 sHM_vect <- modeldf$sHM
 F_vect <- modeldf$Signal_F
@@ -99,3 +100,13 @@ T_vect <- modeldf$Signal_T
 m <- lm(log10(sHM_vect) ~ F_vect + T_vect)
 
 summary (m)
+
+
+## Compute coefficient of variation for local sewage and influent 
+#
+
+coef_var <- WW_all_long %>%
+  group_by(Sewer_type,parameter) %>%
+  summarize(cv = sd(value,na.rm=TRUE)/mean(value,na.rm=TRUE),
+            mean = mean(value,na.rm=TRUE),
+            stdev = sd(value,na.rm=TRUE))
