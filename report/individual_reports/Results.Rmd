@@ -211,13 +211,13 @@ The result that model fit improved using selected subsets of the data by site ra
 
 **Variable selection**
 
-Final variables selected in models could help govern how to design field-level monitoring systems for estimating wastewater contamination. The sensor models indicated that this could potentially be done with currently available sensors with T and F fluorescence signals. These models, however, were developed using data from laboratory analysis. Additional work will be needed to understand the steps necessary to translate these models to a field setting. Analysis of how the field sensors respond in comparison to the corresponding signals measured by the laboratory instrument will be needed as well as adjustments for the influence of turbidity,temperature, and inner filter effects on field sensor results (Saraceno et al., 2017; Downing et al., 2015; Watras et al., 2014). 
+Final variables selected in models could help govern how to design field-level monitoring systems for estimating wastewater contamination. The sensor models indicated that this could potentially be done using currently available T and F fluorescence sensors. These models, however, were developed using data from laboratory analysis. Additional work will be needed to understand the steps necessary to translate these models to a field setting. Analysis of how the field sensors respond in comparison to the corresponding signals measured by the laboratory instrument will be needed as well as adjustments for the influence of turbidity,temperature, and inner filter effects on field sensor results (Saraceno et al., 2017; Downing et al., 2015; Watras et al., 2014). 
 
 Modeling results from this study call into question whether it would be a valuable use of resources to develop additional field senors targeted at optical signals other than T, F, and turbidity for the purpose of wastewater contamination prediction. The lack of substantial improvements in model fit when including alternate signals in the model in combination with the lack of consistency in the alternate signals selected for models among sites and among bacteria modeled would not provide a clear choice on which alternative signals would be of greatest value. Further, each additional sensor added to a monitoring system adds equipment and maintenance cost. Until alternative sensor development efforts improve accuracy, reliability and reduce maintenance in the field, T, F, and turbidity sensors would likely be the most economical way to predict wastewater contamination using optical field sensors.
 
 **Seasonality**
 
- Inclusion of seasonal variables in the large watershed and subwatershed regressions suggest a seasonal influence
+Inclusion of seasonal variables in the large watershed and subwatershed regression models indicate a seasonal influence in the relation of bacteria to predictor variables. This seasonality could be influenced by several factors: Precipitation and runoff to streams can be exposed to different levels of vegetation over the year, and runoff also has a variable level of exposure to soil depending on the presence of snow and ice.  In the fall, leachate from leaf litter during precipitation events can be transported to streams. These factors all have influence the DOM composition and lead to seasonal fluxuations. Soil saturation, which is commonly high in the spring, can have a substanial influence on potential for inflow and infiltration into sanitary sewers and the likelihood of exceeding sanitary sewer capacity and increasing the risk of sanitary sewer overflows. Soil saturation level also governs the baseflow level and the severity of precipitation response in streams: increased flow increases the capacity of the stream to carry sediment, thereby increasing turbidity. All of these factors, and likely others, provide potential for seasonal changes in each of the model response and predictor parameters and the overall models themselves.
 
 
   + inclusion of seasonal term suggests seasonality in the relation between bacteria and optical properties of water
@@ -241,13 +241,14 @@ In addition, other non-human sources can influence the optical signals in an unp
 
 
 
-**<div custom-style="BlueText">Info on FIB models and pathogen models in surface water (first milwaukee paper, beach paper, others?)</div>**
-
 **Previous surrogate models for microbial contaminants**
 
 Previous efforts have developed surrogate models for prediction of fecal indicators in recreational waters (Francy GL beaches, Whitman citation(s), Nevers citations, Brooks, PLS, Brooks, beauty contest, other), and in rivers (Dila et al. 2018, Corsi et al., Baldwin et al MMSD, Kansas pubs, +others). These models often use basic water quality parameters such as turbidity and water temperature as well as physical parameters such as wave height, water currents,  wind velocities, and stream flow as predictor variables. Some have been used in assisting managers of recreational waters for swimming advisories (citations), and others for helping to understand dynamics of water quality or for computation of stream loadings (**<span custom-style="OrangeText">Kansas pubs, Dila et al, 2018, Baldwin MMSD, others?</span>**). The majority of these modeling efforts have focused on prediction of general fecal indicators such as E. coli or fecal coliform (**<span custom-style="OrangeText">Enerococci??</span>**) that provide general microbial contamination, but do not necessarily indicate presence of wastewater and its associated pathogenic and chemical contamination. Inclusion of human-associated bacteria in the modeling effort provides opportunity to gain information on the level of wastewater contamination that is directly associated to breaches in the sanitary conveyance system that IDDE efforts could work to identify and control.
 
 **Limitations of application**
+
+Results indicate that there is promise for application of optical sensors to predict wastewater contamination in streams, but there remain limitations in this approach: there was no universal relationship
+
 
   + Individual site calibration needed--no universal relationship
   + Sensor accuracy and reliability
