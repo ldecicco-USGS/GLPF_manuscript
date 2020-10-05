@@ -3,6 +3,10 @@
 plot_fig_2 <- function() {
   library(tidyverse)
   library(scales)
+  library(ggplot2)
+  library(gridExtra)
+  library(cowplot)
+  
   dfHM <- readRDS(file.path("process","out","combined_human_markers.rds"))
   
   #Sum of human markers

@@ -27,6 +27,18 @@ comboHMPlusBasicOptical <- function(filename){
   # Extract human markers and make one dataframe with all three scales
   
   # GLPF data
+  
+  #Remove sanitary sewer data
+  glpf$site_type <- glpf$IfTributarySewerOutfallManholeorDitch
+  
+  glpf[grep("Autosample",glpf$VirusAutosampleorSewerGrab),"site_type"] <- "Stream"
+  glpf[grep("WW Influent",glpf$VirusAutosampleorSewerGrab),"site_type"] <- "WWTP"
+  
+  ww_rows <- which(glpf$VirusAutosampleorSewerGrab %in% c("Sanitary Grab", "WWTP", "WW Influent", "Sanitary"))
+  
+  glpf_ww <- glpf[ww_rows,]
+  glpf <- glpf[-ww_rows,]
+  
   glpfHM <- glpf[,c("CAGRnumber","State","USGSFieldID","pdate","hydroCondition","bacHum", "lachno","T","F","A","A254")]
   glpfHM$scale <- "small"
   
@@ -78,5 +90,6 @@ comboHMPlusBasicOptical <- function(filename){
   dfHM <- dfHM[keepRows,]
   dfHM$site <- droplevels( dfHM$site)
   saveRDS(dfHM,file=file.path("process","out",filename))
+  return(dfHM)
   
 }

@@ -53,8 +53,12 @@ plot_fig_3 <- function(){
   # Set up ordered factor for graphing
   category_text <- c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5","0-10^2","10^2-235","235-10^3","10^3-10^4",
                      " 10^4","0-10^2","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5")
-  category_text[category_text == " 10^5"] <- expression(""> 10^5)
-  category_levels <- c("0-10^2","0-450","10^2-235","10^2-10^3","235-10^3","450-10^3","10^3-10^4"," 10^4","10^4-10^5",expression(""> 10^5))
+  
+  conc_10_5 <- which(category_text %in% " 10^5")
+  conc_10_4 <- which(category_text %in% " 10^4")
+  
+  category_text[c(conc_10_5,conc_10_4)] <- c(rep(expression(""> 10^5),length(conc_10_5)),rep(expression(""> 10^4),length(conc_10_4)))
+  category_levels <- c("0-10^2","0-450","10^2-235","10^2-10^3","235-10^3","450-10^3","10^3-10^4",expression(""> 10^4),"10^4-10^5",expression(""> 10^5))
   HVOccur$category_text <- factor(category_text,levels = category_levels)
   
   bacteria_vs_virus <- ggplot(HVOccur,aes(x=category_text,y=Occurrence)) +
