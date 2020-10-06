@@ -32,10 +32,18 @@ knitr::opts_knit$set(root.dir = '../../')
 
 ```{r read_sites, echo=FALSE}
 library(tidyverse)
+library(ggplot2)
+library(scales)
+library(cowplot)
+library(flextable)
+library(officer)
+
 source("./report/src/count_sites_and_samples.R")
 
 sites_and_samples <- count_sites_and_samples()
 
+land_use <- data.frame(col1=c(1,2,3),col2=c(1,2,3))
+land_use <- read.csv("./report/tables/GLPF site characteristics.csv")
 model_summary <- readRDS("model/out/modeling_summary_table.rds")
 model_summary$Bachuman <- sub("Turbidity_mean","Turb",model_summary$Bachuman)
 model_summary$Bachuman <- sub("Turb","Turbidity",model_summary$Bachuman)
@@ -72,8 +80,24 @@ Sources of wastewater contamination are diverse in nature with large variations 
 
 ## Site selection
 
-Samples were collected from areas around the Great Lakes at three different drainage basin scales (Figure 1, Table 1), including: 1). Watersheds: Eight tributaries of the Great Lakes with a gradient of urban to agricultural land use, 2). Subwatersheds: Three locations were sampled on the Menomonee River in the Milwaukee Metropolitan area, and 3). Small scale: Multiple storm sewers and open channels (`r sites_and_samples$sites[4]` sites) were sampled in three subwatersheds within the Great Lakes Basin including the Middle Branch of the Clinton River in Macomb County, Michigan (`r sites_and_samples$sites[1]` sites), Red Creek in Monroe County, New York (`r sites_and_samples$sites[2]` sites), and the Kinnickinnic River in Milwaukee (`r sites_and_samples$sites[3]` sites).
+Samples were collected from areas around the Great Lakes at three different drainage basin scales (Figure 1, (Figure \@ref(fig:SiteMap), Table \@ref(tab:landuse)), including: 1). Watersheds: Eight tributaries of the Great Lakes with a gradient of urban to agricultural land use, 2). Subwatersheds: Three locations were sampled on the Menomonee River in the Milwaukee Metropolitan area, and 3). Small scale: Multiple storm sewers and open channels (`r sites_and_samples$sites[4]` sites) were sampled in three subwatersheds within the Great Lakes Basin including the Middle Branch of the Clinton River in Macomb County, Michigan (`r sites_and_samples$sites[1]` sites), Red Creek in Monroe County, New York (`r sites_and_samples$sites[2]` sites), and the Kinnickinnic River in Milwaukee (`r sites_and_samples$sites[3]` sites).
  
+```{r SiteMap, echo=FALSE, fig.cap="Location of sampling sites including small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale).", out.width = '50%'}
+knitr::include_graphics("M://QW Monitoring Team/GLPF/JA/Figures/GLPF_locmap_all_journalversion_20201006-01.jpg")
+```
+
+
+Table 1. Land cover for sampling sites including small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale)
+
+
+```{r landuse, echo= FALSE}
+source("./Report/Tables/Table1.R")
+table_1 <- make_table_1(land_use)
+table_1 <- set_caption(table_1, "Table: (\\#tab:landuse) Land cover for sampling sites including small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale).")
+table_1
+```
+
+
 
 ## Sampling design
 
@@ -176,12 +200,7 @@ The model selection process included several steps with the ultimate goal of min
 # Results {#results}
 
 ```{r,echo=FALSE}
-library(tidyverse)
-library(ggplot2)
-library(scales)
-library(cowplot)
-library(flextable)
-library(officer)
+
 source("process/src/GenerateComboHMPlusBasicOptical.R")
 dfHM <- comboHMPlusBasicOptical(filename="combined_human_markers.rds")
 #dfHM <- readRDS("process/out/combined_human_markers.rds")
@@ -252,17 +271,16 @@ print(bacteria_vs_virus)
 
 
 ## Regression Modeling
-Regression models were explored for describing variability of human-associated bacteria using optical signals. The first consideration in regression modeling was the choice of sites to include in common models. Watershed and subwatershed sites were initially grouped together for a unified model. These efforts resulted in poor cross-validated predictive capability, and no adequate models were discovered. Next, categories from watershed and subwatershed sites were chosen for similarity in land cover and potential diversity of water quality influences as well as geographic proximity. These groups were chosen to minimize differences in background DOC that could lead to confounding signals in regressions, resulting in four site categories: Watershed-scale sites were separated into three categories for model development including Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and single site (Milwaukee), and the three subwatershed-scale sites were included as the fourth category. Separating sites into these four categories resulted in improved cross-validated predictive capability for resulting models over the watershed- and subwatershed-scale unified model, so the four categories were selected for inclusion in final model development (Table \@ref(tab:tabTest)). 
+Regression models were explored for describing variability of human-associated bacteria using optical signals. The first consideration in regression modeling was the choice of sites to include in common models. Watershed and subwatershed sites were initially grouped together for a unified model. These efforts resulted in poor cross-validated predictive capability, and no adequate models were discovered. Next, categories from watershed and subwatershed sites were chosen for similarity in land cover and potential diversity of water quality influences as well as geographic proximity. These groups were chosen to minimize differences in background DOC that could lead to confounding signals in regressions, resulting in four site categories: Watershed-scale sites were separated into three categories for model development including Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and single site (Milwaukee), and the three subwatershed-scale sites were included as the fourth category. Separating sites into these four categories resulted in improved cross-validated predictive capability for resulting models over the watershed- and subwatershed-scale unified model, so the four categories were selected for inclusion in final model development (Table \@ref(tab:Models)). 
 
 Model development attempts for the small-scale sites also included four data groupings: first, data from all sites and samples within the three regions were used to develop one unified model, and second, separate data sets from each of the three regions was used to develop individual models. Resulting models for small-scale sites were all considered to be inadequate for the intended purpose: To meet sensor development needs for tracing contamination back to the source, regressions must provide increasing predictions with increasing human bacteria concentrations for individual events within a storm sewer system or small drainage basin. Attempts to develop models for the small-scale sites did not result in models that consistently met this need.
 
-Table \@ref(tab:tabTest) using table 1 function.
 
-```{r tabTest, echo= FALSE}
-source("./Report/Tables/Table1.R")
-table_1 <- make_table_1(model_summary)
-table_1 <- set_caption(table_1, "Table: (\\#tab:tabTest)")
-table_1
+```{r Models, echo= FALSE}
+source("./Report/Tables/Table2.R")
+table_2 <- make_table_2(model_summary)
+table_2 <- set_caption(table_2, "Table: (\\#tab:Models)")
+table_2
 ```
 
 
@@ -270,7 +288,7 @@ Models were developed with two sets of optical variables: First, using optical s
 
 The sensor models included different combinations of fluorescence signal "T" (often referred to as tryptophan-like fluorescence), fluorescence signal "F" (often referred to as "CDOM" or "fDOM"), and turbidity. Signals T and F were commonly included in final models as interaction terms with seasonality. All final sensor models included turbidity, indicating that turbidity may be the most valuable signal for inclusion in these surrogate models with additional optical signals and seasonal terms to enhance accuracy of these. 
 
-There was not a substanial and consistent improvement in cross-validation error (RMSE)  in the alternate signal models compared to the sensor models (Table \@ref(tab:tabTest)). The enterococci culture models for the urban large watershed sites and for the Milwaukee River site were the only two models that had 10% or greater decrease in RMSE by using models developed with the alternate signal variables. In addition to T and F, variables in the alternate signal models included two fluorescence signals (M and N), ratios of fluorescence signals, the fluorescence index, and ratios of absorbance signals (Table SI-XX). Collectively, results suggested that there may be minor improvements in model performance by use of the alternate signal variables for a few selected site-organism combinations, but that the optical signals selected for the alternate signal models are not consistent.
+There was not a substanial and consistent improvement in cross-validation error (RMSE)  in the alternate signal models compared to the sensor models (Table \@ref(tab:Models)). The enterococci culture models for the urban large watershed sites and for the Milwaukee River site were the only two models that had 10% or greater decrease in RMSE by using models developed with the alternate signal variables. In addition to T and F, variables in the alternate signal models included two fluorescence signals (M and N), ratios of fluorescence signals, the fluorescence index, and ratios of absorbance signals (Table SI-XX). Collectively, results suggested that there may be minor improvements in model performance by use of the alternate signal variables for a few selected site-organism combinations, but that the optical signals selected for the alternate signal models are not consistent.
 
 The proportion of virus occurrence increased with the sum of fitted sHB from the watershed- and subwatershed-scale models (Figure \@ref(fig:PredictionToVirusFig)). For instances when fitted model values were below 1000 copy number/100mL, no viruses were detected. Virus detection increased with increasing concentration up to 40% virus detection when sHB fitted values were greater than 100000 copy number/100mL. Because human viruses were measured independently from human bacteria and not used in model development, this result provides independent verification that the sensor models have the capability of predicting the presence of sewage and potential risk from human pathogens. 
 
@@ -291,20 +309,16 @@ EXAMPLE FOR FONT STYLE
 
 # Discussion
 
-**General sHM presence**
-
-
-by the wide variability in the level of contamination among watersheds included in this study with median concentrations of sHB
+**Microbial Contamination**
 
 The variability of contamination level by watershed was illustrated in result with median concentrations varying from less than the detection limit in samples from watershed scale to greater than 10000 cn/100 ml in several samples from the small-scale sites within the Kinnickinic River watershed. The general increasing human virus occurrence with increasing concentration bins for sHB provided validation that human-associated bacteria markers can be valuable for assessing the presence of sewage and risk of exposure to sewage-contaminated waters. Human viruses, however, are not consistently present in the human waste stream, and when they are present, they are highly variable even in raw wastewater (Lenaker et al, 2018,  Fernandez-Cassi et al., 2018; Shrestha et al., 2017). These pathogens are most likely to be present in wastewater when they are present in the human population, and concentrations are likely to vary depending on how pervasive they are in the human population at the time of sampling. Depending on the specific virus, the occurrence and magnitude of virus presence in wastewater may or may not have seasonal patterns (Lenaker et al, 2018, Myrmel et al., 2006). Conversely, presence of human-associated bacteria such as the two measured in samples from the current study are relatively stable in wastewater treatment plant influent over time with concentrations of approximately 10^8^ cn/100 ml $\pm$ an order of magnitude (Lenaker et al., 2019). With a detection level of 225 cn/100 ml, HIB would be detectable even after dilution in natural waters of five to seven orders of magnitude. Therefore, while human-associated bacteria are likely to be present whenever human viruses are present, human viruses are not always present in environmental waters contaminated with human-associated bacteria (Zhang et al., 2020). Depending on monitoring objectives, these two types of parameters can be valuable in different ways. Measurement of human viruses provide more direct information on human health risk while human-associated bacteria provide information on the potential for human health risk (McLellan et al., 2018;  Zhang et al., 2020, Boehm et al., 2018) and an additional level of information on wastewater prevalence that can include other contaminants that are potentially harmful to aquatic life regardless of pathogenic presence.
 
-<div custom-style="RedText">Whole paragraph of colored text</div>
 
-The lack of relation between EC or ENT and virus occurrence is consistent with conclusions from previous work that general fecal indicators are not necessarily good predictors of waterborne pathogens (Corsi et al., 2016; Noble and Fuhrman, 2001; Boehm et al., 2009). These indicators are, however, used commonly as more general indicators of nonspecific fecal contamination from numerous sources (standridge, 2008; Ercumen et al., 2017; Ishii and Sadowsky, 2008; Kinzelman et al., 2003; Byappanahalli et al., 2012), and have previously been associated with a risk to human health (Wade et al., 2006, Wade et al., 2008; Cabelli, 1989). Concentrations of fecal indicator bacteria in recreational waters are a primary measure currently used for issuing swimming advisories for the protection of human health (Kay et al., 2004; https://www.epa.gov/wqc/recreational-water-quality-criteria-and-methods
-**<span custom-style="OrangeText">add EPA recreational criteria reference here</span>**).
+The lack of relation between EC or ENT and virus occurrence is consistent with conclusions from previous work that general fecal indicators are not necessarily good predictors of waterborne pathogens (Boehm et al., 2009; Corsi et al., 2016; Noble and Fuhrman, 2001). These indicators are, however, used commonly as more general indicators of nonspecific fecal contamination from numerous sources (Standridge, 2008; Ercumen et al., 2017; Ishii and Sadowsky, 2008; Kinzelman et al., 2003; Byappanahalli et al., 2012), and have previously been associated with a risk to human health (Wade et al., 2006, Wade et al., 2008; Cabelli, 1989). Concentrations of fecal indicator bacteria in recreational waters are a primary measure currently used for issuing swimming advisories for the protection of human health (Kay et al., 2004; United States Environmental Protection Agency, 2012).
 
+**Site groupings**
 
-The result that model fit improved using selected subsets of the data by site rather than full data sets for each of the large watershed and subwatershed scales indicates the importance of watershed setting. Each subset of data included sites that represented a specific type of watershed setting with potential for distinctly different background DOM compostition that could impact the relation between optical signals and bacteria abundance: The final subsets of data included large watersheds dominated by agricultural influence, large watersheds dominated by urban influence, a mixed land use watershed with seiche effect from Lake Michigan, and subwatersheds dominated by urban influence. The agricultural watersheds were located in the Western Lake Erie drainage basin and all have > xx% agricultural influence (**<span custom-style="OrangeText">add reference here</span>**). The urban watersheds were located in the Detroit metropolitan area, and both have active combined sewer overflows at times (**<span custom-style="OrangeText">add reference here</span>**). The Milwaukee River includes a mix of urban and agricultural land use and is influenced by a regular seiche effect that includes transitional influences from the Milwaukee River, the Milwaukee harbor, and Lake Michigan resulting in a unique combination of DOM sources. The subwatershed sites are all within the Menomonee River watershed in the Milwaukee metropolitan area that is dominated by residential, commercial, and industrial land cover, and to a lesser extent, the upper portion of the Menomonee River includes agricultural influence. Each of these groupings have different watershed characteristics unique enough to have influences on the organic matter content, and therefore, different optical properties of water that have potential to change the association with human-associated bacteria.
+The result that model fit improved using selected subsets of the data by site rather than full data sets for each of the large watershed and subwatershed scales indicates the importance of watershed setting. Each subset of data included sites that represented a specific type of watershed setting with potential for distinctly different background DOM compostition that could impact the relation between optical signals and bacteria abundance: The final subsets of data included large watersheds dominated by agricultural influence, large watersheds dominated by urban influence, a mixed land use watershed with seiche effect from Lake Michigan, and subwatersheds dominated by urban influence. The agricultural watersheds were located in the Western Lake Erie drainage basin and all have **> xx%** agricultural influence (Table 1). The urban watersheds were located in the Detroit metropolitan area, and both have active combined sewer overflows at times (Michigan Department of Environmental Quality, 2011, Michigan Department of Environmental Quality, 1995). The Milwaukee River includes a mix of urban and agricultural land use and is influenced by a regular seiche effect that includes transitional influences from the Milwaukee River, the Milwaukee harbor, and Lake Michigan resulting in a unique combination of DOM sources. The subwatershed sites are all within the Menomonee River watershed in the Milwaukee metropolitan area that is dominated by residential, commercial, and industrial land cover, and to a lesser extent, the upper portion of the Menomonee River includes agricultural influence. Each of these groupings have different watershed characteristics unique enough to have influences on the organic matter content, and therefore, different optical properties of water that have potential to change the association with human-associated bacteria.
 
 **Variable selection**
 
@@ -324,19 +338,17 @@ Small scale sampling included storm sewers and open channels in urban areas. The
 In addition, other non-human sources can influence the optical signals in an unpredictable manner such as, wildlife waste, pet waste, and leaf leachate (Bratt, et al., 2017; Fork et al., 2020). This is likely to be another substantial reason that modeling attempts were unsuccessful for small-scale sites. In contrast, flow contributing to the watershed and subwatershed sites represents water from many diverse, small-scale sources that are homogenized in the main channel, making it more likely to result in a consistent relationship between optical signals and human bacteria to facilitate model development. This difference among different scale sites is a likely reason that development of models for small scale sites was not possible while reasonable models were achievable for the watershed and subwatershed scale sites. 
 
 
+**Surrogate models**
 
-**Previous surrogate models for microbial contaminants**
+Previous efforts have developed surrogate models for prediction of fecal indicators in recreational waters (Francy et al., 2013, He and He, 2008; Shively et al., 2015; Brooks et al., 2016), and in rivers (Christensen, et al., 2002; Baldwin et al., 2012). These models often use basic water quality parameters such as turbidity and water temperature as well as physical parameters such as wave height, water currents,  wind velocities, and stream flow as predictor variables. Some have been used to assist managers of recreational waters for issuing swimming advisories (Heberger et al., 2008; Dada and Hamilton, 2016), and others for helping to understand dynamics of water quality or for computation of stream loadings (McKergow and Davies, 2010; David and Haggard, 2010). The majority of these modeling efforts have focused on prediction of general fecal indicators such as E. coli or fecal coliform that provide general microbial contamination, but do not necessarily indicate presence of wastewater and its associated pathogenic and chemical contamination. Expanding the use of surrogate models for human-associated bacteria in the current study provides opportunity to gain information on the level of wastewater contamination directly associated with breaches in the sanitary conveyance system that IDDE efforts could work to identify and control.
 
-Previous efforts have developed surrogate models for prediction of fecal indicators in recreational waters (Francy et al., 2013, He and He, 2008; Shively et al., 2015; Brooks et al., 2016), and in rivers (Christensen, et al., 2002; Baldwin et al., 2012). These models often use basic water quality parameters such as turbidity and water temperature as well as physical parameters such as wave height, water currents,  wind velocities, and stream flow as predictor variables. Some have been used to assist managers of recreational waters for issuing swimming advisories (Heberger et al., 2008; Dada and Hamilton, 2016), and others for helping to understand dynamics of water quality or for computation of stream loadings (McKergow and Davies, 2010; David and Haggard, 2010). The majority of these modeling efforts have focused on prediction of general fecal indicators such as E. coli or fecal coliform that provide general microbial contamination, but do not necessarily indicate presence of wastewater and its associated pathogenic and chemical contamination. Inclusion of human-associated bacteria in the modeling effort provides opportunity to gain information on the level of wastewater contamination that is directly associated to breaches in the sanitary conveyance system that IDDE efforts could work to identify and control.
+**Application**
 
-**Limitations of application**
-
-Potential exists for valuable applications of optical field sensors, but there remain a number of limitations with this approach that are important to consider: Given that there was no universal relationship for all sites, validation of model effectiveness and calibration of coefficients will be required for each future application. Translation of these concepts to the field setting will need to be validated through long-term monitoring in different hydrologic conditions and throughout all seasons. Accuracy in comparison to laboratory measurements and stability of the sensor signals over time will need to be validated through regular quality control measurements. Field applications can be complex with multiple challenging factors to overcome such as biofouling, logistics of in-stream and flow-through system deployments, and assurance sampling with a sensor at an individual location is representative water throughout the stream cross section. In this study, models were developed using data from one to two year time periods. Further study would be needed to verify stationarity of these models over time due to changes within a watershed, such as runoff management actions, that have potential to change the relationship between human-associated bacteria and optical properties of water. In addition, the current study included multiple watersheds with variable influences, but was limited to the Great Lakes region. Validation for additional geological and geographic areas would provide insight into the tranferability of these concepts to more diverse watershed settings.
+Potential exists for valuable applications of optical field sensors, but there remain a number of limitations with this approach that are important to consider: Given that there was no universal relationship for all sites, validation of model effectiveness and calibration of coefficients will be required for each future application. Translation of these concepts to the field setting will need to be validated through long-term monitoring in different hydrologic conditions and throughout all seasons. Accuracy in comparison to laboratory measurements and stability of the sensor signals over time will need to be evaluated through regular quality control measurements. Field applications can be complex with multiple challenging factors to overcome such as biofouling, logistics of in-stream and flow-through system deployments, and assurance that sampling with a sensor at an individual location is representative of water throughout the stream cross section. In this study, models were developed using data from one to two year time periods. Further study would be needed to verify stationarity of these models over time due to changes within a watershed such as runoff management actions that have potential to change the relationship between human-associated bacteria and optical properties of water. In addition, the current study included multiple watersheds with variable influences, but was limited to the Great Lakes region. Validation for additional geological and geographic areas would provide insight into the transferability of these concepts to more diverse watershed settings.
 
 
 Even with these limitations, the application holds promise for providing real time estimates of general fecal indicator bacteria, human-associated bacteria markers, and wastewater contamination. Successful implementation of a field application could include continuous deployment at stationary sites or discrete sampling during targeted time periods. Continuous deployment would allow for prediction of bacteria concentrations, bacteria loadings when coupled with flow measurement, and estimation of the wastewater content in streams at a fine time scale. This approach would provide advantages over discrete sampling for bacteria directly: Cost of sampling would be substantially less than that from laboratory analysis of numerous samples collected at a fine time scale, results would be available in real time either through telemetry for unattended continuous sampling or on-site for manual sampling operations. Laboratory analyses typically take days to months. Results during continous deployment could also be used to trigger discrete sampling at threshold levels to verify bacteria and wastewater predictions. While the application does not appear to work well at the very small drainage area scale for tracing contamination to the source, deployment in large watersheds and subwatersheds would provide a means to prioritize relative contamination levels in different portions of the watershed, and the time periods in which they occur, allowing resource managers to focus on areas with the largest contamination contributions for remediation. 
 
-**Baldwin and Valo: Exploring the relationship between the optical properties of water and the quality and quantity of dissolved organic carbon in aquatic ecosystems: strong correlations do not always mean strong predictive power**
 
 
  
@@ -344,16 +356,12 @@ Even with these limitations, the application holds promise for providing real ti
 
 
 # Actions needed:
-1. Develop site characteristics table. Land cover for the watershed and subwatershed scales, and for the three primary small watersheds in the small scale.
-    + need site IDs for middle branch Clinton and Red Creek, NY
 
 2. Human-associated bacteria markers (CHECK NAME CONSISTENCY) 
 
 3. Search for modeling of human-associated bacteria
 
-4. Compile intro, methods, results and discussion into one doc
-
-5. Write abstract
+4. Write abstract
 
 
 Modeling points to make:
