@@ -48,6 +48,7 @@ WW_init$Study <- "GLPF"
 
 ggplot(WW, aes(x=Sewer_type,y=sHM)) +
   geom_boxplot() + geom_jitter(width = 0.1)
+summary(WW$sHM)
 
 WW_all <- full_join(WW_init,HIB_WW_P3) %>%
   rename(Signal_T = T, Signal_F = F)
@@ -56,6 +57,7 @@ ggplot(WW_all, aes(x=Sewer_type,y = sHM)) +
   geom_boxplot() + 
   geom_jitter(width = 0.1) +
   scale_y_log10()
+summary(WW_all$sHM)
 
 WW_all$sHM <- WW_all$bacHum + WW_all$lachno
 WW_all_long <- WW_all[c(1,2,3,4:9)] %>% pivot_longer(-c(Sewer_type,Study), names_to = c("parameter"), values_to = "value") %>%
