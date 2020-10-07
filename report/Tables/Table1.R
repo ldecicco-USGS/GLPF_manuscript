@@ -21,7 +21,15 @@ make_table_1 <- function(land_use) {
   # 
   # 
   #names(model_summary) <- header2
-  table1 <- flextable(land_use, cwidth = 0.7)
+  table1 <- flextable(land_use, cwidth = 0.6)
+  table1 <- fontsize(table1, size = 7)
+  table1 <- fontsize(table1, size = 8, part = "header")
+  table1 <- width(table1, width = 1.9, j = 1)
+  table1 <- width(table1, width = 0.7, j = 2)
+  table1 <- width(table1, width = 0.8, j = 5)
+  table1 <- width(table1, width = 0.5, j = 6)
+  table1 <- width(table1, width = 0.7, j = 7)
+  table1 <- width(table1, width = 0.7, j = 10)
   # table1 <- fontsize(table1, size = 7)
   # table1 <- width(table1, width = 0.5, j = grep("RMSE", names(model_summary)))
   # table1 <- set_header_df(table1,mapping=header_df, key = names(header_df)[1])
