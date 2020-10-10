@@ -46,11 +46,6 @@ land_use <- data.frame(col1=c(1,2,3),col2=c(1,2,3))
 land_use <- read.csv("./report/tables/GLPF site characteristics.csv")
 names(land_use) <- c("Site name","Scale","USGS Site ID", "Lake","Abbreviation","Urban","Agriculture","Forest","Water/ Wetland","Impervious")
 #land_use <- land_use %>% filter(!(Abbreviation %in% c("BK","CG")))
-model_summary <- readRDS("model/out/modeling_summary_table.rds")
-model_summary$Bachuman <- sub("Turbidity_mean","Turb",model_summary$Bachuman)
-model_summary$Bachuman <- sub("Turb","Turbidity",model_summary$Bachuman)
-vars <- unique(unlist(strsplit(model_summary$Bachuman,split = "_")))
-var_names <- c("Turbidity","F","T","M","N","A290","A295","T2","Turbidity")
 
 
 font_size <- 4
@@ -73,32 +68,23 @@ ww_fig <- 1
 ^3^United States Geological Survey, Reston, VA
 
 # Abstract
-  + Intro to topic and need
-    + Aging infrastructure -> wastewater contamination
-    + Difficult to detect efficiently
-    + Optical properties have different signature than environmental samples
-    + Human bacteria are a good indicator: relation to human virus and present in large quantities in sewage
-    + Using human bacteria as a sewage indicator, relations were developed between optical and sHB
-    + Studied three spatial watershed scales
-    + Success for two, but not for small scale
-      + small scale variability is a problem
-      + different properties of watersheds force a non-universal relation
-      + resulting model still predicted virus occurence
-    + translation to field sensors would be useful for load calculation for evaluating severity of problem
-    
-Wastewtaer contamination of waterways Existing wastewater conveyance infrastructure is 
+<!--   + Intro to topic and need -->
+<!--     + Aging infrastructure -> wastewater contamination -->
+<!--     + Difficult to detect efficiently -->
+<!--     + Optical properties have different signature than environmental samples -->
+<!--     + Human bacteria are a good indicator: relation to human virus and present in large quantities in sewage -->
+<!--     + Using human bacteria as a sewage indicator, relations were developed between optical and sHB -->
+<!--     + Studied three spatial watershed scales -->
+<!--     + Success for two, but not for small scale -->
+<!--       + small scale variability is a problem -->
+<!--       + different properties of watersheds force a non-universal relation -->
+<!--       + resulting model still predicted virus occurence -->
+<!--     + translation to field sensors would be useful for load calculation for evaluating severity of problem -->
+
+<!-- Wastewtaer contamination of waterways Existing wastewater conveyance infrastructure is  -->
 
 
-Contamination of waterways resulting from leaking wastewater conveyance infrastructure is a common problem that continues to be difficult to overcome. Illicit discharge detection and elimination programs (IDDE) are designed to manage this issue in communities, but methods used to do so can be time consuming, expensive, and are often inaccurate. Human sewage has distinct optical properties of water (fluorescence and absorbance) that are different than those typically observed in natural waters. Technology does exist to incorporate measurement of select optical signals into field sensors. Research is needed to determine whether a select number of optical signals can reliably and efficiently predict wastewater contamination in natural waters. Human-associated bacteria are a reliable parameter for defining wastewater contamination. 
-
-
-
-Contamination of waterways by leaking sewage systems is becoming more pervasive as wastewater infrastructure ages widely recognized as a very challenging problem to overcome.
-
-##
-Currently existing infrastructure is aging, and ongoing urbanization leading to periodic misconnections of sanitary sewers into storm sewers continues to increase the problem. Illicit discharge detection and elimination programs (IDDE) are used to manage this issue in communities all throughout the Great Lakes. 
-
-Practitioners that implement IDDEs have commonly indicated that the process of backtracking (tracking sewage contamination to the source) is one of the most challenging and time consuming parts of the IDDE process. There are currently are no tools to rapidly and accurately identify sanitary sewage contamination in surface waters that serve to help facilitate mitigation without undue time and resources for field investigations and laboratory analyses to be completed.
+Optical properties in surface water samples were used for the purpose of field sensor development to estimate wastewater contamination of waterways. Leaking wastewater conveyance infrastructure is a common problem that results in contamination of waterways. Methods used to quantify such contamination can be time consuming, expensive, and are often inaccurate or nonspecific. Human-associated bacteria analyses are effective for defining wastewater contamination but require discrete sampling with additonal latency in laboratory analysis. Human sewage has distinct optical properties of water (fluorescence and absorbance) that are different than those typically observed in natural waters. Research is needed to determine which optical signals are most reliable for prediction of wastewater prevalence in environmental waters for development of field sensors that could be used for real time estimates. A study of three watershed scales was conducted to determine consistency and transferrability of the relationship between optical signals and human-associated bacteria: Eight watershed-scale sites, five subwatershed-scale sites, and 213 storm sewers and open channels within three small watersheds (small-scale sites) were sampled for optical properties of water, human-associated bacteria, general fecal indicator bacteria, and, for selected samples, human viruses. The presence of human viruses increased with increasing human-associated bacteria concentration, providing additional confidence human-associated bacteria as a surrogate for wastewater contamination. Regression analysis indicated that bacteria concentrations could be estimated at the watershed and subwatershed scales using optical signals that represent signals used in existing field sensors. Separate regressions were needed for different categories of watersheds, suggesting that these relationships were dependent upon the watershed characteristics. Expanding to optical signals that did not have current field sensor options did not improve these estimations substantially, and for situations where there were moderate improvements, the alternative optical signals needed were variable. Adequate regression relationships were not found for small-scale sites to reliably estimate bacteria concentrations likely due to high variability of source inputs with little flow dilution in these small drainage areas. 
 
 
 # Introduction
@@ -128,7 +114,9 @@ knitr::include_graphics("M://QW Monitoring Team/GLPF/JA/Figures/GLPF_locmap_all_
 ```
 
 
-Table 1. Land cover for sampling sites including small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale)
+
+
+
 
 
 ```{r landuse, echo= FALSE}
@@ -309,10 +297,11 @@ Regression models were explored for describing variability of human-associated b
 Model development attempts for the small-scale sites also included four data groupings: first, data from all sites and samples within the three regions were used to develop one unified model, and second, separate data sets from each of the three regions was used to develop individual models. Resulting models for small-scale sites were all considered to be inadequate for the intended purpose: To meet sensor development needs for tracing contamination back to the source, regressions must provide increasing predictions with increasing human-associated bacteria concentrations for individual events within a storm sewer system or small drainage basin. Attempts to develop models for the small-scale sites did not result in models that consistently met this need.
 
 
+
 ```{r Models, echo= FALSE}
 source("./Report/Tables/Table2.R")
-table_2 <- make_table_2(model_summary)
-table_2 <- set_caption(table_2, "Table: (\\#tab:Models)")
+table_2 <- make_table_2()
+table_2 <- set_caption(table_2, "Table: (\\#tab:Models) Explanatory variables and root mean squared errors (RMSE) for regression equations to estimate bacteria concentrations using optical properties of water. [Explanatory variables are defined in supporting information Table SI-8].")
 table_2
 ```
 
@@ -354,7 +343,7 @@ Modeling results from this study call into question whether it would be a valuab
 
 **Seasonality**
 
-Inclusion of seasonal variables in the watershed- and subwatershed-scale regression models indicate a seasonal influence in the relation of bacteria to predictor variables. This seasonality could be influenced by several factors: Precipitation and runoff to streams can be exposed to different levels of vegetation over the year, and runoff also has a variable level of exposure to soil depending on the presence of snow and ice (Qui et al., 2016; Shi et al., 2020).  In the fall, leachate from leaf litter during precipitation events can be transported to streams. These factors all have influence on the DOM composition and lead to seasonal fluctuations (Mineau et al., 2016; Fork et al., 2020; Meingast et al., 2020). Human-associated bacteria measured in the watershed-scale sites indicated some seasonal differences in concentrations and loadings (Dila et al., 2018). Soil saturation, which is commonly high in the spring in the Great Lakes region, can have a substanial influence on potential for inflow and infiltration into sanitary sewers and the likelihood of exceeding sanitary sewer capacity and increasing the risk of sanitary sewer overflows (Cahoon and Hanke, 2017). Soil saturation level also governs the baseflow level and the severity of precipitation response in streams: increased flow increases the capacity of the stream to carry sediment, thereby increasing turbidity (Mukandan et al., 2013). All of these factors, and likely others, provide potential for seasonal changes in each of the model response and predictor parameters and the overall models themselves.
+Inclusion of seasonal variables in the watershed- and subwatershed-scale regression models indicate a seasonal influence in the relation of bacteria to explanatory variables. This seasonality could be influenced by several factors: Precipitation and runoff to streams can be exposed to different levels of vegetation over the year, and runoff also has a variable level of exposure to soil depending on the presence of snow and ice (Qui et al., 2016; Shi et al., 2020).  In the fall, leachate from leaf litter during precipitation events can be transported to streams. These factors all have influence on the DOM composition and lead to seasonal fluctuations (Mineau et al., 2016; Fork et al., 2020; Meingast et al., 2020). Human-associated bacteria measured in the watershed-scale sites indicated some seasonal differences in concentrations and loadings (Dila et al., 2018). Soil saturation, which is commonly high in the spring in the Great Lakes region, can have a substanial influence on potential for inflow and infiltration into sanitary sewers and the likelihood of exceeding sanitary sewer capacity and increasing the risk of sanitary sewer overflows (Cahoon and Hanke, 2017). Soil saturation level also governs the baseflow level and the severity of precipitation response in streams: increased flow increases the capacity of the stream to carry sediment, thereby increasing turbidity (Mukandan et al., 2013). All of these factors, and likely others, provide potential for seasonal changes in each of the model response and explanatory variables and the overall models themselves.
 
 
 **Small scale variability**
@@ -366,7 +355,7 @@ In addition, other non-human sources can influence the optical signals in an unp
 
 **Surrogate models**
 
-Previous efforts have developed surrogate models for prediction of fecal indicators in recreational waters (Francy et al., 2013, He and He, 2008; Shively et al., 2015; Brooks et al., 2016), and in rivers (Christensen, et al., 2002; Baldwin et al., 2012). These models often use basic water quality parameters such as turbidity and water temperature as well as physical parameters such as wave height, water currents,  wind velocities, and stream flow as predictor variables. Some have been used to assist managers of recreational waters for issuing swimming advisories (Heberger et al., 2008; Dada and Hamilton, 2016), and others for helping to understand dynamics of water quality or for computation of stream loadings (McKergow and Davies, 2010; David and Haggard, 2010). The majority of these modeling efforts have focused on prediction of general fecal indicators such as E. coli or fecal coliform that provide general microbial contamination, but do not necessarily indicate presence of wastewater and its associated pathogenic and chemical contamination. Expanding the use of surrogate models for human-associated bacteria in the current study provides opportunity to gain information on the level of wastewater contamination directly associated with breaches in the sanitary conveyance system that IDDE efforts could work to identify and control.
+Previous efforts have developed surrogate models for prediction of fecal indicators in recreational waters (Francy et al., 2013, He and He, 2008; Shively et al., 2015; Brooks et al., 2016), and in rivers (Christensen, et al., 2002; Baldwin et al., 2012). These models often use basic water quality parameters such as turbidity and water temperature as well as physical parameters such as wave height, water currents,  wind velocities, and stream flow as explanatory variables. Some have been used to assist managers of recreational waters for issuing swimming advisories (Heberger et al., 2008; Dada and Hamilton, 2016), and others for helping to understand dynamics of water quality or for computation of stream loadings (McKergow and Davies, 2010; David and Haggard, 2010). The majority of these modeling efforts have focused on prediction of general fecal indicators such as E. coli or fecal coliform that provide general microbial contamination, but do not necessarily indicate presence of wastewater and its associated pathogenic and chemical contamination. Expanding the use of surrogate models for human-associated bacteria in the current study provides opportunity to gain information on the level of wastewater contamination directly associated with breaches in the sanitary conveyance system that IDDE efforts could work to identify and control.
 
 **Application**
 

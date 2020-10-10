@@ -1,7 +1,35 @@
-make_table_2 <- function(model_summary) {
+make_table_2 <- function() {
+  model_summary <- as.data.frame(readRDS("model/out/modeling_summary_table.rds"))
+  model_summary$Bachuman <- sub("Turbidity_mean","Turb",model_summary$Bachuman)
+  #model_summary$Bachuman <- sub("Turb","Turbidity",model_summary$Bachuman)
+  vars <- unique(unlist(strsplit(model_summary$Bachuman,split = "_")))
+  var_names <- c("Turbidity","F","T","M","N","A290","A295","T2","Turbidity")
+  
   model_summary$Sites <- c("Watershed: Agriculture", "Watershed: Agriculture", 
                            "Watershed: Urban", "Watershed: Urban", "Milwaukee River", 
                            "Milwaukee River", "Subwatersheds", "Subwatersheds")
+  
+  response <- c("Bachuman","Lachno","Entero","Entero Culture", "E. Coli")
+  #model_summary[,response]
+  
+  for (i in response) {
+    model_summary[,i] <- gsub(pattern = "FI_2005",replacement = "FI",x =  model_summary[,i])
+    model_summary[,i] <- gsub(pattern = "_",replacement = ", ",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "rA290, ",replacement = "A290/",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "rA280, ",replacement = "A280/",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "Turb",replacement = "Turbidity",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "Turb, ",replacement = "Turbidity, ",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "T2",replacement = "T",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "F2",replacement = "F",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "rMrange.25, N",replacement = "M/N",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "rMrange.25, F",replacement = "M/F",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "rS2.25, S1.25",replacement = "S2/S1",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "rN, S3.25",replacement = "N/T",x =  model_summary[,i])
+  }
+  
+  model_summary[which(is.na(model_summary[,"Entero Culture"])),"Entero Culture"] <- "--"
+  model_summary[which(is.na(model_summary[,"RMSE Entero Culture"])),"RMSE Entero Culture"] <- "--"
+  
   names(model_summary) <- make.names(names(model_summary))
   
   Header1 <- c("", "", "Human Bacteroides", "Human Bacteroides", 
@@ -38,6 +66,7 @@ make_table_2 <- function(model_summary) {
   table1 <-merge_v(table1,j=~Sites) 
   table1 <-merge_h(table1,i=1,part="header") 
   table1 <- align(table1,i=1,align="center",part="header")
+  table1 <- set_caption(table1,"Table 2. Explanatory variables and root mean squared errors (RMSE) for regression equations to estimate bacteria concentrations using optical properties of water. [ADD VARIABLE ABBREVIATIONS HERE].")
   
   return(table1)
 }
