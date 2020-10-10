@@ -9,6 +9,22 @@ plot_fig_2 <- function() {
   
   dfHM <- readRDS(file.path("process","out","combined_human_markers.rds"))
   
+  #Add short names for MMSD sites
+  abbrevs <- c("Underwood", "Wauwatosa", "16th", "Cedarburg","Bark")
+  abbrev_short <- c("UW","MW","MC","CG","BK")
+  siteID <- c("04087088", "04087120", "04087142", "04086600", "05426060")
+  sites <- data.frame(abbrev = abbrev_short,Abbreviation = abbrevs,Site_ID = siteID)
+  
+  i <- 1
+  dfHM$shortname <- as.character(dfHM$site)
+  for (i in 1:length(abbrevs)) {
+  dfHM$shortname[which(dfHM$shortname == abbrev_short[i])] <- abbrevs[i]
+  }
+  
+  site_levels <- c("WI","NY","MI","Underwood","16th","Wauwatosa","Cedarburg","Bark","Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
+  dfHM$shortname <- factor(dfHM$shortname,levels = site_levels)
+  dfHM$site <- dfHM$shortname
+  
   #Sum of human markers
   dfHM$hm <- dfHM$bacHum + dfHM$lachno2
   
@@ -36,7 +52,7 @@ plot_fig_2 <- function() {
   
   #Occurrence
   HMoccurrence <- group_by(dfHM, scale, site, hydro_condition) %>% 
-    summarize(occur = mean(hm > 500),
+    summarise(occur = mean(hm > 500),
               count = n())
   
   barp <- ggplot(HMoccurrence,aes(y=occur,x=site,group=hydro_condition,fill=hydro_condition)) +

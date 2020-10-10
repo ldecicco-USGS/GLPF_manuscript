@@ -8,7 +8,11 @@ plot_fig_3 <- function(){
   # comboHM_HV("HM_HV.rds")
   
   dfHV <- readRDS(file=file.path("process","out","HM_HV.rds"))
-  dfHV <- dfHV %>% filter(!is.na(HumanVirus))
+  dfHV_bkcg <- dfHV %>% filter(!is.na(HumanVirus)) %>%
+    filter((site %in% c("BK","CG")))
+  dfHV <- dfHV %>% filter(!is.na(HumanVirus)) %>%
+    filter(!(site %in% c("BK","CG")))
+  
   
   #Sum of human markers
   dfHV$hm <- dfHV$bacHum + dfHV$lachno2

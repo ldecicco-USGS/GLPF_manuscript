@@ -1,0 +1,17 @@
+Sampling location,Scale,USGS station ID,Great Lakes basin,Watershed abbreviation,urban,Agriculture,Forest,Water and wetlands,Impervious
+"Menominee River Near Mc Allister, WI",Watershed,4067500,Michigan,Menominee,3.8,3.1,52.2,20.6,0.5
+"Manitowoc River at Manitowoc, WI",Watershed,4085427,Michigan,Manitowoc,6.3,69.6,4.2,7.4,1.5
+"Milwaukee River at Mouth at Milwaukee, WI",Watershed,4087170,Michigan,Milwaukee,29.4,41.5,11,4.2,11.8
+"Clinton River at Moravian Drive at Mt. Clemens, MI",Watershed,4165500,Erie,Clinton,51.5,18.9,14.9,6.5,20.2
+"River Rouge at Detroit, MI",Watershed,4166500,Erie,Rouge,92,0.2,4.4,1.9,33.8
+"River Raisin Near Monroe, MI",Watershed,4176500,Erie,Raisin,10.4,66.9,10.8,3.5,2.5
+"Maumee River Near Waterville, OH",Watershed,4193490,Erie,Maumee,9.8,78.9,6.5,1.3,2.5
+"Portage River at Woodville, OH",Watershed,4195500,Erie,Portage,9,84.5,4.7,0.5,2.2
+"Underwood Creek at Wauwatosa, WI",Subwatershed,4087088,Michigan,Underwood,88.9,1.2,2.3,2,29.4
+"Menomonee River at Wauwatosa, WI",Subwatershed,4087120,Michigan,Wauwatosa,65,18.1,5.6,1.9,25.6
+"Menomonee River at 16th Street at Milwaukee, WI",Subwatershed,4087142,Michigan,16th,67.7,16.6,5.2,1.7,28.1
+"Milwaukee River Near Cedarburg, WI",Subwatershed,4086600,Michigan,Cedarburg,11.6,53.5,13.3,5.2,3.3
+"Bark River at County Trunk Highway k Nr Merton, WI",Subwatershed,5426060,Michigan,Bark,32.2,35.2,15.5,4.2,5.5
+"Kinnickinnic River @ S. 11th Street @ Milwaukee, WI",Small,4087159,Michigan,WI,98.4,0.3,0.6,0.1,51.7
+"Middle Branch Clinton River at Macomb, MI",Small,4164800,Erie,MI,52.5,24.1,16.6,1.6,16.9
+"Red Creek at East River Road at Rocheste, NY",Small,4231421,Ontario,NY,48,23.9,13.6,0.5,18.3
