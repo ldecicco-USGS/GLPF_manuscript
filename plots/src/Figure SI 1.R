@@ -51,20 +51,34 @@ plot_ww <- function() {
     arrange(parameter,Sewer_type)
   #WW_all_long <- WW_all_long %>%filter(Study == "GLPF")
   WW_all_long$parameter <- factor(WW_all_long$parameter,levels = c("bacHum","lachno","sHM","ent","DOCResult","Signal_F","Signal_T"))
-  ggplot(WW_all_long, aes(x=Sewer_type,y=value)) +
-    geom_boxplot() +
-    geom_jitter(width = 0.1) +
-    facet_wrap(vars(parameter),scales = "free_y") +
-    scale_y_log10()
+  # ggplot(WW_all_long, aes(x=Sewer_type,y=value)) +
+  #   geom_boxplot() +
+  #   geom_jitter(width = 0.1) +
+  #   facet_wrap(vars(parameter),scales = "free_y") +
+  #   scale_y_log10()
   
   WW_all_long_sHB <- WW_all_long %>%
     filter(!(parameter %in% c("bacHum","lachno")))
+  WW_all_long_sHB$Sewer_type <- sub(pattern = "Sanitary_Grab",replacement = "Local",x=  WW_all_long_sHB$Sewer_type)
+  WW_all_long_sHB$Sewer_type <- sub(pattern = "WWTP",replacement = "Regional",x=  WW_all_long_sHB$Sewer_type)
+  WW_all_long_sHB$parameter <- sub(pattern = "DOCResult",replacement = "DOC",x=  WW_all_long_sHB$parameter)
+  WW_all_long_sHB$parameter <- sub(pattern = "Signal_F",replacement = "F",x=  WW_all_long_sHB$parameter)
+  WW_all_long_sHB$parameter <- sub(pattern = "Signal_T",replacement = "T",x=  WW_all_long_sHB$parameter)
+  WW_all_long_sHB$parameter <- sub(pattern = "ent",replacement = "Enterococci",x=  WW_all_long_sHB$parameter)
+  
+  
   
   ww_plot <- ggplot(WW_all_long_sHB, aes(x=Sewer_type,y=value)) +
     geom_boxplot() +
     geom_jitter(width = 0.1) +
     facet_wrap(vars(parameter),scales = "free_y") +
-    scale_y_log10()
+    scale_y_log10() +
+    xlab("Sanitary Sewer Source") +
+    ylab("Concentration")
+  
+  png(file.path("plots","out","Figure_SI_1.png"))
+  print(x = ww_plot)
+  dev.off()
   
   ww_plot
 }
