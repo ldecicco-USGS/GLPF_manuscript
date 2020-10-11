@@ -66,7 +66,7 @@ plot_ww <- function() {
   WW_all_long_sHB$parameter <- sub(pattern = "Signal_T",replacement = "T",x=  WW_all_long_sHB$parameter)
   WW_all_long_sHB$parameter <- sub(pattern = "ent",replacement = "Enterococci",x=  WW_all_long_sHB$parameter)
   
-  
+  WW_all_long_sHB$parameter <- factor(WW_all_long_sHB$parameter, levels = c("sHM","Enterococci", "DOC","F","T"))
   
   ww_plot <- ggplot(WW_all_long_sHB, aes(x=Sewer_type,y=value)) +
     geom_boxplot() +
