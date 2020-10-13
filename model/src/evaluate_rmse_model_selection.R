@@ -56,7 +56,7 @@ evaluate_rmse_model_selection <- function() {
   
   ### MMSD ###
   
-  #LMER
+  #LMER 3-site
   
   filenm <- file.path("model","out","rmse_and_sites_Oct_9_3-sites.rds",sep="")
   df <- readRDS(file=filenm)
@@ -79,9 +79,34 @@ evaluate_rmse_model_selection <- function() {
   MMSD$model <- factor(MMSD$model,levels = unique(c(MMSD_selection$model,MMSD_non_cor_selection$model)))
   MMSD <- MMSD[-which(MMSD$model == "Turbidity_mean_Turb"),] # remove redundant turbidity model
   
+  # MMSD
+  #LMER 2-site
+  
+  filenm <- file.path("model","out","rmse_and_sites_Oct_12_20202-sites.rds",sep="")
+  df <- readRDS(file=filenm)
+  df <- df[-grep("M",df$model),]
+  
+  MMSD_selection <- rmse_model_selection(df)
+  
+  
+  #non-correlated extra variables
+  
+  filenm <- file.path("model","out","rmse_and_sites_Oct_12_2020_no_corr2-sites.rds")
+  df <- readRDS(file=filenm)
+  
+  MMSD_non_cor_selection <- rmse_model_selection(df)
+  
+  MMSD_selection$model_run <- "sensors"
+  MMSD_non_cor_selection$model_run <- "non-cor"
+  
+  MMSD_2_site <- full_join(MMSD_selection,MMSD_non_cor_selection)
+  MMSD_2_site$model <- factor(MMSD_2_site$model,levels = unique(c(MMSD_selection$model,MMSD_non_cor_selection$model)))
+ 
+  
   saveRDS(GLRI_LMER,file.path("model","out","GLRI_LMER_model_rankings.rds"))
   saveRDS(GLRI_OLS,file.path("model","out","GLRI_OLS_model_rankings.rds"))
   saveRDS(MMSD,file.path("model","out","MMSD_LMER_model_rankings.rds"))
+  saveRDS(MMSD_2_site,file.path("model","out","MMSD_LMER_model_rankings_2_site.rds"))
   
 }
 
