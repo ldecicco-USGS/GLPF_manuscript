@@ -36,6 +36,8 @@ generate_final_model_objects <- function(filenm, project, formulas){
   
   # * Define predictors and interaction terms
   predictors<- c("Turbidity_mean", "T", "F","M")
+
+    
   
   #non_int_predictors <- c("CSO")
   interactors <- c("sinDate","cosDate")
@@ -46,7 +48,8 @@ generate_final_model_objects <- function(filenm, project, formulas){
   site_combos <- list()
   if(project == "MMSD") {
     site_combos[[1]] <- c("MC", "MW", "UW")
-    names(site_combos) <- c("3-sites")
+    site_combos[[2]] <- c("BK", "CG")
+    names(site_combos) <- c("3-sites","2-sites")
   }else{
     site_combos[[1]] <- c("CL", "RO")
     site_combos[[2]] <- c("PO", "MA", "RM")
@@ -62,6 +65,8 @@ generate_final_model_objects <- function(filenm, project, formulas){
   for (s in 1:length(site_combos)) {  
     #   * Choose sites or states to be included
     sites <- site_combos[[s]]
+    if("CG" %in% sites)  predictors<- c("T", "F","M")
+    
     for (i in 1:length(response)) {
       f <- f + 1
       form <- formulas[[f]][[1]]

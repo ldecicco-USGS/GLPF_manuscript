@@ -1,0 +1,36 @@
+---
+title: "Supplemental information for: Optical properties of water for prediction of wastewater contamination and indicator bacteria in surface water"
+author: "Steven R. Corsi^1^, Laura A. De Cicco^1^, Angela Hanson^2^, Peter Lenaker^1^, Brian Bergamaschi^2^, Brian Pellerin^3^"
+date: ""
+#output: word_document
+output:
+  bookdown::word_document2:
+#    css: environmental-science-and-technology.csl
+    fig_caption: yes
+    toc: no
+    reference_docx: "word-styles-reference-orig.docx"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+knitr::opts_knit$set(root.dir = '../../') 
+```
+
+
+^1^United States Geological Survey, Middleton, WI, ^2^United States Geological Survey, Sacramento, CA, ^3^United States Geological Survey, Reston, VA
+ 
+  
+   
+   
+
+```{r WW_fig, dpi=300, fig.width=4,fig.height=5, fig.cap = "Figure SI-1. Bacteria, DOC, and fluorescence properties in samples from local sanitary sewers and wastewater treatment plant influent (regional). [sHM, sum of human bacteria markers bacteroides and lachnospiraceae; DOC, dissolved organic carbon.]", echo=FALSE}
+source("./plots/src/Figure SI 1.R")
+WW_fig_SI_1 <- plot_ww()
+print(WW_fig_SI_1)
+
+```
+

@@ -14,7 +14,9 @@ evaluate_rmse_model_selection <- function() {
   
   filenm <- file.path("model","out",paste("rmse_and_sites_Oct_9_",sites,".rds",sep=""))
   df <- readRDS(file=filenm)
+  df_M <- df[grep("M",df$model),]
   df <- df[-grep("M",df$model),]
+
   
   GLRI_LMER_selection <- rmse_model_selection(df)
   
@@ -33,7 +35,7 @@ evaluate_rmse_model_selection <- function() {
   
   #Evaluate GLRI single site OLS models
   
-  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_10_","RO",".rds",sep=""))
+  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_10_","JI",".rds",sep=""))
   df <- readRDS(file=filenm)
   df <- df[-grep("M",df$model),]
   
@@ -42,7 +44,7 @@ evaluate_rmse_model_selection <- function() {
   
   #non-correlated extra variables for single sites
   
-  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_10_no_corr","RO",".rds",sep=""))
+  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_10_no_corr","JI",".rds",sep=""))
   df <- readRDS(file=filenm)
   df <- df[-grep("M",df$model),]
   

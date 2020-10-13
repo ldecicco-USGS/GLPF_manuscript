@@ -169,6 +169,7 @@ comboHM_HV("HM_HV.rds")
 # Evaluate model results
 source(file.path("model","src","rmse_model_selection.R"))
 source(file.path("model","src","evaluate_rmse_model_selection.R"))
+evaluate_rmse_model_selection()
 
 #Develop final modeling table for large and sub-watersheds
 source(file.path("model","src","modeling_summary_table.R"))
@@ -177,7 +178,9 @@ saveRDS(model_summary,file.path("model","out","modeling_summary_table.rds"))
 
 #Save model objects from final models
   #MMSD
-source(file.path("model","src","MMSD save final model objects.R"))
+
+
+source(file.path("model","src","MMSD Suburban save final model objects.R"))
 mmsd_models <- save_mmsd_model_objects()
 
   #GLRI

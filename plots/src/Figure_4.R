@@ -8,8 +8,17 @@ plot_fig_4 <- function() {
   mmsd_model_objects <- final_model_list[[1]]
   glri_model_objects <- final_model_list[[2]]
   
-  #Start with MMSD
-  df_predictions <- full_join(mmsd_model_objects[[1]][[2]],mmsd_model_objects[[2]][[2]])
+  # #Start with MMSD
+  # df_predictions <- full_join(mmsd_model_objects[[1]][[2]],mmsd_model_objects[[2]][[2]])
+  
+  for(i in 1:length(mmsd_model_objects)){
+    df_add <- mmsd_model_objects[[i]][[2]]
+    # df_add <- rename(df_add,lachno2 = Lachno.2.cn.100ml, bacHum = BACHUM.cn.100mls)
+    # df_add$response <- ifelse(df_add$response == "Lachno.2.cn.100ml", "lachno2",df_add$response)
+    # df_add$response <- ifelse(df_add$response == "BACHUM.cn.100mls", "bacHum",df_add$response)
+    if(i == 1) df_predictions <- df_add
+    if(i != 1) df_predictions <- full_join(df_predictions,df_add)
+  }
   
   #Add in GLRI
   for(i in 1:length(glri_model_objects)){

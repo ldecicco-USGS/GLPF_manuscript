@@ -9,6 +9,15 @@ plot_ww <- function() {
   #Load MMSD Phase IV data (doesn't have WWTP data for bacteria)
   df_MMSD <- readRDS(file.path("process","out","mmsd_summary.rds"))
   
+  #Load MMSD Phase IV WW data
+  mmsd <- read.csv("Raw/MMSD/PhaseIV/MMSDOptSummary.csv",stringsAsFactors = FALSE,skip = 1)
+  WWrows <- grep("JI",mmsd$FieldExpID)
+  WWrows <- c(WWrows,grep("SS",mmsd$FieldExpID))
+  ww_P4 <- mmsd[WWrows,]
+  ww_P4 <- ww_P4 %>%
+    rename(Signal_T = F4_AquaConvert_Tex275em340_result) %>%
+    rename(Signal_F = F4_AquaConvert_fDOMex370em460_result)
+  ww_P4$Sewer_type <- "WWTP"
   
   #Load WWTP data from the spatial indicator study
   #WWTP_JI <- readNWISqw(c("430125087540400","425308087504900"), parameterCd = "All", startDate = "2007-01-01","2017-01-01")
@@ -45,6 +54,8 @@ plot_ww <- function() {
   
   WW_all <- full_join(WW_init,HIB_WW_P3) %>%
     rename(Signal_T = T, Signal_F = F)
+  WW_all <- WW_all %>%
+    full_join(ww_P4[,c("Signal_T","Signal_F","DOCResult","Sewer_type")])
   
   WW_all_long <- WW_all[c(1,2,3,4:9)] %>% pivot_longer(-c(Sewer_type,Study), names_to = c("parameter"), values_to = "value") %>%
     filter(!is.na(value)) %>% 
@@ -82,3 +93,4 @@ plot_ww <- function() {
   
   ww_plot
 }
+

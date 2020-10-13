@@ -277,10 +277,10 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     
   }
   #df_rmse_and_sites <- cbind(df_cv_rmspe,df_cv_sites)
-  filenm <- file.path("model","out",paste("rmse_Oct_9_",names(site_combos)[s],".rds",sep=""))
+  filenm <- file.path("model","out",paste("rmse_Oct_3_2020_",names(site_combos)[s],".rds",sep=""))
   saveRDS(rmse_df, file = filenm)
   
-  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_9_",names(site_combos)[s],".rds",sep=""))
+  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_13_2020_",names(site_combos)[s],".rds",sep=""))
   saveRDS(cv_sites, file = filenm)
   
   
