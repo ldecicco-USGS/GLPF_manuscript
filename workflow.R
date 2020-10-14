@@ -157,15 +157,19 @@ comboHM_HV("HM_HV.rds")
 # DO NOT RUN this again. It takes hours: scripts used = 
 # DO NOT RUN again: MMSD lmer cv multi-org_rmse_by_site.R
 # DO NOT RUN again: MMSD lmer cv multi-org_rmse_by_site_no_corr.R
+# DO NOT RUN again: MMSD lmer cv multi-org_rmse_by_site_CG_BK.R
+# DO NOT RUN again: MMSD lmer cv multi-org_rmse_by_site_CG_BK_no_corr.R
 # DO NOT RUN again: GLRI Jones Island cv multi-org_rmse.R
 # DO NOT RUN again: GLRI Jones Island cv multi-org_rmse_no_corr.R
 # DO NOT RUN again: GLRI lmer cv multi-org_rmse_by_site.R
 # DO NOT RUN again: GLRI lmer cv multi-org_rmse_by_site_no_corr.R
+
 # Output is used in the evaluation scripts below
 
 # Evaluate model results
 source(file.path("model","src","rmse_model_selection.R"))
 source(file.path("model","src","evaluate_rmse_model_selection.R"))
+evaluate_rmse_model_selection()
 
 #Develop final modeling table for large and sub-watersheds
 source(file.path("model","src","modeling_summary_table.R"))
@@ -174,7 +178,9 @@ saveRDS(model_summary,file.path("model","out","modeling_summary_table.rds"))
 
 #Save model objects from final models
   #MMSD
-source(file.path("model","src","MMSD save final model objects.R"))
+
+
+source(file.path("model","src","MMSD Suburban save final model objects.R"))
 mmsd_models <- save_mmsd_model_objects()
 
   #GLRI

@@ -9,7 +9,7 @@ save_mmsd_model_objects <- function() {
   response <- c("lachno2","bacHum")
   names(response) <- c("Lachno","Bachuman")
   
-  # Define models
+  # Define models 3-sites
   #
   
   form <- list()
@@ -56,8 +56,47 @@ save_mmsd_model_objects <- function() {
   model_bh <- form[as.character(model_bh_name)]
   
   mmsd_models <- list()
-  mmsd_models[["Lachno"]] <- model_lachno
-  mmsd_models[["Bachuman"]] <- model_bh
+  mmsd_models[[paste0(sites_cat,"Lachno")]] <- model_lachno
+  mmsd_models[[paste0(sites_cat,"Bachuman")]] <- model_bh
+  
+  # Define models 2- sites
+  #
+  
+  
+  form <- list()
+  form[[1]] <- formula("log_response ~ F * cosDate + F * sinDate + sinDate + cosDate + (1 | abbrev)")
+  form[[2]] <- formula("log_response ~ T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
+  form[[3]] <- formula("log_response ~ M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
+  form[[4]] <- formula("log_response ~ F * cosDate + F * sinDate + T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
+  form[[5]] <- formula("log_response ~ F * cosDate + F * sinDate + M * cosDate + M * sinDate + sinDate + cosDate + (1 | abbrev)")
+  form[[6]] <- formula("log_response ~ M * cosDate + M * sinDate + T * cosDate + T * sinDate + sinDate + cosDate + (1 | abbrev)")
+  
+  
+  form_names <- c("F","T","M",
+                  "F_T","F_M","T_M")
+  names(form) <- form_names
+  
+  # Read list of selected models for human indicators
+  model_table <- readRDS(file.path("model","out","modeling_summary_table.rds"))
+  
+  sites_cat <- "2-sites"
+  parm_cat <- "sensors"
+  
+  #Lachno: 
+  HIB <- "Lachno"
+  row_num <- which(model_table$Sites == sites_cat & model_table$`Parameter Category` == parm_cat)
+  model_lachno_name <- first(model_table[names(response[HIB])])[row_num]
+  model_lachno <- form[as.character(model_lachno_name)]
+  
+  
+  #Bachuman: 
+  HIB <- "Bachuman"
+  row_num <- which(model_table$Sites == sites_cat & model_table$`Parameter Category` == parm_cat)
+  model_bh_name <- first(model_table[names(response[HIB])])[row_num]
+  model_bh <- form[as.character(model_bh_name)]
+  
+  mmsd_models[[paste0(sites_cat,"Lachno")]] <- model_lachno
+  mmsd_models[[paste0(sites_cat,"Bachuman")]] <- model_bh
   
   #run models and write to model object list
   source(file.path("model","src","Generate_final_model_objects.R"))

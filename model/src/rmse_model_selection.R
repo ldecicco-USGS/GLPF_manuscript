@@ -15,7 +15,7 @@ rmse_model_selection <- function(df,deviation_threshold = 0.03, max_deviation_th
   # Step 1
   df_rmspe <- df %>%
     group_by(site_combo,response,model,replication) %>%
-    summarise(rmse = rmspe(log_response,predictions)) %>%
+    summarise(rmse = rmspe(log_response,predictions)/sd(log_response)) %>% #use sd to normalize rmspe
     group_by(site_combo,response,model) %>%
     summarise(rmse_median = median(rmse),
               rmse_max = max(rmse),
