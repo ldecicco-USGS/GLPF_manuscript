@@ -1,4 +1,5 @@
 make_table_2 <- function() {
+  library(flextable)
   model_summary <- as.data.frame(readRDS("model/out/modeling_summary_table.rds"))
   model_summary$Bachuman <- sub("Turbidity_mean","Turb",model_summary$Bachuman)
   #model_summary$Bachuman <- sub("Turb","Turbidity",model_summary$Bachuman)
@@ -7,7 +8,8 @@ make_table_2 <- function() {
   
   model_summary$Sites <- c("Watershed: Agriculture", "Watershed: Agriculture", 
                            "Watershed: Urban", "Watershed: Urban", "Milwaukee River", 
-                           "Milwaukee River", "Subwatersheds", "Subwatersheds")
+                           "Milwaukee River", "Subwatershed: Suburban", "Subwatershed: Suburban", 
+                           "Subwatershed: Urban", "Subwatershed: Urban")
   
   response <- c("Bachuman","Lachno","Entero","Entero Culture", "E. Coli")
   #model_summary[,response]
@@ -17,6 +19,8 @@ make_table_2 <- function() {
     model_summary[,i] <- gsub(pattern = "_",replacement = ", ",x =  model_summary[,i])
   model_summary[,i] <- gsub(pattern = "rA290, ",replacement = "A290/",x =  model_summary[,i])
   model_summary[,i] <- gsub(pattern = "rA280, ",replacement = "A280/",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "rA350, ",replacement = "A350/",x =  model_summary[,i])
+  model_summary[,i] <- gsub(pattern = "rA275, ",replacement = "A275/",x =  model_summary[,i])
   model_summary[,i] <- gsub(pattern = "Turb",replacement = "Turbidity",x =  model_summary[,i])
   model_summary[,i] <- gsub(pattern = "Turb, ",replacement = "Turbidity, ",x =  model_summary[,i])
   model_summary[,i] <- gsub(pattern = "T2",replacement = "T",x =  model_summary[,i])
@@ -38,7 +42,7 @@ make_table_2 <- function() {
                "Enterococci Culture", "Enterococci Culture", 
                "E. coli", "E. coli")
   
-  Header2 <- c("Sites", "Category", rep(c("Variables","RMSE"),5))
+  Header2 <- c("Sites", "Category", rep(c("Variables","NRMSE"),5))
   Type <- c(rep("character",2),rep(c("character","numeric"),5))
   
   header_df <- data.frame(col.keys = names(model_summary),
@@ -66,7 +70,7 @@ make_table_2 <- function() {
   table1 <-merge_v(table1,j=~Sites) 
   table1 <-merge_h(table1,i=1,part="header") 
   table1 <- align(table1,i=1,align="center",part="header")
-  table1 <- set_caption(table1,"Table 2. Explanatory variables and root mean squared errors (RMSE) for regression equations to estimate bacteria concentrations using optical properties of water. [ADD VARIABLE ABBREVIATIONS HERE].")
+#  table1 <- set_caption(table1,"Table 2. Explanatory variables and root mean squared errors (RMSE) for regression equations to estimate bacteria concentrations using optical properties of water. [ADD VARIABLE ABBREVIATIONS HERE].")
   
   return(table1)
 }
