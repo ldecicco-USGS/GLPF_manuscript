@@ -1,5 +1,6 @@
 make_table_2 <- function() {
   library(flextable)
+  library(officer)
   model_summary <- as.data.frame(readRDS("model/out/modeling_summary_table.rds"))
   model_summary$Bachuman <- sub("Turbidity_mean","Turb",model_summary$Bachuman)
   #model_summary$Bachuman <- sub("Turb","Turbidity",model_summary$Bachuman)
@@ -33,6 +34,9 @@ make_table_2 <- function() {
   
   model_summary[which(is.na(model_summary[,"Entero Culture"])),"Entero Culture"] <- "--"
   model_summary[which(is.na(model_summary[,"RMSE Entero Culture"])),"RMSE Entero Culture"] <- "--"
+  model_summary[,"Parameter Category"] <- as.character(  model_summary[,"Parameter Category"])
+  model_summary[,"Parameter Category"] <- gsub(pattern = "sensors",replacement = "Sensors",x =  model_summary[,"Parameter Category"])
+  model_summary[,"Parameter Category"] <- gsub(pattern = "non-cor",replacement = "Alternative signals",x =  model_summary[,"Parameter Category"])
   
   names(model_summary) <- make.names(names(model_summary))
   

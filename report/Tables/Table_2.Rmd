@@ -1,0 +1,32 @@
+---
+title: "Optical properties of water for prediction of wastewater contamination in surface water"
+author: "Steven R. Corsi^1^, Laura A. De Cicco^1^, Angela Hanson^2^, Peter Lenaker^1^, Brian Bergamaschi^2^, Brian Pellerin^3^"
+date: ""
+#output: word_document
+output:
+  bookdown::word_document2:
+#    css: environmental-science-and-technology.csl
+    fig_caption: yes
+    toc: no
+    reference_docx: "word-styles-reference-orig.docx"
+#bibliography: Optical properties.bib
+#link-citations: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+knitr::opts_knit$set(root.dir = '../../') 
+```
+
+
+
+```{r Models, echo= FALSE}
+source("./Report/Tables/Table2.R")
+table_2 <- make_table_2()
+table_2 <- set_caption(table_2, "Table: (\\#tab:Models) Explanatory variables and normalized root mean squared errors (NRMSE) for regression equations to estimate bacteria concentrations using optical properties of water. [Explanatory variables are defined in supporting information Table SI-8].")
+table_2
+```

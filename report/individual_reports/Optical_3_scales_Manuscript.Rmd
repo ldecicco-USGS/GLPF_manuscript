@@ -246,14 +246,14 @@ source(file = "plots/src/Figure_4.R")
 
 ConcOccurrenceFig <- plot_fig_2()
 bacteria_vs_virus <- plot_fig_3()
-Prediction_vs_virus <- plot_fig_4()
+#Prediction_vs_virus <- plot_fig_4()
 
 ```
 Throughout the study, `r sum(dfHM_summary$n)` environmental samples were collected, including `r dfHM_summary[1,"n"]` samples from `r dfHM_summary[1,"scale"]` scale sites, `r dfHM_summary[2,"n"]` samples from `r dfHM_summary[2,"scale"]` scale sites, and `r dfHM_summary[3,"n"]` samples from `r dfHM_summary[3,"scale"]` scale sites. The sum of the two human indicator bacteria markers (sHM) varied from below the reporting level to a maximum of `r maxHM` x 10^7^ cn/100 ml (Figure \@ref(fig:ConcAndOccurrenceFig)).
 
 
 
-```{r ConcAndOccurrenceFig, dpi=300, fig.width=3,fig.height=5, fig.cap = "The sum of human indicator bacteria markers A. concentrations and B. Occurrence proportion in samples from small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). For each scale, sites are ordered by most to least urban land use percentage from left to right. Number of observations in each concentration bin are provided above the bars.", echo=FALSE}
+```{r ConcAndOccurrenceFig, dpi=300, fig.width=4,fig.height=5, fig.cap = "The sum of human indicator bacteria markers A. concentrations and B. Occurrence proportion in samples from small storm sewers and open channels (small scale), subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). For each scale, sites are ordered by most to least urban land use percentage from left to right. Number of observations in each concentration bin are provided above the bars.", echo=FALSE}
 
 print(ConcOccurrenceFig)
 
@@ -282,15 +282,6 @@ There were differences in sHM concentrations among sites and by hydrologic condi
 
 Samples collected at sites with greater than 25% urban land cover at the watershed and subwatershed scales had greater sHM concentrations during runoff event periods than low-flow periods (p<0.05). Concentrations of sHM at sites with less than 25% urban land cover at these two scales did not vary significantly by hydrologic condition. 
 
-Human viruses were analyzed for the watershed- and subwatershed-scale sites concurrently with the human-associated and the general indicator bacteria, providing a means to assess potential exposure to human pathogens from sampled water. The fraction of samples for which human viruses were present increased with increasing sHM concentration, but occurrence of human viruses did not increase with increasing concentration of the non-specific fecal indicators E. coli and enterococci (Figure \@ref(fig:VirusOccurrenceFig)). These results reinforce the the assumption that human-associated bacteria markers represent presence of sewage and an increased risk of exposure to human pathogens with increasing human-associated bacteria concentrations.
-
-```{r VirusOccurrenceFig, dpi=300, fig.width=3,fig.height=5, fig.cap = "Fraction of human virus occurrence as compared to concentration bins for A. the sum of human associated bacteria, B. Escherichia coli, and C. Enterococci in samples from subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale). Number of observations in each concentration bin are provided above the bars. sHM concentration of 450 Copy Number/100mL represents the analytical detection level. E. coli concentration of 235 CFU/100mL represents a common recreational water quality criteria.", echo=FALSE}
-
-print(bacteria_vs_virus)
-
-```
-
-
 ## Regression Modeling
 Regression models were explored for describing variability of human-associated bacteria using optical signals. The first consideration in regression modeling was the choice of sites to include in common models. Watershed- and subwatershed-scale sites were initially grouped together for a unified model. These efforts resulted in poor cross-validated predictive capability, and no adequate models were discovered. Next, categories from watershed- and subwatershed-scale sites were chosen for similarity in land cover and potential diversity of water quality influences as well as geographic proximity. These groups were chosen to minimize differences in background DOM that could lead to confounding signals in regressions, resulting in four site categories: Watershed-scale sites were separated into three categories for model development including Agricultural (Maumee, Portage, and Raisin), Urban (Clinton and Rouge), and single site (Milwaukee), and the three subwatershed-scale sites were included as the fourth category. Separating sites into these four categories resulted in improved cross-validated predictive capability for resulting models over the watershed- and subwatershed-scale unified model, so the four categories were selected for inclusion in final model development (Table \@ref(tab:Models)). 
 
@@ -312,12 +303,14 @@ The sensor models included different combinations of fluorescence signal "T" (of
 
 There was not a substanial and consistent improvement in cross-validation error (RMSE)  in the alternate signal models compared to the sensor models (Table \@ref(tab:Models)). The enterococci culture models for the urban watershed-scale sites and for the Milwaukee River site were the only two models that had 10% or greater decrease in RMSE by using models developed with the alternate signal variables. In addition to T and F, variables in the alternate signal models included two fluorescence signals (M and N), ratios of fluorescence signals, the fluorescence index, and ratios of absorbance signals (Table SI-`r RegressionVars`). Collectively, results suggested that there may be minor improvements in model performance by use of the alternate signal variables for a few selected site-organism combinations, but that the optical signals selected for the alternate signal models are not consistent.
 
-The proportion of virus occurrence increased with the sum of fitted sHB from the watershed- and subwatershed-scale models (Figure \@ref(fig:PredictionToVirusFig)). For instances when fitted model values were below 1000 copy number/100mL, no viruses were detected. Virus detection increased with increasing concentration up to 40% virus detection when sHB fitted values were greater than 100000 copy number/100mL. Because human viruses were measured independently from human-associated bacteria and not used in model development, this result provides independent verification that the sensor models have the capability of predicting the presence of sewage and potential risk from human pathogens. 
+Human viruses were analyzed for the watershed- and subwatershed-scale sites concurrently with the human-associated and the general indicator bacteria, providing a means to assess potential exposure to human pathogens from sampled water. The fraction of samples for which human viruses were present increased with increasing sHM concentration, but occurrence of human viruses did not increase with increasing concentration of the non-specific fecal indicators E. coli and enterococci (Figure \@ref(fig:VirusOccurrenceFig)). These results reinforce the the assumption that human-associated bacteria markers represent presence of sewage and an increased risk of exposure to human pathogens with increasing human-associated bacteria concentrations.
+
+The proportion of virus occurrence also increased with the sum of fitted sHB from the watershed- and subwatershed-scale models (Figure \@ref(fig:VirusOccurrenceFig)). For instances when fitted model values were below 1000 copy number/100mL, no viruses were detected. Virus detection increased with increasing concentration up to 40% virus detection when sHB fitted values were greater than 100000 copy number/100mL. Because human viruses were measured independently from human-associated bacteria and not used in model development, this result provides independent verification that the sensor models have the capability of predicting the presence of sewage and potential risk from human pathogens. 
 
 
-```{r PredictionToVirusFig, dpi=300, fig.width=3,fig.height=2, fig.cap = "Fraction of human virus occurrence as compared to concentration bins for the sum of human associated bacteria computed from fitted values from regression models developed using laboratory-measured optical signals that represent currently available optical sensors. Number of observations in each concentration bin are provided above the bars. sHM concentration of 450 Copy Number/100mL represents the analytical detection level.", echo=FALSE}
+```{r VirusOccurrenceFig, dpi=300, fig.width=3,fig.height=6, fig.cap = "Fraction of human virus occurrence as compared to concentration bins for  the sum of human associated bacteria, B. Escherichia coli, and C. Enterococci in samples from subwatersheds of the Milwaukee River (subwatershed scale), and tributaries of the Great Lakes (watershed scale), and the sum of human associated bacteria computed from fitted values from regression models developed using laboratory-measured optical signals that represent currently available optical sensors. Number of observations in each concentration bin are provided above the bars. sHM concentration of 450 Copy Number/100mL represents the analytical detection level. E. coli concentration of 235 CFU/100mL represents a common recreational water quality criteria.", echo=FALSE}
 
-print(Prediction_vs_virus)
+print(bacteria_vs_virus)
 
 ```
 
