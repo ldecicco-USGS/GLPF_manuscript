@@ -28,8 +28,8 @@ optMRLAdjust <- function(df,dfMRLs,Wavelength,sampleGRnums,multiplier=1.0) {
   dfRemarks <- df2
   
   for(i in 2:ncol(df2)){
-    df2[which(df2[[i]] < df2$MRL), i] <- df2$MRL[which(df2[[i]] < df2$MRL)]*multiplier
-    dfRemarks[which(dfRemarks[[i]] < dfRemarks$MRL), i] <- paste("<",dfRemarks$MRL[which(dfRemarks[[i]] < dfRemarks$MRL)])
+    df2[[i]][which(df2[[i]] < df2$MRL)] <- multiplier*df2$MRL[which(df2[[i]] < df2$MRL)]
+    dfRemarks[[i]][which(dfRemarks[[i]] < dfRemarks$MRL)] <- paste("<",dfRemarks$MRL[which(dfRemarks[[i]] < dfRemarks$MRL)])
   }
   
   return(list(df2=df,dfRemarks=dfRemarks))

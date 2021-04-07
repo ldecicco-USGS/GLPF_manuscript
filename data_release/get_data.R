@@ -90,9 +90,9 @@ df_mmsd <- readRDS(file.path("process","out","mmsd_summary.rds"))
 # df_glpf_QA <- readRDS(file.path("raw","GLPF","summary_QA.rds"))
 
 # Remove ratio and logs:
-df_glri <- df_glri[,1:which(names(df_glri) == "Aresid267" )]
-df_glpf <- df_glpf[,1:which(names(df_glpf) == "Aresid267" )]
-df_mmsd <- df_mmsd[,1:which(names(df_mmsd) == "Aresid267" )]
+df_glri <- df_glri[,1:which(names(df_glri) == "FreshI" )]
+df_glpf <- df_glpf[,1:which(names(df_glpf) == "FreshI" )]
+df_mmsd <- df_mmsd[,1:which(names(df_mmsd) == "FreshI" )]
 
 # Remove straight abs (we're including the full spectrum):
 df_glri <- df_glri[,!grepl("A\\d{3}", names(df_glri))]
@@ -144,6 +144,36 @@ samples_df <- bind_rows(mmsd_samples,
 
 sites_NWIS <- dataRetrieval::readNWISsite(unique(samples_df$SiteID))
 
+samples_df <- samples_df %>% 
+  left_join(select(sites_NWIS, SiteID = site_no, state_cd), 
+            by = "SiteID") %>% 
+  mutate(SiteID = paste0("USGS-", SiteID))
+
+samples_df$state_cd <- dataRetrieval::stateCdLookup(as.numeric(samples_df$state_cd))
+
+samples_df <- samples_df %>% 
+  rename(State = state_cd,
+         `US Geological Survey Station ID` = SiteID,
+         `Sample start date and time` = pdate,
+         `Sample end date and time` = pedate)
+
 data.table::fwrite(samples_df, file = file.path("data_release","summary_df.csv"))
 
+# df_tots, samples_df, fl_tots
+rm(df_glpf, df_glpf_opt_sigs, df_glpf_samples, df_glri, df_glri_opt_sigs, df_glpf_samples,
+   df_glri_samples, df_mmsd, df_mmsd_opt_sigs, df_mmsd_samples, glpf_samples, glri_samples, mmsd_samples)
 
+
+map <- leaflet::leaflet(height = "500px", data=sites_NWIS) %>%
+  leaflet::addProviderTiles("CartoDB.Positron") %>%
+  leaflet::setView(lng = mean(sites_NWIS$dec_long_va, na.rm = TRUE), 
+                   lat = mean(sites_NWIS$dec_lat_va, na.rm = TRUE), zoom=6) %>% 
+  leaflet::addCircleMarkers(lat=~dec_lat_va, lng=~dec_long_va,
+                            popup=paste0('<b>',sites_NWIS$station_nm,"</b><br/>") ,
+                            fillColor = "red",
+                            fillOpacity = 0.8,
+                            radius = 5,
+                            stroke=FALSE,
+                            opacity = 0.8)
+
+map
