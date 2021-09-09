@@ -1,57 +1,112 @@
 # Model archive for "Optical properties of water for prediction of wastewater contamination, human-associated bacteria, and fecal indicator bacteria in surface water"
 
+library(tidyverse)
+library(smwrBase)
+
 source(file.path("model_archive","src","get_formulas.R"))
-       
+source(file.path("model","src","variable_correlations.R"))
+
 # Read model table
 model_table <- readRDS("model/out/modeling_summary_table.rds")
 model_table$project <- c(rep("GLRI",6),rep("MMSD",4))
 
-formulas <- get_formulas()
 
 
-for(i in 1:dim(sub_model_table)[1]){
-  project <- model_table$project[i]
-  
-#MMSD models
-if(project == "MMSD"){
-  
-# 1. Load data
-df_MMSD <- readRDS(file.path("process","out","mmsd_summary.rds"))
-df <- df_MMSD
+# Model setup
+## 1. Define project
+### a. define project data set
+### b. define response variables'
+### c. define sites
+### d. subset data to chosen sites
+## 2. transform variables (season)
+## 3. Modeling 
+### a. Step through response organisms
+### b. define model type (sensor, non-cor)
+### c. define model list
+### d. choose specific model formula for current sites/model type
+## 4. 
 
-# 2. General modeling setup:
+#Run models
+#
 
-#  * Define response variables
-response <- c("lachno2","bacHum","eColi","ent")
-response_header_name <- c("Lachno","Bachuman","E. Coli","Entero")
-# * Transform seasonal variables
-df$sinDate <- fourier(df$psdate)[,1]
-df$cosDate <- fourier(df$psdate)[,2]
+j <- 6
 
-# Define predictors and interaction terms
-predictors<- c("Turbidity_mean", "T", "F","M")
-
-#non_int_predictors <- c("CSO")
-interactors <- c("sinDate","cosDate")
-
-# Define grouping variable (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
+## MODELING ROUTINE ##
 groupings <- c("abbrev")
 
-site_combos <- list()
-site_combos[[1]] <- c("MC", "MW", "UW")
-
-names(site_combos) <- c("3-sites")
-parm_category <- "sensors"
-
-#Define model formulas
-form <- get_formulas(parm_category)
-
-# 
-
-model_table_row <- which(model_table$Sites == names(site_combos) & model_table$`Parameter Category` == parm_category)
-form_name <- as.character(as.data.frame(model_table)[model_table_row,response_header_name[i]])
-
-model_formula <- form[form_name]
-
-## Now use model formula to run 50-fold x-val and compute NRMSE for this model instance
+#for(j in 1:dim(model_table)[1]){  ###### Begin model table loop  ################
+for(j in 5:6){
+  project <- model_table$project[j]
+  parm_category <- model_table[j,"Parameter Category"]
+  
+  # Define grouping variable (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
+  ## 1. Define project: data, response variables, and sites
+  if(project == "MMSD"){
+    
+    ### a. define project data set
+    #### Load data
+    df_MMSD <- readRDS(file.path("process","out","mmsd_summary.rds"))
+    df_orig <- df_MMSD
+    
+    #  * Define response variables
+    response <- c("bacHum","lachno2","ent","eColi")
+    response_header_name <- c("Bachuman","Lachno","Entero","E. Coli")
+    
+    site_combos <- list()
+    site_combos[[1]] <- c("CG", "BK")
+    site_combos[[2]] <- c("UW","MW","MC")
+    names(site_combos) <- c("2-sites","3-sites")
+    
+  }else if(project == "GLRI"){
+    df_GLRI <- readRDS(file.path("process","out","glri_summary.rds"))
+    df_orig <- df_GLRI
+    
+    response <- c("BACHUM.cn.100mls","Lachno.2.cn.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml","E..coli.CFUs.100ml")
+    response_header_name <- c("Bachuman","Lachno","Entero", "Entero Culture","E. Coli")
+    
+    site_combos <- list()
+    site_combos[[1]] <- c("CL", "RO")
+    site_combos[[2]] <- c("PO", "MA", "RM")
+    site_combos[[3]] <- c("JI")
+    names(site_combos) <- c("CL_RO","Agriculture","JI")
+    
+  }
+  names(response) <- response_header_name
+  df <- df_orig
+  
+  # General modeling setup:
+  
+  ## 2. Transform variables (season)
+  df$sinDate <- fourier(df$psdate)[,1]
+  df$cosDate <- fourier(df$psdate)[,2]
+  
+  ## 3. Modeling: Step through response variables 
+  ## 3. Define model formula
+  
+  #Define model formulas
+  sites <- pull(model_table[j,"Sites"])
+  parm_category <- as.character(pull(model_table[j,"Parameter Category"]))
+  formulas <- get_formulas(sites,parm_category)
+  
+  
+  
+  #   * Filter data to sites and make model df
+  model_df <- df %>%
+    filter(abbrev %in% site_combos[sites])
+  
+  
+  ### START MODELING  ###  
+  if(j == 5) median_rmse <- data.frame(rmspe_median = numeric(),variables=character(),response=character(),type =character())
+  
+  if(sites == "JI") {
+    # OLS modeling for JI
+    median_rmse <- bind_rows(median_rmse,
+      OLS_modeling(df, parm_category, formulas, response, model_table, sites)) #output = # dataframe with 
+    #data frame with one row that has the equivalent of the model_table.
+    
+  }else {
+    lmer_modeling()
+  }
+  
+}
 

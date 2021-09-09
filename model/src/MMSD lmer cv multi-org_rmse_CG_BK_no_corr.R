@@ -83,6 +83,7 @@ for(i in 1:length(sensors)) {
 }
 
 names(form) <- form_names
+saveRDS(form,file = "./process/out/MMSD_CG_BK_formulas_no_corr.rds")
 
 predictors <- sensors
 

@@ -1,123 +1,19 @@
-# Reference to Sam's dissertation:  
-# https://github.com/limnoliver/CSI-Nutrient-Time-Series/blob/master/Code/05_analysis_hlm.R
-#
-
-# Intro to Linear mixed models: https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/
-# lme4 package vignette describing method with Table 2 describing grouping options:
-#   https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
-
-# 1. Load data
-# 2. General modeling setup:
-#   * Define response variables
-#     * Transform response variables
-#   * Define predictors
-#     * Define interactions
-#     * Define grouping variables (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
-#         *Using this form: x + (x || g) 1 + x + (1 | g) + (0 + x | g) Uncorrelated random intercept and slope.
-
-#   * Construct formula
-#   * Choose sites or states to be included
-#   * Filter data to sites and make model df
-
-# 3. Run LME model for all response variables
-# 4. Graph results
 
 
-library(lme4)
-library(smwrBase)
-library(car)
-library(dplyr)
-library(cvTools)
-library(ggplot2)
-library(ggpubr)
-
-
-source(file.path("model","src","plot_model_cv.R"))
-source(file.path("model","src","variable_correlations.R"))
-
-# 1. Load data
-df_GLRI <- readRDS(file.path("process","out","glri_summary.rds"))
-df <- df_GLRI
-
-# 2. General modeling setup:
-
-#  * Define response variables
-response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls","E..coli.CFUs.100ml","ENTERO.cn.100mls","Entero.CFUs.100ml")
-#response <- c("Lachno.2.cn.100ml","BACHUM.cn.100mls")
-
-#Set censored values to detection limit
-MDL <- c(225,225,1,225,1)
-names(MDL) <- response
-for(i in 1:length(response)){df[,response[i]] <- ifelse(df[,response[i]]<=MDL[response[i]],MDL[response[i]],df[,response[i]])}
-
-# * Transform seasonal variables
-df$sinDate <- fourier(df$psdate)[,1]
-df$cosDate <- fourier(df$psdate)[,2]
-
-
-#non_int_predictors <- c("CSO")
-interactors <- c("sinDate","cosDate")
-
-#predictors_withou_int <- "Turb"
-# ADD THIS AFTER ADDING TURB DATA
-
-# Define grouping variable (sites for MMSD and GLRI or states for GLPF. Maybe hydro condition for GLPF)
-groupings <- c("abbrev")
-
-site_combos <- list()
-site_combos[[1]] <- c("CL", "RO")
-site_combos[[2]] <- c("PO", "MA", "RM")
-# site_combos[[3]] <- c("JI","OC")
-#site_combos[[1]] <- c("PO", "MA", "RM","OC","EE")
-#site_combos[[1]] <- c("OC","EE")
-# site_combos[[3]] <- c("JI","CL", "RO")
-# site_combos[[4]] <- c("PO", "MA", "RM","JI")
-# site_combos[[5]] <- c("JI","PO", "MA", "CL", "RO", "RM")
-# site_combos[[6]] <- c("PO", "MA", "CL", "RO", "RM")
-
-names(site_combos) <- c("CL_RO","Agriculture")
-
-
-
-Initial_predictors<- c("Turbidity_mean", "T", "F","M")
-
-df_cor <- correlated_to_primary_signals(Initial_predictors,filenm="glri_summary.rds")
-sensors <- reduce_correlated_variables(df_cor,filenm="glri_summary.rds", Initial_predictors)
-sensors <- sensors[-grep("rSag",sensors)]
-sensors <- sensors[-grep("A_",sensors)]
-sensors <- sensors[-grep("LA",sensors)] #remove LA signal--high error in models distorts graphics
-sensors <- sensors[-grep("H2",sensors)] #remove H2 signal--high error in models distorts graphics
-
-sensors <- c(sensors,Initial_predictors)
-
-form <- list()
-form_names <- character()
-for(i in 1:length(sensors)) {
-  form[[(i*2-1)]] <- formula(paste("log_response ~ ",paste(sensors[i],c("* sinDate","* cosDate"),collapse=" + "),"+ sinDate + cosDate + (1 | abbrev)"))
-  form[[(i*2)]] <- formula(paste("log_response ~ ","Turbidity_mean + ",
-                                 paste(sensors[i],c("* sinDate","* cosDate"),collapse=" + "),"+ sinDate + cosDate + (1 | abbrev)"))
-  form_names <- c(form_names,sensors[i],paste0(sensors[i],"_","Turb"))
-}
-
-names(form) <- form_names
-saveRDS(form,file = "./process/out/GLRI_formulas_no_corr.rds")
-
-predictors <- sensors
-
-
-# # 3. Run LME model for all response variables
-
-# Set boundary tolerance for singularity consistent with "isSingular()"
-options(lmerControl(boundary.tol=1e-4))
-
-cv_sites <- data.frame(abbrev=character(),predictions = numeric(),log_response = numeric(),
-                       model=character(),site_combo=character(),response=character(),replication = numeric())
-
-for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
-  #   * Choose sites or states to be included
-  sites <- site_combos[[s]]
+lmer_modeling <- function(df,model_formula){
+  ## Now use model formula to run 50-fold x-val and compute NRMSE for this model instance
+  
+  # Set boundary tolerance for singularity consistent with "isSingular()"
+  options(lmerControl(boundary.tol=1e-4))
+  
+  cv_sites <- data.frame(abbrev=character(),predictions = numeric(),log_response = numeric(),
+                         model=character(),site_combo=character(),response=character(),replication = numeric())
+  
   for (i in 1:length(response)) {
-
+    
+    #filenm <- paste("GLRI_predictions_",response[i],".pdf",sep="")
+    #  pdf(filenm)
+    
     #   * transform response variable
     df$log_response <- log10(df[,response[i]])
     
@@ -138,7 +34,7 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     
     running_mean_cv_rmspe_list <- list()
     for(f in 1:length(form)){
-        n_folds <- 5
+      n_folds <- 5
       n_replications <- 50
       cv_rmspe = numeric()
       running_mean_cv_rmspe <- numeric()
@@ -197,6 +93,10 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     
     names(df_running_mean_cv_rmspe) <-  paste("form",c(1:length(form)),sep="_")
     
+    #}
+    #  dev.off()
+    #  shell.exec(filenm)
+    
     #Develop boxplot analysis of RMSE for each of the models for an individual organism
     # Used to choose model with least uncertainty in prediction
     # plot_df <- do.call(cbind,running_mean_cv_rmspe_list)
@@ -205,9 +105,9 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     plot_df <- df_cv_rmspe
     
     plot_df <- tidyr::gather(plot_df)
-    plot_df$key <- factor(plot_df$key,levels = gsub("\\.","_", make.names(names(form))))
     
-
+    plot_df$key <- factor(plot_df$key,levels = form_names)
+    
     rmspeboxplot <- ggplot(data=plot_df,aes(x=key,y=value)) + 
       geom_boxplot() + 
       ggtitle(paste0(response[i],":    Root Mean Square Prediction Error for ",n_replications," replications of each Model Option")) +
@@ -244,7 +144,7 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     model_plot <- ggplot(data = model_results_df,aes(x = observed,y = predicted, color=abbrev)) + 
       geom_point() +
       #    geom_point(colour=model_results_df$Plot_colors) +
-      scale_color_manual(values= colorOptions[levels(model_results_df$abbrev)]) +
+      scale_color_manual(values= colorOptions[unique(model_results_df$abbrev)]) +
       #scale_color_brewer(palette="Set2") +
       geom_abline(intercept = 0, slope = 1, color="blue", 
                   linetype="dashed", size=0.5) +
@@ -257,21 +157,10 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     multi.page <- ggarrange(model_plot, rmspeboxplot,
                             nrow = 1, ncol = 1)
     
-    filenm <- paste("GLRI_Oct_9_no_corr",names(site_combos)[s],"_",response[i],".pdf",sep="")
+    filenm <- paste("MMSD_Oct_9_",names(site_combos)[s],"_",response[i],".pdf",sep="")
     filenm <- file.path("model","out","plots",filenm)
     ggexport(multi.page, filename = filenm,width = 11,height = 8)
     
     df_cv_rmspe$response <- response[i]
     
   }
-  #df_rmse_and_sites <- cbind(df_cv_rmspe,df_cv_sites)
-  filenm <- file.path("model","out",paste("rmse_Oct_9_no_corr",names(site_combos)[s],".rds",sep=""))
-  saveRDS(rmse_df, file = filenm)
-  
-  filenm <- file.path("model","out",paste("rmse_and_sites_Oct_9_no_corr",names(site_combos)[s],".rds",sep=""))
-  saveRDS(cv_sites, file = filenm)
-  
-  
-}
-
-

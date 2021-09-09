@@ -96,6 +96,7 @@ for(i in 1:length(sensors)) {
 }
 
 names(form) <- form_names
+saveRDS(form, file = "./process/out/GLRI Jones Island formulas no-corr.rds")
 
 predictors <- sensors
 

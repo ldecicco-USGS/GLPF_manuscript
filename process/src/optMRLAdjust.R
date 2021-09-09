@@ -17,7 +17,7 @@
 #' @return 
 
 optMRLAdjust <- function(df,dfMRLs,Wavelength,sampleGRnums,multiplier=1.0) {  
-
+  df <- as.data.frame(df)
   join_by <- "Wavelength"
   names(join_by) <- Wavelength
   MRL <- dfMRLs[,c("Wavelength","MRL")]
@@ -26,12 +26,22 @@ optMRLAdjust <- function(df,dfMRLs,Wavelength,sampleGRnums,multiplier=1.0) {
   df2 <- dplyr::left_join(df, MRL, by = join_by)
 
   dfRemarks <- df2
+  for(i in 1:ncol(df2)) dfRemarks[,i] <- as.character(df2[,i])
+  names(dfRemarks) <- names(df2)
   
   for(i in 2:ncol(df2)){
-    df2[which(df2[[i]] < df2$MRL), i] <- df2$MRL[which(df2[[i]] < df2$MRL)]*multiplier
-    dfRemarks[which(dfRemarks[[i]] < dfRemarks$MRL), i] <- paste("<",dfRemarks$MRL[which(dfRemarks[[i]] < dfRemarks$MRL)])
+    censored <- which(df2[[i]] < df2$MRL)
+    df2[censored, i] <- df2$MRL[censored]*multiplier
+    dfRemarks[censored, i] <- paste("<",dfRemarks$MRL[censored])
   }
   
-  return(list(df2=df,dfRemarks=dfRemarks))
+  # dfRemarks <- df2
+  # 
+  # for(i in 2:ncol(df2)){
+  #   df2[which(df2[[i]] < df2$MRL), i] <- df2$MRL[which(df2[[i]] < df2$MRL)]*multiplier
+  #   dfRemarks[which(dfRemarks[[i]] < dfRemarks$MRL), i] <- paste("<",dfRemarks$MRL[which(dfRemarks[[i]] < dfRemarks$MRL)])
+  # }
+  
+  return(list(df2=df,dfRemarks=dfRemarks,df_adjusted = df2))
 }
 

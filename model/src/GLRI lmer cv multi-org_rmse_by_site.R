@@ -110,6 +110,8 @@ sensors <- c("F","T","M")
 turb <- "Turbidity_mean"
 
 names(form) <- form_names[1:length(form)]
+saveRDS(form,file = "./process/out/GLRI_formulas_by_site.rds")
+
 # # 3. Run LME model for all response variables
 
 # Set boundary tolerance for singularity consistent with "isSingular()"

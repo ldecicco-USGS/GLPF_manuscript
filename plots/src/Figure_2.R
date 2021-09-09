@@ -35,21 +35,23 @@ plot_fig_2 <- function() {
   panel <- data.frame(label = c("","","A"), site = c(1,1,7))
   
   boxp <- ggplot(dfHM,aes(y=hm,x=site)) +
-    geom_boxplot(aes(fill=hydro_condition)) +
+    geom_boxplot(aes(fill=hydro_condition),
+                 lwd = 0.25) +
     facet_grid(~scale, scales='free_x', space = "free_x") +
     #  geom_hline(yintercept = 225) +
     #  xTickLabelFont=c(14,"bold", "#993333") +
     scale_y_continuous(trans="log10",breaks = trans_breaks("log10", function(x) 10^x),
                        labels = trans_format("log10", math_format(10^.x))) +
+    scale_fill_manual(values=c("springgreen4", "lightblue")) +
     theme_bw() +
     theme(text = element_text(size=10),
           #axis.text.x = element_text(angle=90, hjust=1)
           axis.title.x=element_blank(),
           axis.text.x=element_blank(),
           axis.ticks.x=element_blank(),
-          legend.position = c(0.8, 0.8),
-          legend.text = element_text(size = 8),               #legend text size
-          legend.title = element_text(size = 8)) +            #legend title size
+          legend.position = c(0.75, 0.8),
+          legend.text = element_text(size = 7),               #legend text size
+          legend.title = element_text(size = 7)) +            #legend title size
     labs(x="",y="sHM ")+
     guides(fill=guide_legend(title=element_blank()))   #Legend title
     # labs(x="",y="Human Markers (cn/100 ml)", tag = "A") +
@@ -72,6 +74,7 @@ plot_fig_2 <- function() {
     #  geom_hline(yintercept = 225) +
     #    xTickLabelFont=c(14,"bold", "#993333") +
     labs(x="",y="Occurrence ")+
+    scale_fill_manual(values=c("springgreen4", "lightblue")) +
     theme_bw() +
     theme(text = element_text(size=10),
           axis.text.x = element_text(angle=90, hjust=1.0,vjust = 0.5),
@@ -81,7 +84,7 @@ plot_fig_2 <- function() {
      # theme(axis.text.x = element_text(colour = "black"),
      #      axis.text.y = element_text(colour = "black")) +
     labs(tag = "n = ")+
-    theme(plot.tag.position = c(0.07,0.93),plot.tag = element_text(size=8),plot.margin=unit(c(0,1,0.,0),"cm")) 
+    theme(plot.tag.position = c(-0.10,0.93),plot.tag = element_text(size=8),plot.margin=unit(c(0,1,0.,0),"cm")) 
     # labs(tag = "B")+
     # theme(plot.margin=unit(c(1,1.2,1.5,1.2),"cm")) + theme(plot.tag.position = c(1.05, 1))
     

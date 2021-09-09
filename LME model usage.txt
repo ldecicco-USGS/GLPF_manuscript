@@ -1,0 +1,12 @@
+LME models usage
+
+1. Groups are defined (sites) that may have some form of variable relation between response and predictor variables.
+2. Fixed effects are variables that have the same coefficient among all groups
+3. Random effects are variables that can have different coefficients among groups 
+       (represented inside the parentheses with "|" or "||" included).
+4. Adding (1 | group) will change the intercept among different groups (random intercept with fixed mean)
+5. Adding (predictor | group) will change the coefficient and the intercept among groups:
+       x + (x | g) 1 + x + (1 + x | g) Correlated random
+intercept and slope.
+6. ||  x + (x || g) -> 1 + x + (1 | g) + (0 + x | g) Uncorrelated random intercept and slope.
+

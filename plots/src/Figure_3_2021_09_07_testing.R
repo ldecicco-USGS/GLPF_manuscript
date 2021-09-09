@@ -15,7 +15,7 @@ plot_fig_3 <- function(){
   #Remove GLRI eColi from this analysis due to inconsistent lab method (culture instead of qPCR)
   sitesWatershed <- c("Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
   names(sitesWatershed) <- c("Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
-  dfHV[which(dfHV$site  %in% sitesWatershed),"eColi"] <- NA
+  dfHV[which(!(dfHV$site  %in% sitesWatershed)),"eColi"] <- NA
   
   
   #Sum of human markers
@@ -59,8 +59,8 @@ plot_fig_3 <- function(){
   #  HVOccur$full_name <- factor(HVOccur$full_name, levels = response_names)
   
   # Set up ordered factor for graphing
-  category_text <- c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5","0-225","10^2-10^3","10^3-10^4","10^4-10^5",
-                     " 10^5","0-225","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5")
+  category_text <- c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5","0-225","10^2-10^3","10^3-10^4",
+                     "0-225","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5")
   HVOccur$category_text <- category_text
   
   # category_text <- c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5","0-10^2","10^2-235","235-10^3","10^3-10^4",
@@ -228,31 +228,6 @@ plot_fig_3 <- function(){
           axis.text.y = element_text(size = 7,colour = "black"),
           strip.text.x = element_text(size = 8.5)) +
     annotate("text",label = "n= ",x = 0.65,y = 0.53,size = 2)
-  
-  # 
-  # 
-  # bacteria_vs_virus <- ggplot(HVOccur_plot,aes(x=category_text,y=Occurrence)) +
-  #   geom_bar(stat = "identity") +
-  #   facet_wrap(. ~ full_name, scales = "free_x",nrow = 1,ncol = 4, labeller = label_wrap_gen()) +
-  #   #    geom_text(aes(label = c("A","B","C")), stat = "identity",y = 0.6,x=5.5) +
-  #   ylim(0,0.55) +
-  #   geom_text(
-  #     aes(label=n),
-  #     stat='identity',
-  #     y=0.53,size = 2
-  #   )+
-  #   theme(axis.text.x=element_text(angle = 0, hjust = 0.5,vjust=0.0,size = 6, )) +
-  #   xlab("Indicator Bacteria Concentration") +
-  #   ylab("Human Virus 
-  #        Occurrence Proportion") +
-  #   scale_x_discrete(labels = function(l) parse(text=l))+
-  #   theme(axis.title.x = element_text(size = 8),
-  #         axis.title.y = element_text(size = 8),
-  #         axis.text.x = element_text(size = 7,colour = "black",angle = 45, vjust = 1,hjust = 1),
-  #         axis.text.y = element_text(size = 7,colour = "black"),
-  #         strip.text.x = element_text(size = 8.5)) +
-  #   annotate("text",label = "n= ",x = 0.65,y = 0.53,size = 2)
-  
   
   
   ####################################

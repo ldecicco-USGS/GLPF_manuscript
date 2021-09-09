@@ -84,12 +84,18 @@ plot_ww <- function() {
     geom_jitter(width = 0.1) +
     facet_wrap(vars(parameter),scales = "free_y") +
     scale_y_log10() +
+    theme(axis.text.x = element_text(angle = 90)) +
     xlab("Sanitary Sewer Source") +
     ylab("Concentration")
   
-  png(file.path("plots","out","Figure_SI_1.png"))
+  png(file.path("plots","out","Figure_SI_3.png"))
   print(x = ww_plot)
   dev.off()
+  
+  pdf(file.path("plots","out","Figure_SI_3.pdf"))
+  print(x = ww_plot)
+  dev.off()
+  
   
   ww_plot
 }

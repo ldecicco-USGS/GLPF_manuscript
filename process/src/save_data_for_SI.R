@@ -23,7 +23,8 @@ cols_to_keep <- keep_glri$column_names[which(keep_glri$keep==1)]
 cols_to_keep <- c("Site_ID","Abbreviation",cols_to_keep)
 glri_df_for_SI <- df[,cols_to_keep]
 write.csv(df[,cols_to_keep],file.path("process","out","glri_data_for_SI.csv"),row.names = FALSE)
-
+openxlsx::write.xlsx(df[,cols_to_keep],
+                     file.path("process","out","glri_data_for_SI.xlsx"))
 
 
 # MMSD data
@@ -47,6 +48,8 @@ remove_sites <- c("HW","LD","MF")
 df <- filter(df,!(abbrev %in% remove_sites))
 
 write.csv(df[,cols_to_keep],file.path("process","out","mmsd_data_for_SI.csv"),row.names = FALSE)
+openxlsx::write.xlsx(df[,cols_to_keep],
+                     file.path("process","out","mmsd_data_for_SI.xlsx"))
 
 
 
@@ -62,3 +65,5 @@ cols_to_keep <- c("SiteID",cols_to_keep)
 df_for_SI <- df[,cols_to_keep]
 
 write.csv(df[,cols_to_keep],file.path("process","out","glpf_data_for_SI.csv"),row.names = FALSE)
+openxlsx::write.xlsx(df[,cols_to_keep],
+                     file.path("process","out","glpf_data_for_SI.xlsx"))
