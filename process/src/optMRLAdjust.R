@@ -33,6 +33,7 @@ optMRLAdjust <- function(df,dfMRLs,Wavelength,sampleGRnums,multiplier=1.0) {
     censored <- which(df2[[i]] < df2$MRL)
     df2[censored, i] <- df2$MRL[censored]*multiplier
     dfRemarks[censored, i] <- paste("<",dfRemarks$MRL[censored])
+
   }
   
   # dfRemarks <- df2
