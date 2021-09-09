@@ -132,6 +132,7 @@ source(file=file.path("process","src","get_GLRI_turbidity_data.R"))
 source(file=file.path("process","src","PopulateTurbidity.R"))
 PopulateTurbidity()
 
+#Populate the MMSD data set with turbidity parameters for each sampling period
 source(file=file.path("process","src","PopulateTurbidity_mmsd.R"))
 Populate_turbidity_mmsd()
 
@@ -144,7 +145,6 @@ remove_old_optical_signals()
 #Add summary variables
 source(file.path("process", "src","get_summaries.R"))
 get_summaries()
-
 
 #Generate dataframe with bacteria markers and human virus data to feed into Figure 3
 source("Process/src/GenerateComboHM_Virus.R")
@@ -213,10 +213,11 @@ for(i in 1:length(model_plots)) print(model_plots[[i]])
 dev.off()
 
 fig_2 <- plot_fig_2()
-ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.pdf"), width = 3, height = 5)
+ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.pdf"), width = 3.5, height = 5)
+ggsave(fig_2, filename = file.path("plots","out","Figure_2_bar_box.png"), width = 3.5, height = 5)
 
 fig_3 <- plot_fig_3()
-ggsave(fig_3, filename = file.path("plots","out","Figure_3_virus_bacteria_relations.pdf"), width = 3, height = 5)
+ggsave(fig_3, filename = file.path("plots","out","Figure_3_virus_bacteria_relations.pdf"), width = 7, height = 2.5)
 
 fig_4 <- plot_fig_4()
 ggsave(fig_4, filename = file.path("plots","out","Figure_4_virus_occurrence_from_bacteria_predictions.pdf"), width = 3, height = 5)

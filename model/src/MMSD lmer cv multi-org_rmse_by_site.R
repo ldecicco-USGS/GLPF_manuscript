@@ -242,7 +242,7 @@ for (s in 1:length(site_combos)) {  #Solo JI doesn't need lmer, but just lm
     model_plot <- ggplot(data = model_results_df,aes(x = observed,y = predicted, color=abbrev)) + 
       geom_point() +
       #    geom_point(colour=model_results_df$Plot_colors) +
-      scale_color_manual(values= colorOptions[levels(model_results_df$abbrev)]) +
+      scale_color_manual(values= colorOptions[levels(factor(model_results_df$abbrev))]) +
       #scale_color_brewer(palette="Set2") +
       geom_abline(intercept = 0, slope = 1, color="blue", 
                   linetype="dashed", size=0.5) +

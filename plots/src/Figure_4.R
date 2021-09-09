@@ -86,7 +86,7 @@ plot_fig_4 <- function() {
     geom_text(
       aes(label=n),
       stat='identity',
-      nudge_y=0.03,size = 3
+      y=0.49,size = 2
     )+
     theme(axis.text.x=element_text(angle = 0, hjust = 0.5,vjust=0.0,size = 6, )) +
     xlab("Fitted Human Indicator Bacteria Concentration") +
@@ -95,10 +95,11 @@ plot_fig_4 <- function() {
   theme(axis.title.x = element_text(size = 7),
     axis.title.y = element_text(size = 7),
     axis.text.x = element_text(size = 7,colour = "black"),
-    axis.text.y = element_text(size = 7,colour = "black"))
+    axis.text.y = element_text(size = 7,colour = "black")) +
+    annotate("text",label = "n = ",x = 0.6,y = 0.49, size = 2)
+  
   
   bacteria_vs_virus
-  
   
   return(bacteria_vs_virus)
 }

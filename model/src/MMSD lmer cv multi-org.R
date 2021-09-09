@@ -162,6 +162,8 @@ form_names <- c("Turb","Turb_F","Turb_T","Turb_M","Turb_F2","Turb_T2","Turb_M2",
                 "F_T","F_M","T_M")
 
 names(form) <- form_names[1:length(form)]
+saveRDS(form,file = "./process/out/MMSD_formulas.rds")
+
 # # 3. Run LME model for all response variables
 
 # Set boundary tolerance for singularity consistent with "isSingular()"

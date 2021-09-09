@@ -58,6 +58,4 @@ apply_MRLs <- function() {
   saveRDS(glri_fl_MRL_adjusted,file=file.path("process","out","glri_fl_MRL_adjusted.rds"))
   saveRDS(mmsd_fl_MRL_adjusted, file=file.path("process","out","mmsd_fl_MRL_adjusted.rds"))
   saveRDS(glpf_fl_MRL_adjusted, file=file.path("process","out","glpf_fl_MRL_adjusted.rds"))
-    
-  
 }

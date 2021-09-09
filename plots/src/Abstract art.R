@@ -1,4 +1,4 @@
-plot_fig_3 <- function(){
+plot_abstract_art <- function(){
   
   library(tidyverse)
   
@@ -10,23 +10,21 @@ plot_fig_3 <- function(){
   # PANEL 1: ACTUAL sHM vs viruses
   
   dfHV <- readRDS(file=file.path("process","out","HM_HV.rds"))
-  dfHV <- dfHV %>% filter(!is.na(HumanVirus)) 
-  
-  #Remove GLRI eColi from this analysis due to inconsistent lab method (culture instead of qPCR)
-  sitesWatershed <- c("Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
-  names(sitesWatershed) <- c("Rouge","Clinton","Milwaukee","Raisin","Maumee","Portage","Manitowoc","Menominee")
-  dfHV[which(dfHV$site  %in% sitesWatershed),"eColi"] <- NA
+  dfHV_bkcg <- dfHV %>% filter(!is.na(HumanVirus)) %>%
+    filter((site %in% c("BK","CG")))
+  dfHV <- dfHV %>% filter(!is.na(HumanVirus)) %>%
+    filter(!(site %in% c("BK","CG")))
   
   
   #Sum of human markers
   dfHV$hm <- dfHV$bacHum + dfHV$lachno2
   
   response <- c("hm","eColi","ent")
-  response_names <- c("sHM (Copy Number/100mL)","E. coli (Copy Number/100mL)", "Enterococci (Copy Number/100mL)")
+  response_names <- c("sHM (Copy Number/100mL)","E. coli (CFU/100mL)", "Enterococci (Copy Number/100mL)")
   cutpoints <- list()
   cutpoints[[1]] <- c(0,450,1000,10000,100000,3000000)
-  cutpoints[[2]] <- c(0,225,1000,10000,100000,260000)
-  cutpoints[[3]] <- c(0,225,1000,10000,100000,2000000)
+  cutpoints[[2]] <- c(0,100,235,1000,10000,260000)
+  cutpoints[[3]] <- c(0,100,1000,10000,100000,2000000)
   
   dfHV$HumanVirus_all <- dfHV$HumanVirus
   #  dfHV$HumanVirus <- dfHV$Adenovirus.C.D.F + dfHV$Adenovirus.A + dfHV$Enterovirus
@@ -56,25 +54,18 @@ plot_fig_3 <- function(){
   
   df_response <- data.frame(response=response,full_name=response_names)
   HVOccur <- left_join(HVOccur,df_response)
-  #  HVOccur$full_name <- factor(HVOccur$full_name, levels = response_names)
+#  HVOccur$full_name <- factor(HVOccur$full_name, levels = response_names)
   
   # Set up ordered factor for graphing
-  category_text <- c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5","0-225","10^2-10^3","10^3-10^4","10^4-10^5",
-                     " 10^5","0-225","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5")
-  HVOccur$category_text <- category_text
-  
-  # category_text <- c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5","0-10^2","10^2-235","235-10^3","10^3-10^4",
-  #                    " 10^4","0-10^2","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5")
+  category_text <- c("0-450","450-10^3","10^3-10^4","10^4-10^5"," 10^5","0-10^2","10^2-235","235-10^3","10^3-10^4",
+                     " 10^4","0-10^2","10^2-10^3","10^3-10^4","10^4-10^5"," 10^5")
   
   conc_10_5 <- which(category_text %in% " 10^5")
   conc_10_4 <- which(category_text %in% " 10^4")
   
   category_text[c(conc_10_5,conc_10_4)] <- c(rep(expression(""> 10^5),length(conc_10_5)),rep(expression(""> 10^4),length(conc_10_4)))
-  category_levels <- c("0-225","0-450","10^2-10^3","450-10^3","10^3-10^4","10^4-10^5",expression(""> 10^5))
-
-#  category_levels <- c("0-10^2","0-450","10^2-235","10^2-10^3","235-10^3","450-10^3","10^3-10^4",expression(""> 10^4),"10^4-10^5",expression(""> 10^5))
-
-    HVOccur$category_text <- factor(category_text,levels = category_levels)
+  category_levels <- c("0-10^2","0-450","10^2-235","10^2-10^3","235-10^3","450-10^3","10^3-10^4",expression(""> 10^4),"10^4-10^5",expression(""> 10^5))
+  HVOccur$category_text <- factor(category_text,levels = category_levels)
   
   HVoccur_obs <- HVOccur
   
@@ -179,91 +170,58 @@ plot_fig_3 <- function(){
   # 
   
   HVOccur_plot <- full_join(HVOccur,HVoccur_obs)
-  response_names <- c("sHM (Copy Number/100mL)","E. coli (Copy Number/100mL)", "Enterococci (Copy Number/100mL)","Modeled sHM (Copy Number/100mL)")
+  response_names <- c("sHM (Copy Number/100mL)","E. coli (CFU/100mL)", "Enterococci (Copy Number/100mL)","Modeled sHM (Copy Number/100mL)")
   
   HVOccur_plot$full_name <- factor(HVOccur_plot$full_name, levels = response_names)
   
-#  HVOccur_plot$category_text <- factor(HVOccur_plot$category_text,levels = HVOccur_plot$category_text[c(1,2,11,12,17,13,3,4,15,20)])
-  category_levels <- c("0-10^2","0-225","0-450","10^2-10^3","450-10^3","10^3-10^4","10^4-10^5",expression(""> 10^5))
-  HVOccur_plot$category_text <- factor(HVOccur_plot$category_text,levels = category_levels)
+  HVOccur_plot$category_text <- factor(HVOccur_plot$category_text,levels = HVOccur_plot$category_text[c(1,2,11,12,17,13,3,4,15,20)])
   
   response_names %in% unique(HVOccur_plot$full_name)
   
   ####################################
   
-  ec_italic <- "italic('E. coli')~' Copy Number/100mL'"
+  HVOccur_plot_abstract_art <- HVOccur_plot %>%
+    filter(grepl("sHM",full_name)) %>%
+    mutate(facet_name = ifelse(full_name == "Modeled sHM (Copy Number/100mL)","Modeled Human Bacteria","Observed Human Bacteria"))
+      
+  bar_color <- colors()[239]
   
-  # HVOccur_plot$full_name2 <- as.character(HVOccur_plot$full_name)
-  # HVOccur_plot <- HVOccur_plot %>%
-  #   mutate(full_name2 =
-  #            ifelse(full_name == "E. coli (Copy Number/100mL)", "italic('E. coli')~' Copy Number/100mL'",as.character(full_name)))
-  # 
-  # HVOccur_plot$full_name2 <- factor(HVOccur_plot$full_name2)
-  # HVOccur_plot$full_name3 <- factor(HVOccur_plot$full_name2,levels =   levels(HVOccur_plot$full_name2)[c(4,2,1,3)])
-
-
-  levels(HVOccur_plot$full_name) <- c(expression(atop("sHM","(Copy Number/100mL)")),
-                                      expression(atop(paste(italic("E. Coli")),"(Copy Number/100mL)")),
-                                      expression(atop("Enterococci","(Copy Number/100mL)")),
-                                      expression(atop("Modeled sHM","(Copy Number/100mL)")))
-  
-  bacteria_vs_virus <- ggplot(HVOccur_plot,aes(x=category_text,y=Occurrence)) +
-    geom_bar(stat = "identity") +
-    facet_wrap(. ~ full_name, scales = "free_x",nrow = 1,ncol = 4, labeller=label_parsed) +
+  bacteria_vs_virus <- ggplot(HVOccur_plot_abstract_art,aes(x=category_text,y=Occurrence)) +
+    geom_bar(stat = "identity", color = "black",fill = "transparent", size = 1.) +
+    facet_wrap(. ~ full_name, scales = "free_x",nrow = 1,ncol = 4, labeller = label_wrap_gen()) +
     #    geom_text(aes(label = c("A","B","C")), stat = "identity",y = 0.6,x=5.5) +
-    ylim(0,0.55) +
-    geom_text(
-      aes(label=n),
-      stat='identity',
-      y=0.53,size = 2
-    )+
-    theme(axis.text.x=element_text(angle = 0, hjust = 0.5,vjust=0.0,size = 6, )) +
-    xlab("Indicator Bacteria Concentration") +
-    ylab("Human Virus
-         Occurrence Proportion") +
+#    ylim(0,0.55)+
+    scale_y_continuous(expand = c(0, 0),limits = c(0,0.55)) +
+    theme(axis.text.x=element_text(angle = 0, hjust = 0.5,vjust=0.0,size = 5, )) +
+    xlab("") +
+    #xlab("Sum of Human Bacteroides and \nLachnospiraceae (count number/100 mL)") +
+    #theme(axis.title.x = ggtext::element_markdown()) +
+    ylab("Human Virus Occurrence") +
     scale_x_discrete(labels = function(l) parse(text=l))+
-    theme(axis.title.x = element_text(size = 8),
-          axis.title.y = element_text(size = 8),
-          axis.text.x = element_text(size = 7,colour = "black",angle = 45, vjust = 1,hjust = 1),
-          axis.text.y = element_text(size = 7,colour = "black"),
-          strip.text.x = element_text(size = 8.5)) +
-    annotate("text",label = "n= ",x = 0.65,y = 0.53,size = 2)
+    theme(axis.title.x = element_text(size = 18, colour = "black", vjust = -1, face = "bold"),
+          axis.title.y = element_text(size = 18, colour = "black", vjust = 3, face = "bold"),
+          axis.text.x = element_text(size = 18,colour = "black", angle = 45, vjust = 1.,hjust = 1, face = "bold"),
+          axis.text.y = element_text(size = 16,colour = "black", face = "bold"),
+          strip.background = element_blank(),
+          strip.text.x = element_blank()) +
+    theme(strip.background =element_rect(fill="transparent"))+
+    theme(strip.text = element_text(colour = 'black'))+
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    theme(panel.background = element_rect(fill = "transparent", colour = NA),  plot.background = element_rect(fill = "transparent", colour = NA)) +
+    theme(plot.margin=unit(c(0,0,1,1),"cm")) +
+    theme(panel.spacing = unit(4, "lines")) +
+    theme(panel.border = element_rect(color = "black", fill = NA, size = 1.5))
   
-  # 
-  # 
-  # bacteria_vs_virus <- ggplot(HVOccur_plot,aes(x=category_text,y=Occurrence)) +
-  #   geom_bar(stat = "identity") +
-  #   facet_wrap(. ~ full_name, scales = "free_x",nrow = 1,ncol = 4, labeller = label_wrap_gen()) +
-  #   #    geom_text(aes(label = c("A","B","C")), stat = "identity",y = 0.6,x=5.5) +
-  #   ylim(0,0.55) +
-  #   geom_text(
-  #     aes(label=n),
-  #     stat='identity',
-  #     y=0.53,size = 2
-  #   )+
-  #   theme(axis.text.x=element_text(angle = 0, hjust = 0.5,vjust=0.0,size = 6, )) +
-  #   xlab("Indicator Bacteria Concentration") +
-  #   ylab("Human Virus 
-  #        Occurrence Proportion") +
-  #   scale_x_discrete(labels = function(l) parse(text=l))+
-  #   theme(axis.title.x = element_text(size = 8),
-  #         axis.title.y = element_text(size = 8),
-  #         axis.text.x = element_text(size = 7,colour = "black",angle = 45, vjust = 1,hjust = 1),
-  #         axis.text.y = element_text(size = 7,colour = "black"),
-  #         strip.text.x = element_text(size = 8.5)) +
-  #   annotate("text",label = "n= ",x = 0.65,y = 0.53,size = 2)
+ 
+    bacteria_vs_virus
   
-  
+  ggsave(bacteria_vs_virus,filename = "test.png",bg = "transparent")
   
   ####################################
   
-  
-  
-  ####################################
   
   # fig_3 <- plot_grid(bacteria_vs_virus, ncol=1, align="v",labels = c("A","B"), label_x = 0.94, label_y = 1,
   #                    label_size = 10)
   return(bacteria_vs_virus)
 }
 
-#write_rds(HVOccur_plot,file = file.path("plots","out","fig_3_data.rds"))

@@ -84,6 +84,8 @@ sensors <- c("F","T","M")
 
 
 names(form) <- form_names[1:length(form)]
+save(form, file = "./process/out/MMSD_CG_BK_formulas.rds")
+
 # # 3. Run LME model for all response variables
 
 # Set boundary tolerance for singularity consistent with "isSingular()"

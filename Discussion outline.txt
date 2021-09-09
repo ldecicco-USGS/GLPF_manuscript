@@ -27,7 +27,17 @@ Regressions
 		-Regressions were developed based on composite samples. Discrete sampling would need to be done to explore whether optical signals can provide valuable info in short term variability.
 		-detection level: if contamination is low, it may be difficult to develop meaningful regressions due to background interference and ability to detect HIB.
 
-Pros and cons
-Uses for these regressions
-Limitations with these methods
+Implications for optical sensor use
+	-Current-use sensors may work just fine without development of new sensors
+	-All of this hinges on a good translation of lab-measured optical properties to the field.
+	
+
+
+Laura:
+Data release:
+FIB + Optical + virus for environmental samples
+FIB + Optical + virus for QA samples
+FIB + Optical for sewage samples
+
+
 

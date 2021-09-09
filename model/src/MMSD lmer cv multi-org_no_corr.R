@@ -75,8 +75,8 @@ names(site_combos) <- c("3-sites")
 
 Initial_predictors<- c("Turbidity_mean", "T", "F","M")
 
-df_cor <- correlated_to_primary_signals(Initial_predictors)
-sensors <- reduce_correlated_variables(df_cor)
+df_cor <- correlated_to_primary_signals(Initial_predictors,filenm="mmsd_summary.rds")
+sensors <- reduce_correlated_variables(df_cor,filenm="mmsd_summary.rds",Initial_predictors)
 sensors <- sensors[-grep("rSag",sensors)]
 sensors <- sensors[-grep("A_",sensors)]
 sensors <- sensors[-grep("LA",sensors)] #remove LA signal--high error in models distorts graphics
@@ -95,7 +95,7 @@ for(i in 1:length(sensors)) {
 
 
 names(form) <- form_names
-
+saveRDS(form,file = "./process/out/MMSD_formulas_no_corr.rds")
 
 
 predictors <- sensors
