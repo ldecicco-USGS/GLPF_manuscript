@@ -65,5 +65,9 @@ cols_to_keep <- c("SiteID",cols_to_keep)
 df_for_SI <- df[,cols_to_keep]
 
 write.csv(df[,cols_to_keep],file.path("process","out","glpf_data_for_SI.csv"),row.names = FALSE)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1a3a71200f24e2616aa4ccc4a9308843ffb0cbfb
 openxlsx::write.xlsx(df[,cols_to_keep],
                      file.path("process","out","glpf_data_for_SI.xlsx"))
